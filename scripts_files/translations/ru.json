@@ -1,4 +1,14 @@
 {
 	"State": "Состояние",
-	"Off-Screen ESP": "Враги за пределами экрана"
+	"Size": "Размер",
+	"Color": "Цвет",
+	"Full": "Полное",
+	"Icon": "Иконка",
+	"Off-Screen ESP": "Враги за пределами экрана",
+	"Max distance": "Макс. дистанция",
+	"Indicator size": "Размер индикатора",
+	"Image type": "Тип изображения",
+	"Visible check": "Проверка видимости",
+	"Custom indicator color": "Свой цвет индикатора",
+	"Display if the hero is not visible on the map": "Отображать, если герой не виден на карте"
 }
