@@ -85,7 +85,6 @@ export class GUI {
 		if (texture === undefined) {
 			return
 		}
-		console.log(texture)
 		const size = !isIcon ? vecSize : vecSize.Clone().DivideScalar(1.3).RoundForThis()
 		RendererSDK.Image(texture, position.Subtract(size.DivideScalar(2)), 0, size)
 	}
