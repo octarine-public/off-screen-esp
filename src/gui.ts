@@ -27,21 +27,23 @@ export class GUI {
 		return position
 	}
 	public DrawEntity(entity: Unit, menu: MenuManager, ellipseRect: Rectangle) {
-		if (entity.Distance(CameraSDK.Position) > menu.MaxDistance) {
+		const camera = CameraSDK.Position
+		if (entity.Distance(camera) > menu.MaxDistance) {
 			return
 		}
 		const w2s = RendererSDK.WorldToScreen(entity.Position, false)
 		if (w2s === undefined || this.isInScreen(w2s)) {
 			return
 		}
-		const center = ellipseRect.Center
-		const halfSize = ellipseRect.Size.DivideScalar(2).RoundForThis()
-		const relative = w2s.Subtract(center).DivideForThis(halfSize)
-		const direction = Vector2.FromAngle(relative.Angle)
-		const position = center.AddForThis(direction.Multiply(halfSize))
-
 		const showDistance = menu.ShowDistance.value
 		const isIcon = menu.ImageType.SelectedID === 1
+
+		const center = ellipseRect.Center
+		const halfSize = ellipseRect.Size.DivideScalar(2).RoundForThis()
+		const direction = Vector2.FromVector3(camera.GetDirection2DTo(entity.Position))
+			.MultiplyScalarY(-1)
+			.Normalize()
+		const position = direction.Multiply(halfSize).AddForThis(center)
 
 		let size = menu.ImageSize
 		if (isIcon) {
@@ -49,8 +51,8 @@ export class GUI {
 		} else {
 			size = showDistance ? size * 1.2 : size
 		}
-
 		const vecSize = GUIInfo.ScaleVector(size, size)
+
 		let slot = PlayerCustomData.get(entity.PlayerID)?.TeamSlot
 		if (slot === undefined) {
 			slot = PlayerCustomData.get(entity.OwnerPlayerID)?.TeamSlot
@@ -93,14 +95,14 @@ export class GUI {
 			RendererSDK.Image(texture, pos, 0, size)
 			return
 		}
-		const scaleFactor = showDistance ? 0.5 : 1 / 1.3
-		const finalSize = size.Clone().MultiplyScalar(scaleFactor)
+		const scaleFactor = showDistance ? 2 : 1.3
+		const finalSize = size.Clone().DivideScalar(scaleFactor)
+
 		const finalPos = position
 			.Subtract(finalSize.DivideScalar(2))
-			.Subtract(new Vector2(0, finalSize.y / 2 - 2))
-		RendererSDK.Image(texture, finalPos, isIcon ? -1 : 0, finalSize)
+			.Subtract(new Vector2(0, showDistance ? finalSize.y / 2 - 2 : 0))
+		RendererSDK.Image(texture, finalPos, -1, finalSize)
 	}
-
 	private drawArrow(center: Vector2, dir: Vector2, imageWidth: number, color: Color) {
 		const triWidth = imageWidth * 0.5
 		const triLength = imageWidth * 0.25
