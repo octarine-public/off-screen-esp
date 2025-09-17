@@ -6,6 +6,7 @@ export class MenuManager {
 	public readonly State: Menu.Toggle
 	public readonly ImageType: Menu.Dropdown
 	public readonly IsVisible: Menu.Toggle
+	public readonly ShowDistance: Menu.Toggle
 
 	private readonly basePath = "github.com/octarine-public/off-screen-esp/scripts_files/"
 	private readonly icon = this.basePath + "icons/screen.svg"
@@ -45,6 +46,7 @@ export class MenuManager {
 			"Display if the hero is not visible on the map"
 		)
 		this.customColor = this.node.AddToggle("Custom indicator color", false)
+		this.ShowDistance = this.node.AddToggle("Show distance", false)
 		this.elipsSize = this.node.AddSlider("Size", 100, 0, 100)
 		this.distance = this.node.AddSlider("Max distance", 40, 10, 80)
 		this.imageSize = this.node.AddSlider("Indicator size", 0, 0, 100)
