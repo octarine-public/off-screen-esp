@@ -38,11 +38,12 @@ export class GUI {
 		const showDistance = menu.ShowDistance.value
 		const isIcon = menu.ImageType.SelectedID === 1
 
+		const pos2D = Vector2.FromVector3(entity.Position)
+		const cam2D = Vector2.FromVector3(camera).AddScalarY(RendererSDK.WindowSize.y)
+
 		const center = ellipseRect.Center
 		const halfSize = ellipseRect.Size.DivideScalar(2).RoundForThis()
-		const direction = Vector2.FromVector3(camera.GetDirection2DTo(entity.Position))
-			.MultiplyScalarY(-1)
-			.Normalize()
+		const direction = cam2D.GetDirectionTo(pos2D).MultiplyScalarY(-1).Normalize()
 		const position = direction.Multiply(halfSize).AddForThis(center)
 
 		let size = menu.ImageSize
