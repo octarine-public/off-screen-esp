@@ -47,7 +47,7 @@ export class MenuManager {
 		)
 		this.customColor = this.node.AddToggle("Custom indicator color", false)
 		this.ShowDistance = this.node.AddToggle("Show distance", false)
-		this.elipsSize = this.node.AddSlider("Size", 100, 0, 100)
+		this.elipsSize = this.node.AddSlider("Size", 40, 0, 100)
 		this.distance = this.node.AddSlider("Max distance", 40, 10, 80)
 		this.imageSize = this.node.AddSlider("Indicator size", 0, 0, 100)
 		this.ImageType = this.node.AddDropdown("Image type", ["Full", "Icon"], 1)
