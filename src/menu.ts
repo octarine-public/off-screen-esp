@@ -17,7 +17,7 @@ export class MenuManager {
 	private readonly distance: Menu.Slider
 	private readonly customColor: Menu.Toggle
 
-	private readonly tree = Menu.AddEntry("Visual")
+	private readonly tree = Menu.AddEntryDeep(["Visual", "Maphack"])
 	public readonly node = this.tree.AddNode("Off-Screen ESP", this.icon)
 
 	private readonly colorNames = [
