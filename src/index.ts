@@ -1,16 +1,5 @@
 import "./translations"
 
-import {
-	DOTAGameState,
-	DOTAGameUIState,
-	Entity,
-	EventsSDK,
-	GameRules,
-	GameState,
-	Hero,
-	Unit
-} from "github.com/octarine-public/wrapper/index"
-
 import { GUI } from "./gui"
 import { MenuManager } from "./menu"
 
@@ -38,8 +27,8 @@ new (class COffScreenESP {
 	}
 	private get isPostGame() {
 		return (
-			GameRules === undefined ||
-			GameRules.GameState === DOTAGameState.DOTA_GAMERULES_STATE_POST_GAME
+			Dota2SDK.GameRules === undefined ||
+			Dota2SDK.GameRules.GameState === DOTAGameState.DOTA_GAMERULES_STATE_POST_GAME
 		)
 	}
 	protected Draw() {

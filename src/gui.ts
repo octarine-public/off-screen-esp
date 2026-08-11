@@ -1,14 +1,3 @@
-import {
-	CameraSDK,
-	Color,
-	GUIInfo,
-	PlayerCustomData,
-	Rectangle,
-	RendererSDK,
-	TextFlags,
-	Unit,
-	Vector2
-} from "github.com/octarine-public/wrapper/index"
 
 import { MenuManager } from "./menu"
 

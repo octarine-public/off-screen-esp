@@ -1,4 +1,3 @@
-import { Color, Team } from "github.com/octarine-public/wrapper/index"
 
 export class Colors {
 	public static readonly ArrowColors = [

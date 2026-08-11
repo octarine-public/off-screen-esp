@@ -1,4 +1,3 @@
-import { Menu, Team } from "github.com/octarine-public/wrapper/index"
 
 import { Colors } from "./colors"
 
