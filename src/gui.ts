@@ -1,4 +1,4 @@
-
+import { canvas } from "../render"
 import { MenuManager } from "./menu"
 
 export class GUI {
@@ -67,7 +67,11 @@ export class GUI {
 		)
 	}
 	private drawEllipse(rect: Rectangle, color: Color) {
-		RendererSDK.OutlinedCircle(rect.pos1, rect.Size, color)
+		canvas.Circle(rect.pos1, rect.Size, {
+			color: Color.fromUint32(0),
+			borderColor: color,
+			borderWidth: 3
+		})
 	}
 	private drawImage(
 		entity: Unit,
@@ -82,7 +86,7 @@ export class GUI {
 		}
 		if (!isIcon) {
 			const pos = position.Subtract(size.DivideScalar(2))
-			RendererSDK.Image(texture, pos, 0, size)
+			canvas.Image(texture, pos, size, { circle: true })
 			return
 		}
 		const scaleFactor = showDistance ? 2 : 1.3
@@ -91,20 +95,23 @@ export class GUI {
 		const finalPos = position
 			.Subtract(finalSize.DivideScalar(2))
 			.Subtract(new Vector2(0, showDistance ? finalSize.y / 2 - 2 : 0))
-		RendererSDK.Image(texture, finalPos, -1, finalSize)
+		canvas.Image(texture, finalPos, finalSize)
 	}
 	private drawArrow(center: Vector2, dir: Vector2, imageWidth: number, color: Color) {
 		const triWidth = imageWidth * 0.5
 		const triLength = imageWidth * 0.25
-		const triOffset = imageWidth / 2 - 0.5 // -1 offset to avoid clipping
+		const triOffset = imageWidth / 2 - 0.5
 
-		const perp = dir.Rotated(Math.PI / 2) // equivalent to Vector2(0, -1)
 		const triCenter = center.Add(dir.MultiplyScalar(triOffset))
-		const p1 = triCenter.Add(dir.MultiplyScalar(triLength))
-		const p2 = triCenter.Add(perp.MultiplyScalar(triWidth / 2).RoundForThis())
-		const p3 = triCenter.Subtract(perp.MultiplyScalar(triWidth / 2).RoundForThis())
-
-		RendererSDK.TriangleFilled(p1, p2, p3, color)
+		const size = new Vector2(triLength, triWidth)
+		const position = triCenter
+			.Add(dir.MultiplyScalar(triLength / 2))
+			.Subtract(size.DivideScalar(2))
+		canvas.Image("menu/ui/world-arrow.svg", position, size, {
+			color,
+			fit: "stretch",
+			angle: (Math.atan2(dir.y, dir.x) * 180) / Math.PI
+		})
 	}
 	private drawCircle(
 		position: Vector2,
@@ -114,10 +121,14 @@ export class GUI {
 	) {
 		const vecPos = position.Subtract(size.DivideScalar(2))
 		if (isFilled) {
-			RendererSDK.FilledCircle(vecPos, size, color)
+			canvas.Circle(vecPos, size, { color })
 			return
 		}
-		RendererSDK.OutlinedCircle(vecPos, size, color)
+		canvas.Circle(vecPos, size, {
+			color: Color.fromUint32(0),
+			borderColor: color,
+			borderWidth: 3
+		})
 	}
 	private drawDistance(
 		entity: Unit,
@@ -140,6 +151,11 @@ export class GUI {
 
 		const flags = isIcon ? TextFlags.Bottom | TextFlags.Center : TextFlags.Center
 		const distance = entity.Distance(CameraSDK.Position)
-		RendererSDK.TextByFlags(distance.toFixed(), position, Color.White, 2, flags, 600)
+		canvas.TextIn(distance.toFixed(), position, {
+			color: Color.White,
+			size: position.Height / 2 + 4,
+			flags,
+			weight: 600
+		})
 	}
 }
