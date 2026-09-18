@@ -5,6 +5,14 @@ declare namespace MenuSDK {
 		readonly kind: "rect"
 		/** Uses an elliptical fill, preserving both radii on non-square boxes. */
 		ellipse?: boolean
+		/**
+		 * An ellipse shades from `color` inside `fade` of its radius to `edgeColor` at its rim, and
+		 * the quad's corners past the rim stay clear, so a vignette is one fill and a soft halo
+		 * another; left out, the fill runs whole to an antialiased edge and `edgeColor` is nothing.
+		 * `ellipse` only.
+		 */
+		fade?: number
+		edgeColor?: number
 		x: number
 		y: number
 		w: number
@@ -115,7 +123,12 @@ declare namespace MenuSDK {
 		h: number
 		path: string
 		color: number
-		/** Corner radius in px, half the size for a round portrait. Rasterized, like every radius. */
+		/**
+		 * Corner radius in px, half the size for a round portrait. Carved by the sdf mask, so the
+		 * corner carries per-pixel coverage rather than the stair steps a raster clip leaves at the
+		 * menu's default 0 samples. A {@link IHudImage.fade} owns the mask instead, and rounds the
+		 * element.
+		 */
 		radius?: number
 		/** Degrees clockwise about the image's own centre, for a glyph that carries a bearing. */
 		angle?: number
@@ -123,6 +136,11 @@ declare namespace MenuSDK {
 		grayscale?: boolean
 		/** Cover crops to the destination's aspect ratio; stretch uses the full source. */
 		fit?: "cover" | "stretch"
+		/**
+		 * Fraction of the width from which the art melts away towards its right edge, for a cover
+		 * standing on a card it has to become part of. A mask, so it composes with the radius.
+		 */
+		fade?: number
 		/** Sprite source rectangle in source pixels. */
 		sourceX?: number
 		sourceY?: number
@@ -205,7 +223,9 @@ declare namespace MenuSDK {
 		 * Whether this surface stands with the menu rather than over the world. The host's overlay
 		 * gate closes on the game's own screens and outside a match, which is right for anything
 		 * pinned to the world and wrong for a window the user opened the menu to use: a settings
-		 * window belongs on the main menu as much as it does in a match.
+		 * window belongs on the main menu as much as it does in a match. A surface on the menu's
+		 * own layer is part of the menu and stands with it from the start; one on a HUD layer is
+		 * bound by whoever owns it.
 		 */
 		public MenuBound: boolean
 		constructor(key: string, layer: EPanelLayer)
@@ -224,6 +244,16 @@ declare namespace MenuSDK {
 		 * {@link SetHudAlphaScale}, which every primitive multiplies into what it pushes.
 		 */
 		public Fade(value: number): void
+		/**
+		 * How much of the theme's blur a frosted backdrop drawn onto the surface carries, as a fraction
+		 * of its full strength. A backdrop filter is composited outside the element's opacity, so a
+		 * surface fading in through {@link CHudSurface.Fade} has to ramp the frost by hand or the card
+		 * holds a frosted rectangle at full strength until the glass catches up. It may overshoot 1,
+		 * the way the menu's own open effects do.
+		 */
+		public Backdrop(fraction: number): void
+		/** The fraction {@link CHudSurface.Backdrop} set; 1 while nothing did. */
+		public get BackdropScale(): number
 		/**
 		 * How far out of focus everything the surface draws stands, in screen pixels; 0 is sharp.
 		 *
@@ -305,6 +335,12 @@ declare namespace MenuSDK {
 	function HudAlphaScale(): number
 	/** Fades everything drawn onto the active surface from here on; the card frame calls it. */
 	function SetHudAlphaScale(value: number): void
+	/**
+	 * How much of the theme's blur a frosted backdrop drawn now carries: the card's own fade times
+	 * the fraction the active surface was handed through {@link CHudSurface.Backdrop}, so a card
+	 * fading in on the menu's open motion frosts on the effect's own blur curve.
+	 */
+	function HudBlurScale(): number
 	/**
 	 * Opens and closes the window a panel's content callback draws in. The surface's theme scope is
 	 * entered along with it, so a colour the callback asks the menu for - `HudColors.accent`, a token,

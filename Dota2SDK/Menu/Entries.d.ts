@@ -105,6 +105,8 @@ declare namespace MenuSDK {
 		collapsible?: boolean
 		sortNodes: boolean
 		iconTint: boolean
+		/** Width-to-height ratio of the icon in navigation rows; omitted keeps the square default. */
+		iconAspectRatio?: number
 		filterGroup: Nullable<number>
 		filterGroups: MenuFilterGroup[]
 		filtersOff: Set<number>
@@ -294,6 +296,14 @@ declare namespace MenuSDK {
 		selectedID: number
 		/** The option Safe mode holds the dropdown at; every set lands on it while it stands. */
 		holdOption?: number
+		/**
+		 * An image riding each option, parallel to {@link values} and empty where an option has none.
+		 *
+		 * By position rather than by value, because the selection is: a list whose options are things
+		 * with faces - heroes, maps, weapons - is one a reader picks from by the picture rather than by
+		 * reading down the names.
+		 */
+		icons?: string[]
 		swatches?: OptionSwatches
 		/** Keys bound to this dropdown from its context menu, in creation order. */
 		hotkeys: DropdownHotkey[]

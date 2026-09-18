@@ -20,6 +20,16 @@ declare namespace MenuSDK {
 		 */
 		Menu = 2
 	}
+	/**
+	 * Where the menu's own panels stand in the menu stack: the preview card and its stage, which open
+	 * a stacking context of their own for the glass they lay under their bands.
+	 */
+	const MenuPanelZ = 10
+	/**
+	 * Where a drawing surface on the menu's layer stands: one over the menu's own panels, so what
+	 * a preview paints on it shows over its stage rather than under the card's glass.
+	 */
+	const MenuSurfaceZ: number
 	function MountPanels(): void
 	/** Registers a panel in one of the host's stacks; returns the handle that takes it back out. */
 	function RegisterPanel(key: string, render: () => React.ReactNode, layer?: EPanelLayer): () => void

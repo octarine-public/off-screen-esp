@@ -14,6 +14,18 @@ declare namespace MenuSDK {
 		readonly titleIcons?: readonly string[]
 		/** Color multiplied into the title icon; omitted to preserve the source artwork. */
 		readonly titleIconColor?: Color
+		/**
+		 * Hero art laid down the card's left edge at full height and melting into the glass: the
+		 * cover layout, which takes the place of the title chips. Kept rectangular, so a face keeps
+		 * the framing its artwork gave it instead of what a circle leaves of it.
+		 */
+		readonly portrait?: string
+		/**
+		 * A small image on the portrait's lower right corner, in an item icon's own proportions and
+		 * drawn whole: the scroll a teleport was cast with, the item that was picked up. Only drawn
+		 * with a portrait.
+		 */
+		readonly badge?: string
 		/** Image shown beside the message, such as a rune or ability icon. */
 		readonly messageIcon?: string
 		/**

@@ -5,6 +5,11 @@ declare namespace MenuSDK {
 	 * anchor's left edge instead, for rail rows whose right side is somebody else's content.
 	 */
 	type ChipPlacement = "right" | "top" | "bottom" | "below"
+	/**
+	 * Shows the chip beside its anchor. For an anchor whose chip is already up, the chip is rewritten
+	 * in place: a value that changes under the wheel keeps its chip standing instead of blinking it
+	 * away and fading it back in on every notch.
+	 */
 	function ShowChipTooltip(anchor: HTMLElement, text: string, placement: ChipPlacement, caption?: string, elevation?: "flat" | "raised", icon?: string): void
 	function HideChipTooltip(anchor?: object): void
 }

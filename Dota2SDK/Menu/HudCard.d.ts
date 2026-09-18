@@ -226,12 +226,22 @@ declare namespace MenuSDK {
 		 * to `size` rather than read off a mip level that does not hold it, so a caller passes the
 		 * path it has and nothing about sharpness is left for it to arrange.
 		 *
-		 * `radius` crops it — half the size makes a round portrait — and the crop is a rasterized one,
-		 * so anything that has to hide its stepping edge draws a {@link CHudCard.Ring} of the same
-		 * radius over it. `angle` turns it clockwise about its own centre in degrees, which is how a
+		 * `radius` crops it — half the size makes a round portrait — and the crop is carved by the sdf
+		 * mask, so its edge carries per-pixel coverage and needs nothing drawn over it to hide a
+		 * stepping corner. `angle` turns it clockwise about its own centre in degrees, which is how a
 		 * glyph carries a bearing.
+		 *
+		 * `fit` says what to do when the box is not the artwork's shape. The default fills the box
+		 * with the whole source, which squashes art the box was not cut for — a hero's landscape
+		 * portrait in a shallower cell, an item's 11:8 icon in a squarer one. `"cover"` keeps the
+		 * source's proportions and crops it to the box about its centre, the way
+		 * {@link Canvas.Image} does, and holds the image back until the host has measured the
+		 * source, which is one frame at most.
+		 *
+		 * @example
+		 * HudCard.Image(unit.TexturePath(), pos, size, Color.White, hudAlpha(), radius, 0, "cover")
 		 */
-		public Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number): void
+		public Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number, fit?: "cover" | "stretch"): void
 		/** A filled disc: the chip a glyph or a portrait is set on. */
 		public Disc(centerX: number, centerY: number, radius: number, color: Color, alpha?: number): void
 		/**

@@ -282,6 +282,8 @@ declare namespace MenuSDK {
 	function Icon(props: {
 		path: string
 		size?: number
+		width?: number
+		height?: number
 		tint?: StyleColor
 		round?: number
 		className?: string
