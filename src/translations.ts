@@ -1,9 +1,11 @@
-
-function Load(name: string) {
-	return new Map<string, string>(
-		Object.entries(SharedSDK.readJSON(`translations/${name}.json`))
+function load(name: string) {
+	return new Map(
+		Object.entries(
+			SharedSDK.readJSON<Record<string, string>>(`translations/${name}.json`)
+		)
 	)
 }
-Menu.Localization.AddLocalizationUnit("russian", Load("ru"))
-Menu.Localization.AddLocalizationUnit("english", Load("en"))
-Menu.Localization.AddLocalizationUnit("chinese", Load("cn"))
+
+MenuSDK.Localization.AddLocalizationUnit("russian", load("ru"))
+MenuSDK.Localization.AddLocalizationUnit("english", load("en"))
+MenuSDK.Localization.AddLocalizationUnit("chinese", load("cn"))

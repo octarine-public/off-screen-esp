@@ -9,6 +9,9 @@
 		"strict": true,
 		"alwaysStrict": true,
 		"experimentalDecorators": true,
+		"jsx": "react",
+		"jsxFactory": "React.createElement",
+		"jsxFragmentFactory": "React.Fragment",
 		"forceConsistentCasingInFileNames": true,
 		"lib": [
 			"ESNext"

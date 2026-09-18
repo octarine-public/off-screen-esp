@@ -2,6 +2,7 @@
 	"version": "1.0.0",
 	"main": "src/index.ts",
 	"name": "off-screen-esp",
+	"type": "module",
 	"description": "Off-Screen ESP",
 	"license": "GPL-3.0-or-later",
 	"author": "SicdeX",
@@ -20,11 +21,12 @@
 		"typescript": "^5.6.3"
 	},
 	"scripts": {
+		"test": "node --test tests/*.test.mjs",
 		"check-types": "npx tsc",
 		"check-types-watch": "npx tsc --watch",
 		"upgrade-pack": "yarn upgrade-interactive --latest",
-		"check-circular": "npx madge --circular scripts/",
-		"lint": "eslint -c .eslintrc.json --ext .ts --fix ."
+		"check-circular": "npx madge --circular index.ts",
+		"lint": "eslint -c .eslintrc.json --ext .ts,.tsx --fix ."
 	},
 	"repository": {
 		"type": "git",
