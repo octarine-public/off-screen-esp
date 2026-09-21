@@ -39,6 +39,8 @@ declare namespace MenuSDK {
 		readonly ringWidth?: number
 		readonly shadow?: number
 		readonly shadowColor?: Color
+		/** Whether the outer shadow also shades the portrait's inner edge. Defaults to true. */
+		readonly innerShadow?: boolean
 		readonly text?: string
 		readonly textScale?: number
 		readonly textColor?: Color

@@ -180,8 +180,18 @@ declare namespace MenuSDK {
 		 * `alpha` fades the glass along with everything drawn on it afterwards, and ramps the blur with
 		 * them: a backdrop filter does not answer to an element's own opacity, so a card that faded
 		 * without it held a frosted rectangle at full strength and then snapped away with the element.
+		 *
+		 * `dpRadius` is in dp, like a chip's, for a card that is not the window's own shape - a pill,
+		 * a tile. `carve` is how many steps of alpha to hold this card's glass off the one it would
+		 * otherwise be packed at: cards carved by one and the same shader string share a decorator
+		 * instance in RmlUi, so a surface drawing more than one has to hand each of them a step of its
+		 * own. The step is invisible, and only the glass carries it - the rim and the halo are left as
+		 * the theme set them.
+		 *
+		 * @example
+		 * HudCard.Frame(box, hudAlpha(), CHIP_RADIUS, this.carved++)
 		 */
-		public Frame(box: Rectangle, alpha?: number): void
+		public Frame(box: Rectangle, alpha?: number, dpRadius?: number, carve?: number): void
 		/**
 		 * {@link CHudCard.Frame} as a disc: the same glass, the same hairline rim and the same frosted
 		 * backdrop under both, for a badge carrying a glyph instead of a row of readings. A card and a

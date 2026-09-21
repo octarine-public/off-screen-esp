@@ -6,6 +6,11 @@ declare namespace MenuSDK {
 	 */
 	type ChipPlacement = "right" | "top" | "bottom" | "below"
 	/**
+	 * The soft drop a floating chip casts: close and wide enough to read around a one-line
+	 * surface, where the panels' long throw would land entirely under it.
+	 */
+	const ChipShadow = "0 4dp 14dp #00000080"
+	/**
 	 * Shows the chip beside its anchor. For an anchor whose chip is already up, the chip is rewritten
 	 * in place: a value that changes under the wheel keeps its chip standing instead of blinking it
 	 * away and fading it back in on every notch.

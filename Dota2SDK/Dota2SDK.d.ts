@@ -18,6 +18,7 @@ declare const Dota2SDK: {
 	readonly CCustomHeroPickRules: typeof CCustomHeroPickRules
 	readonly CGameManager: typeof CGameManager
 	readonly CGameRules: typeof CGameRules
+	readonly CNotificationsSDK: typeof CNotificationsSDK
 	readonly CPlayerResource: typeof CPlayerResource
 	readonly CTurboHeroPickRules: typeof CTurboHeroPickRules
 	readonly CameraBounds: Nullable<CCameraBounds>
@@ -137,6 +138,8 @@ declare const Dota2SDK: {
 	readonly NeutralSpawnerBox: typeof NeutralSpawnerBox
 	readonly NeutralSpawnerType: typeof NeutralSpawnerType
 	readonly NeutralSpawners: NeutralSpawnerBox[]
+	readonly NotificationChannel: typeof NotificationChannel
+	readonly NotificationsSDK: typeof NotificationsSDK
 	readonly Outpost: typeof Outpost
 	readonly PARTICLE_RENDER: typeof PARTICLE_RENDER
 	readonly PARTICLE_RENDER_NAME: typeof PARTICLE_RENDER_NAME
