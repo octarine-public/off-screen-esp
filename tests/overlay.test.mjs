@@ -89,6 +89,7 @@ function fixture(objectives = () => [], capShift = 0) {
 			this.Team = 3
 			this.NetworkedPosition = { DistanceSqr2D: () => (3000 + index * 10) ** 2 }
 			this.VisualPosition = { x: 2500, y: 540, z: 0 }
+			this.Buffs = []
 		}
 		IsEnemy() {
 			return true
@@ -125,7 +126,8 @@ function fixture(objectives = () => [], capShift = 0) {
 	class XPFountain extends Thing {}
 	class LotusPool extends Thing {}
 	const heroes = [new Hero(1), new Hero(2), new SpiritBear(3)]
-	const things = objectives({ Rune, XPFountain, LotusPool })
+	const things = objectives({ Rune, XPFountain, LotusPool, heroes })
+	const entities = [...heroes, ...things]
 	const hud = { minimap: () => false, lowerHud: () => false }
 	const imports = {
 		"./collision": collision,
@@ -146,7 +148,11 @@ function fixture(objectives = () => [], capShift = 0) {
 		Hero,
 		SpiritBear,
 		Vector2,
-		EntityManager: { AllEntities: [...heroes, ...things] },
+		EntityManager: {
+			AllEntities: entities,
+			GetEntitiesByClass: ctor => entities.filter(entity => entity instanceof ctor)
+		},
+		Unit,
 		Rune,
 		XPFountain,
 		LotusPool,
@@ -465,6 +471,22 @@ test("a pool's lotuses are read off a modifier cast from it, and a taken rune fa
 	rune.IsValid = false
 	overlay.objectives.UntrackObjective(rune)
 	assert.equal(settle(overlay).frames.has(10), false)
+})
+
+test("a reload finds the modifiers already cast from a pool and a shrine", () => {
+	const overlay = fixture(({ XPFountain, LotusPool, heroes }) => {
+		const shrine = new XPFountain(12, 3000)
+		const pool = new LotusPool(14, 3500)
+		heroes[0].Buffs.push(
+			{ Name: "modifier_other", IsValid: true, StackCount: 9, Caster: pool },
+			{ Name: LOTUS, IsValid: true, StackCount: 2, Caster: pool },
+			{ Name: WISDOM, IsValid: true, StackCount: 1, Caster: shrine }
+		)
+		return [shrine, pool]
+	})
+	const { frames } = settle(overlay)
+	assert.equal(frames.get(12).icon, "rune-xp")
+	assert.equal(frames.get(14).badge, "2")
 })
 
 test("a wisdom rune on the ground goes with the shrines, not the runes", () => {

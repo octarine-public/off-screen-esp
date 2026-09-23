@@ -107,9 +107,19 @@ export function UntrackObjective(entity: Entity): void {
 	}
 }
 
+/**
+ * Tracks the objectives standing when the script loads, then the modifiers their lotuses and
+ * runes are already counted on: those were created before the script and are never announced
+ * to it again, and as every modifier sits in its parent's buffs, the units' buffs hold them all.
+ */
 export function SeedObjectives(): void {
 	for (const entity of EntityManager.AllEntities) {
 		TrackObjective(entity)
+	}
+	for (const unit of EntityManager.GetEntitiesByClass(Unit)) {
+		for (const modifier of unit.Buffs) {
+			TrackObjectiveModifier(modifier)
+		}
 	}
 }
 
