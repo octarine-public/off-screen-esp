@@ -25,7 +25,7 @@
 		"check-types": "npx tsc",
 		"check-types-watch": "npx tsc --watch",
 		"upgrade-pack": "yarn upgrade-interactive --latest",
-		"check-circular": "npx madge --circular index.ts",
+		"check-circular": "npx madge --circular --extensions ts,tsx index.ts",
 		"lint": "eslint -c .eslintrc.json --ext .ts,.tsx --fix ."
 	},
 	"repository": {
