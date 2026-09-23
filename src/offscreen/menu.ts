@@ -1,4 +1,5 @@
 import { OffscreenIcons } from "./icons"
+import { RuneValues } from "./objectives"
 import { TextSettings } from "./text"
 
 export const enum EPlacementMode {
@@ -39,6 +40,15 @@ export class OffscreenMenu {
 	public readonly Distance: MenuSDK.Slider
 	public readonly MaxIndicators: MenuSDK.Slider
 	public readonly Visibility: MenuSDK.Dropdown
+	public readonly Runes: MenuSDK.Toggle
+	public readonly RuneTypes: MenuSDK.ImageSelector
+	public readonly Wisdom: MenuSDK.Toggle
+	public readonly WisdomColor: MenuSDK.ColorPicker
+	public readonly Lotus: MenuSDK.Toggle
+	public readonly LotusColor: MenuSDK.ColorPicker
+	public readonly MinLotuses: MenuSDK.Slider
+	public readonly ObjectiveDistance: MenuSDK.Slider
+	public readonly ObjectiveSize: MenuSDK.Slider
 	public readonly Placement: MenuSDK.Dropdown
 	public readonly Overlap: MenuSDK.Dropdown
 	public readonly EdgeInset: MenuSDK.Slider
@@ -50,6 +60,7 @@ export class OffscreenMenu {
 	public readonly DistancePosition: MenuSDK.Dropdown
 	public readonly Text: TextSettings
 	public readonly ShowHealth: MenuSDK.Toggle
+	public readonly RingWidth: MenuSDK.Slider
 	public readonly HiddenOpacity: MenuSDK.Slider
 	public readonly DistanceFade: MenuSDK.Slider
 	public readonly FadeDistance: MenuSDK.Slider
@@ -84,6 +95,63 @@ export class OffscreenMenu {
 			"Which enemies get an indicator: any, only those visible on the map, or only those hidden in the fog."
 		)
 		this.Visibility.IconPath = OffscreenIcons.Visibility
+
+		const objectives = page.AddNode("Objectives", OffscreenIcons.Objectives)
+		objectives.SortNodes = false
+		this.Runes = objectives.AddToggle(
+			"Runes",
+			true,
+			"Power, bounty and water runes the map knows of; one out of sight is drawn at the occluded opacity.",
+			0,
+			OffscreenIcons.Runes
+		)
+		this.RuneTypes = objectives.AddImageSelector(
+			"Rune types",
+			RuneValues,
+			RuneValues.map(value => [value, true])
+		)
+		this.Wisdom = objectives.AddToggle(
+			"Wisdom rune",
+			true,
+			"A shrine whose wisdom rune is ready to be taken.",
+			0,
+			OffscreenIcons.Wisdom
+		)
+		this.WisdomColor = objectives.AddColorPicker(
+			"Wisdom color",
+			new Color(176, 132, 255)
+		)
+		this.Wisdom.PairColors(this.WisdomColor)
+		this.Lotus = objectives.AddToggle(
+			"Lotus pools",
+			true,
+			"A pool holding lotuses, with how many it holds on the badge.",
+			0,
+			OffscreenIcons.Lotus
+		)
+		this.LotusColor = objectives.AddColorPicker(
+			"Lotus color",
+			new Color(238, 150, 205)
+		)
+		this.Lotus.PairColors(this.LotusColor)
+		this.MinLotuses = objectives.AddSlider("Min lotuses", 1, 1, 6)
+		this.MinLotuses.IconPath = OffscreenIcons.MinLotuses
+		this.ObjectiveDistance = objectives.AddSlider(
+			"Objective distance",
+			4000,
+			500,
+			10000
+		)
+		this.ObjectiveDistance.IconPath = OffscreenIcons.Distance
+		this.ObjectiveSize = objectives.AddSlider("Objective size", 80, 50, 100)
+		this.ObjectiveSize.Suffix = "%"
+		this.ObjectiveSize.IconPath = OffscreenIcons.ObjectiveSize
+		this.Runes.OnValue(runes => {
+			this.RuneTypes.IsHidden = !runes.value
+		})
+		this.Lotus.OnValue(lotus => {
+			this.MinLotuses.IsHidden = !lotus.value
+		})
 
 		const layout = page.AddNode("Layout", OffscreenIcons.Layout)
 		layout.SortNodes = false
@@ -151,6 +219,16 @@ export class OffscreenMenu {
 			0,
 			OffscreenIcons.ShowHealth
 		)
+		this.RingWidth = appearance.AddSlider(
+			"Ring width",
+			2,
+			1,
+			6,
+			0,
+			"How thick the ring round an indicator is drawn: the health of a hero, the colour of an objective."
+		)
+		this.RingWidth.Suffix = "px"
+		this.RingWidth.IconPath = OffscreenIcons.RingWidth
 		this.Text = new TextSettings(appearance)
 		this.ShowDistance.OnValue(shown => {
 			this.DistancePosition.IsHidden = !shown.value

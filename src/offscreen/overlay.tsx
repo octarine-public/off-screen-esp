@@ -1,5 +1,5 @@
 import { Fine, Snap } from "../lib/layout"
-import { ArcPaint, RingPaint } from "../lib/paint"
+import { ArcPaint, PillPaint, RingPaint } from "../lib/paint"
 import { RingDegrees, RingFilled, RingStart, RingSweep } from "./ring"
 
 const POINTER_PATH = `${__OCT_PACKAGE_ROOT__}/scripts_files/images/icons/pointer.svg`
@@ -16,6 +16,10 @@ const ARC_NAMES = Array.from({ length: ARC_STEPS }, (_, index) => `arc${index}`)
  * so one mask fits the portrait at every size.
  */
 const PORTRAIT_MASK = MenuSDK.SdfCircle("#ffffff").decorator ?? "none"
+/** The badge's fill: the portrait's own backing, near opaque, so its reading holds on any ground. */
+const BADGE_FILL = "#181b20f2"
+/** Where the badge's centre stands on the rim: down and to the right, at half past four. */
+const BADGE_REACH = Math.SQRT1_2
 
 export interface IndicatorDress {
 	version: number
@@ -24,12 +28,28 @@ export interface IndicatorDress {
 	fontWeight: number
 	distanceOffset: number
 	arrowSize: number
-	healthRingWidth: number
+	ringWidth: number
 	distanceWidth: number
 	distanceHeight: number
-	portraitAspect: number
+	/**
+	 * The line the distance and the badge are set on: their box, grown where the face stands its
+	 * digits high in a line of their own height, so the digits land on the box's middle.
+	 */
+	distanceLine: number
+	badgeLine: number
+	/** The art's width over its height, and the share of the disc its height spans. */
+	artAspect: number
+	artScale: number
+	/** The badge on the rim and the size its reading is set at. */
+	badgeSize: number
+	badgeFontSize: number
 	showDistance: boolean
-	showHealth: boolean
+	showRing: boolean
+	/**
+	 * Whether the ring drains with health, leaving the art bare where it has gone, the way
+	 * maphack's teleport timer runs out, or stands whole in the accent.
+	 */
+	drain: boolean
 	fontFamily: string
 	textColor: string
 	distanceEffect: string
@@ -51,19 +71,23 @@ export interface IndicatorFrame {
 	baseColor: string
 	warningColor: string
 	warning: boolean
+	/** The reading on the badge; empty leaves the badge off. */
+	badge: string
 	opacity: number
 }
 
 interface IndicatorState {
 	version: number
 	icon: string
-	/** The box the portrait is cut to, in whole screen pixels. */
-	portraitWidth: number
-	portraitHeight: number
+	/** The box the art is cut to, in whole screen pixels. */
+	artWidth: number
+	artHeight: number
 	distance: string
 	healthColor: string
 	filled: number
 	accent: string
+	badge: string
+	badgeRim: string
 	batch: Nullable<MenuSDK.CChainBatch>
 	stroke: { color: string; thickness: number }
 }
@@ -102,8 +126,13 @@ function portraitRef(
 	return ref
 }
 
-function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle }) {
-	const { handle } = props
+/**
+ * One indicator: the disc with its art, the ring on its rim, the distance and the arrow. A hero's
+ * ring drains with its health and leaves the art bare where it has gone; an objective wears its
+ * ring whole, in its own colour, and a badge on the rim for a count.
+ */
+function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle; objective: boolean }) {
+	const { handle, objective } = props
 	return (
 		<div
 			ref={handle.Ref("anchor")}
@@ -142,7 +171,8 @@ function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle }) {
 					borderRadius: 0
 				}}
 			/>
-			{!MenuSDK.CapsulesShaderSupported &&
+			{!objective &&
+				!MenuSDK.CapsulesShaderSupported &&
 				ARC_NAMES.map(name => (
 					<div
 						key={name}
@@ -154,6 +184,18 @@ function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle }) {
 						}}
 					/>
 				))}
+			{objective && (
+				<div
+					ref={handle.Ref("badge")}
+					style={{
+						position: "absolute",
+						textAlign: "center",
+						whiteSpace: "nowrap",
+						backgroundColor: "transparent",
+						borderRadius: 0
+					}}
+				/>
+			)}
 			<div
 				ref={handle.Ref("distance")}
 				style={{
@@ -171,8 +213,16 @@ function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle }) {
 	)
 }
 
-export function OffscreenIndicator(props: { handle: MenuSDK.IWorldOverlayHandle }) {
-	return <Indicator handle={props.handle} />
+export function OffscreenIndicator(props: {
+	handle: MenuSDK.IWorldOverlayHandle
+	objective?: boolean
+}) {
+	return <Indicator handle={props.handle} objective={props.objective === true} />
+}
+
+/** Whether the ring is drawn in strips on this indicator: a draining one, on a host without the shader. */
+function stripped(dress: Readonly<IndicatorDress>): boolean {
+	return dress.drain && !MenuSDK.CapsulesShaderSupported
 }
 
 function layout(
@@ -182,13 +232,14 @@ function layout(
 ): void {
 	const size = dress.size
 	const half = size / 2
-	const ringWidth = dress.healthRingWidth
-	// The portrait is cut to the whole disc and the health ring lies on its rim, over the art, the
-	// way cooldowns lays the time left on a round modifier: what the ring no longer reaches shows
-	// the portrait's own edge, as the game's buff icons do as they drain.
-	const portraitWidth = Math.max(size, Math.round(size * dress.portraitAspect))
-	state.portraitWidth = portraitWidth
-	state.portraitHeight = size
+	const ringWidth = dress.ringWidth
+	// The art is cut to the disc and the ring lies on its rim, over the art, the way cooldowns
+	// lays the time left on a round modifier. A portrait spans the whole disc; an objective's
+	// glyph stands inside it with room to breathe, clear of the ring.
+	const artHeight = Math.max(1, Math.round(size * dress.artScale))
+	const artWidth = Math.max(artHeight, Math.round(artHeight * dress.artAspect))
+	state.artWidth = artWidth
+	state.artHeight = artHeight
 	const backing = handle.Element("portraitBacking")!
 	MenuSDK.WritePx(backing, "left", -half)
 	MenuSDK.WritePx(backing, "top", -half)
@@ -201,25 +252,41 @@ function layout(
 	MenuSDK.WritePx(clip, "height", size)
 	MenuSDK.WriteStyle(clip, "mask-image", PORTRAIT_MASK)
 	const portrait = handle.Element("portrait")!
-	MenuSDK.WritePx(portrait, "left", Math.round((size - portraitWidth) / 2))
-	MenuSDK.WritePx(portrait, "top", 0)
-	MenuSDK.WritePx(portrait, "width", portraitWidth)
-	MenuSDK.WritePx(portrait, "height", size)
-	const reach = ringWidth / 2 + 1
-	if (!dress.showHealth) {
+	MenuSDK.WritePx(portrait, "left", Math.round((size - artWidth) / 2))
+	MenuSDK.WritePx(portrait, "top", Math.round((size - artHeight) / 2))
+	MenuSDK.WritePx(portrait, "width", artWidth)
+	MenuSDK.WritePx(portrait, "height", artHeight)
+	if (!dress.showRing) {
 		MenuSDK.WriteShown(handle.Element("health")!, false)
 	}
-	if (!MenuSDK.CapsulesShaderSupported) {
+	if (stripped(dress)) {
+		const reach = ringWidth / 2 + 1
 		for (let index = 0; index < ARC_STEPS; index++) {
 			const segment = handle.Element(ARC_NAMES[index])!
 			MenuSDK.WritePx(segment, "left", 0)
 			MenuSDK.WritePx(segment, "top", 0)
 			MenuSDK.WritePx(segment, "height", ringWidth + 2)
 			MenuSDK.WriteStyle(segment, "transform-origin", `1px ${reach}px`)
-			if (!dress.showHealth) {
+			if (!dress.showRing) {
 				MenuSDK.WriteShown(segment, false)
 			}
 		}
+	}
+	const badge = handle.Element("badge")
+	if (badge !== undefined) {
+		const badgeSize = dress.badgeSize
+		const at = Math.round(half * BADGE_REACH - badgeSize / 2)
+		MenuSDK.WritePx(badge, "left", at)
+		MenuSDK.WritePx(badge, "top", at)
+		MenuSDK.WritePx(badge, "width", badgeSize)
+		MenuSDK.WritePx(badge, "height", badgeSize)
+		MenuSDK.WritePx(badge, "font-size", dress.badgeFontSize)
+		MenuSDK.WritePx(badge, "line-height", dress.badgeLine)
+		MenuSDK.WriteStyle(badge, "font-family", dress.fontFamily)
+		MenuSDK.WriteFmt(badge, "font-weight", 700, "")
+		MenuSDK.WriteStyle(badge, "color", "#ffffff")
+		MenuSDK.WriteText(badge, "")
+		MenuSDK.WriteShown(badge, false)
 	}
 	const distance = handle.Element("distance")!
 	MenuSDK.WritePx(distance, "left", -Math.round(dress.distanceWidth / 2))
@@ -227,7 +294,7 @@ function layout(
 	MenuSDK.WritePx(distance, "width", dress.distanceWidth)
 	MenuSDK.WritePx(distance, "height", dress.distanceHeight)
 	MenuSDK.WritePx(distance, "font-size", dress.fontSize)
-	MenuSDK.WritePx(distance, "line-height", dress.distanceHeight)
+	MenuSDK.WritePx(distance, "line-height", dress.distanceLine)
 	MenuSDK.WriteStyle(distance, "font-family", dress.fontFamily)
 	MenuSDK.WriteFmt(distance, "font-weight", dress.fontWeight, "")
 	MenuSDK.WriteStyle(distance, "color", dress.textColor)
@@ -239,6 +306,31 @@ function layout(
 	MenuSDK.WritePx(pointer, "width", dress.arrowSize)
 	MenuSDK.WritePx(pointer, "height", dress.arrowSize)
 	MenuSDK.WriteShown(distance, dress.showDistance)
+}
+
+function updateBadge(
+	handle: MenuSDK.IWorldOverlayHandle,
+	dress: Readonly<IndicatorDress>,
+	frame: Readonly<IndicatorFrame>,
+	state: IndicatorState
+): void {
+	const badge = handle.Element("badge")
+	if (badge === undefined) {
+		return
+	}
+	if (state.badge !== frame.badge) {
+		MenuSDK.WriteText(badge, frame.badge)
+		MenuSDK.WriteShown(badge, frame.badge !== "")
+		state.badge = frame.badge
+	}
+	if (frame.badge !== "" && state.badgeRim !== frame.baseColor) {
+		MenuSDK.WriteStyle(
+			badge,
+			"decorator",
+			PillPaint(BADGE_FILL, frame.baseColor, dress.badgeSize / 2)
+		)
+		state.badgeRim = frame.baseColor
+	}
 }
 
 export function UpdateIndicator(
@@ -259,12 +351,14 @@ export function UpdateIndicator(
 		state = {
 			version: -1,
 			icon: "",
-			portraitWidth: 0,
-			portraitHeight: 0,
+			artWidth: 0,
+			artHeight: 0,
 			distance: "",
 			healthColor: "",
 			filled: -1,
 			accent: "",
+			badge: "",
+			badgeRim: "",
 			batch: MenuSDK.CapsulesShaderSupported
 				? new MenuSDK.CChainBatch()
 				: undefined,
@@ -280,6 +374,8 @@ export function UpdateIndicator(
 		state.accent = ""
 		state.healthColor = ""
 		state.filled = -1
+		state.badge = ""
+		state.badgeRim = ""
 	}
 	const accent = frame.warning ? frame.warningColor : frame.baseColor
 	if (state.accent !== accent) {
@@ -295,12 +391,7 @@ export function UpdateIndicator(
 	)
 	if (state.icon !== frame.icon) {
 		const portrait = handle.Element("portrait")!
-		MenuSDK.WriteSizedArt(
-			portrait,
-			frame.icon,
-			state.portraitWidth,
-			state.portraitHeight
-		)
+		MenuSDK.WriteSizedArt(portrait, frame.icon, state.artWidth, state.artHeight)
 		MenuSDK.WriteShown(portrait, frame.icon !== "")
 		state.icon = frame.icon
 	}
@@ -317,14 +408,14 @@ export function UpdateIndicator(
 			0
 		)
 	}
+	updateBadge(handle, dress, frame, state)
 	const filled = RingFilled(frame.health)
-	if (dress.showHealth) {
+	if (dress.showRing) {
 		const health = handle.Element("health")!
-		const ringWidth = dress.healthRingWidth
+		const ringWidth = dress.ringWidth
 		const changed = state.filled !== filled || state.healthColor !== frame.healthColor
 		if (filled >= RingDegrees) {
 			if (changed) {
-				// the sdf circle lays its border inside its edge, and wants a pixel of quad around it
 				const outer = dress.size / 2 + 1
 				MenuSDK.WritePx(health, "left", -outer)
 				MenuSDK.WritePx(health, "top", -outer)
@@ -335,7 +426,7 @@ export function UpdateIndicator(
 					"decorator",
 					RingPaint(frame.healthColor, ringWidth)
 				)
-				if (!MenuSDK.CapsulesShaderSupported) {
+				if (stripped(dress)) {
 					for (let index = 0; index < ARC_STEPS; index++) {
 						MenuSDK.WriteShown(handle.Element(ARC_NAMES[index])!, false)
 					}

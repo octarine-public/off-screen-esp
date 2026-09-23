@@ -8,7 +8,7 @@ import * as layout from "../src/lib/layout.ts"
 import * as ring from "../src/offscreen/ring.ts"
 
 const SIZE = 52
-const BAND = ring.RingBand(SIZE)
+const BAND = ring.RingBand(2, 1)
 /** The middle of the band: on the rim, the band lying inside the portrait's edge. */
 const RADIUS = (SIZE - BAND) / 2
 const STRIPS = 32
@@ -50,7 +50,7 @@ class Batch {
 	}
 }
 
-function fixture(capsules) {
+function fixture(capsules, objective = false) {
 	const MenuSDK = {
 		CapsulesShaderSupported: capsules,
 		ShaderSlotSegments: 40,
@@ -104,7 +104,7 @@ function fixture(capsules) {
 		Style() {}
 	}
 	// mounts the structure: a frame may only write to elements the structure declares
-	overlay.OffscreenIndicator({ handle })
+	overlay.OffscreenIndicator({ handle, objective })
 	const dress = {
 		version: 1,
 		size: SIZE,
@@ -112,12 +112,18 @@ function fixture(capsules) {
 		fontWeight: 600,
 		distanceOffset: 6,
 		arrowSize: 18,
-		healthRingWidth: BAND,
+		ringWidth: BAND,
 		distanceWidth: 50,
 		distanceHeight: 16,
-		portraitAspect: 16 / 9,
+		distanceLine: 18,
+		badgeLine: 22,
+		artAspect: objective ? 1 : 16 / 9,
+		artScale: objective ? 0.75 : 1,
+		badgeSize: 20,
+		badgeFontSize: 12,
 		showDistance: true,
-		showHealth: true,
+		showRing: true,
+		drain: !objective,
 		fontFamily: "Stratum2",
 		textColor: "#ffffff",
 		distanceEffect: "none"
@@ -137,6 +143,7 @@ function fixture(capsules) {
 		baseColor: "#ffffff",
 		warningColor: "#ffb840",
 		warning: false,
+		badge: "",
 		opacity: 1
 	}
 	return {
@@ -145,9 +152,12 @@ function fixture(capsules) {
 			assert.ok(element !== undefined, `no element ${name}`)
 			return element
 		},
-		draw(health, color = "#00ff00") {
+		has: name => elements.has(name),
+		draw(health, color = "#00ff00", badge = "") {
 			frame.health = health
 			frame.healthColor = color
+			frame.baseColor = color
+			frame.badge = badge
 			overlay.UpdateIndicator(handle, dress, frame)
 		}
 	}
@@ -186,6 +196,14 @@ test("the portrait fills the disc and a full ring is laid inside its edge", () =
 	// a pixel of quad each side, for the sdf circle's antialiased edge
 	assert.deepEqual(box(health), [-27, -27, 54, 54])
 	assert.equal(health.style.decorator, `circle(#00000000|${BAND}|#00ff00|1)`)
+	// nothing lies under the ring: where the health has gone the art stays bare
+	assert.equal(indicator.has("track"), false)
+	assert.equal(indicator.has("badge"), false)
+	// the reading stands in its box and is set on the line the face asks for
+	const distance = indicator.element("distance")
+	assert.equal(distance.style.height, 16)
+	assert.equal(distance.style["line-height"], 18)
+	assert.equal(distance.style["font-family"], "Stratum2")
 })
 
 test("with the capsules shader what is left runs the rim from its start round to twelve", () => {
@@ -248,4 +266,32 @@ test("without the shader the strips walk the rim from the start round to twelve"
 		onRim(tail)
 	}
 	near(tail, TWELVE)
+})
+
+test("an objective wears its glyph inside the disc, its ring whole and a badge for a count", () => {
+	for (const capsules of [true, false]) {
+		const indicator = fixture(capsules, true)
+		indicator.draw(1, "#ee96cd", "3")
+		assert.equal(indicator.has("track"), false)
+		assert.equal(indicator.has("arc0"), false)
+		const portrait = indicator.element("portrait")
+		// three quarters of the disc, centred: 39 across, 6.5 in from the edge
+		assert.deepEqual(portrait.art, ["hero", 39, 39])
+		assert.deepEqual(box(portrait), [7, 7, 39, 39])
+		const health = indicator.element("health")
+		assert.equal(health.shown, true)
+		assert.equal(health.style.decorator, `circle(#00000000|${BAND}|#ee96cd|1)`)
+		const badge = indicator.element("badge")
+		assert.equal(badge.shown, true)
+		assert.equal(badge.text, "3")
+		// its centre on the rim at half past four
+		const at = Math.round((SIZE / 2) * Math.SQRT1_2 - 10)
+		assert.deepEqual(box(badge), [at, at, 20, 20])
+		assert.equal(badge.style["line-height"], 22)
+		assert.equal(badge.style.decorator, "shape(10|#181b20f2|1|#ee96cd|1)")
+		indicator.draw(1, "#b084ff", "")
+		assert.equal(badge.shown, false)
+		assert.equal(health.style.decorator, `circle(#00000000|${BAND}|#b084ff|1)`)
+		assert.equal(indicator.element("pointer").style["image-color"], "#b084ff")
+	}
 })

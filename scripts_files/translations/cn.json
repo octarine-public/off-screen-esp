@@ -59,5 +59,20 @@
 	"Outline": "外框",
 	"Shadow": "陰影",
 	"Text shade color": "文字效果顏色",
-	"Text glow radius": "文字光暈半徑"
+	"Text glow radius": "文字光暈半徑",
+	"Objectives": "目標",
+	"Runes": "神符",
+	"Power, bounty and water runes the map knows of; one out of sight is drawn at the occluded opacity.": "地圖上已知的強化、賞金和水神符；視野外的神符以迷霧透明度顯示。",
+	"Rune types": "神符類型",
+	"Wisdom rune": "智慧神符",
+	"A shrine whose wisdom rune is ready to be taken.": "智慧神符可拾取的神殿。",
+	"Wisdom color": "智慧神符顏色",
+	"Lotus pools": "蓮花池",
+	"A pool holding lotuses, with how many it holds on the badge.": "有蓮花的蓮花池，徽章上顯示蓮花數量。",
+	"Lotus color": "蓮花顏色",
+	"Min lotuses": "最少蓮花數",
+	"Objective distance": "目標距離",
+	"Objective size": "目標大小",
+	"Ring width": "圓環粗細",
+	"How thick the ring round an indicator is drawn: the health of a hero, the colour of an objective.": "指示器外圈的粗細：英雄的生命值或目標的顏色。"
 }

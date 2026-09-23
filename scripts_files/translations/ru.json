@@ -59,5 +59,20 @@
 	"Outline": "Обводка",
 	"Shadow": "Тень",
 	"Text shade color": "Цвет эффекта текста",
-	"Text glow radius": "Радиус свечения текста"
+	"Text glow radius": "Радиус свечения текста",
+	"Objectives": "Объекты",
+	"Runes": "Руны",
+	"Power, bounty and water runes the map knows of; one out of sight is drawn at the occluded opacity.": "Руны усиления, богатства и воды, о которых известно на карте; руна вне видимости рисуется с прозрачностью тумана.",
+	"Rune types": "Типы рун",
+	"Wisdom rune": "Руна мудрости",
+	"A shrine whose wisdom rune is ready to be taken.": "Святилище, с которого можно забрать руну мудрости.",
+	"Wisdom color": "Цвет руны мудрости",
+	"Lotus pools": "Лотосовые пруды",
+	"A pool holding lotuses, with how many it holds on the badge.": "Пруд с лотосами; их количество показано на значке.",
+	"Lotus color": "Цвет лотосов",
+	"Min lotuses": "Минимум лотосов",
+	"Objective distance": "Дистанция объектов",
+	"Objective size": "Размер объектов",
+	"Ring width": "Толщина кольца",
+	"How thick the ring round an indicator is drawn: the health of a hero, the colour of an objective.": "Толщина кольца вокруг индикатора: здоровье героя или цвет объекта."
 }

@@ -4,6 +4,15 @@ const iconsPath = `${__OCT_PACKAGE_ROOT__}/scripts_files/images/icons`
 export const OffscreenIcons = {
 	Offscreen: `${iconsPath}/offscreen.svg`,
 	Enemies: `${iconsPath}/users.svg`,
+	Objectives: MenuSDK.MenuIcons.Sparkles,
+	/** A cut stone: the runes on the river and at the bounty spots. */
+	Runes: `${iconsPath}/gem.svg`,
+	/** The rune standing over the bowl of the shrine. */
+	Wisdom: `${iconsPath}/wisdom.svg`,
+	Lotus: `${iconsPath}/lotus.svg`,
+	/** Bars of rising height: how full a pool has to be to be shown. */
+	MinLotuses: MenuSDK.MenuIcons.LevelBars,
+	ObjectiveSize: MenuSDK.MenuIcons.Expand,
 	Layout: "menu/icons/sliders.svg",
 	Appearance: MenuSDK.MenuIcons.Palette,
 	/** A ruler: how far out the tracker reaches. */
@@ -23,6 +32,8 @@ export const OffscreenIcons = {
 	ShowDistance: `${iconsPath}/milestone.svg`,
 	DistancePosition: MenuSDK.MenuIcons.Move,
 	ShowHealth: MenuSDK.MenuIcons.Heart,
+	/** Two rims a band apart: how thick the ring round the portrait is drawn. */
+	RingWidth: `${iconsPath}/ring.svg`,
 	HiddenOpacity: ImageData.Icons.icon_close_cross_eye_hidden,
 	DistanceFade: MenuSDK.MenuIcons.Checkerboard,
 	/** A span between two arrowheads: the distance the fade runs over. */

@@ -24,12 +24,13 @@ const THREE = [1, 0]
 const SIX = [0, 1]
 const NINE = [-1, 0]
 
-test("the band is about a twelfth of the portrait and a pixel at least", () => {
-	assert.equal(RingBand(52), 4)
-	assert.equal(RingBand(36), 3)
-	assert.equal(RingBand(76), 6)
-	assert.equal(RingBand(24), 2)
-	assert.equal(RingBand(6), 1)
+test("the band is the width the menu asks for, scaled with the screen and a pixel at least", () => {
+	assert.equal(RingBand(2, 1), 2)
+	assert.equal(RingBand(6, 1), 6)
+	assert.equal(RingBand(2, 1440 / 1080), 3)
+	assert.equal(RingBand(3, 2160 / 1080), 6)
+	assert.equal(RingBand(1, 720 / 1080), 1)
+	assert.equal(RingBand(1, 0.1), 1)
 })
 
 test("what is left of the ring is whole degrees, a degree at least for any health at all", () => {

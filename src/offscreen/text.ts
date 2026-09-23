@@ -6,6 +6,19 @@ const FONT_NAMES = [
 	...FONT_FAMILIES.map(family => (family === "Stratum2" ? "Stratum 2" : family))
 ]
 const WEIGHTS = [400, 500, 600, 700]
+/**
+ * The face the distance is set in until the menu says otherwise: Radiance, the game's own, which
+ * the SDK loads out of the game's files and the top panel reads its timers in. A client without
+ * it falls back to the menu's own face.
+ */
+const GAME_FAMILY = "Radiance"
+/**
+ * How high above the middle of its line a face stands its digits, as a share of the size. A line
+ * box is centred on the face's ascender and descender, not on the glyphs: Radiance carries `hhea`
+ * 857/-344 against a cap of 672 per 1000 em, so its digits sit high by half the difference less
+ * half the cap height. The faces the menu ships are cut evenly enough to centre on their own.
+ */
+const CAP_SHIFTS = new Map<string, number>([[GAME_FAMILY, (672 - (857 - 344)) / 2000]])
 
 const enum ETextShade {
 	None,
@@ -33,7 +46,11 @@ export class TextSettings {
 		const node = parent.AddSettings("Text settings", OffscreenIcons.Text)
 		node.SortNodes = false
 		this.Node = node
-		this.Font = node.AddDropdown("Font", FONT_NAMES, 0)
+		this.Font = node.AddDropdown(
+			"Font",
+			FONT_NAMES,
+			FONT_FAMILIES.indexOf(GAME_FAMILY) + 1
+		)
 		this.Font.IconPath = OffscreenIcons.Font
 		this.FontSize = node.AddSlider("Font size", 11, 9, 24)
 		this.FontSize.IconPath = OffscreenIcons.FontSize
@@ -84,6 +101,11 @@ export class TextSettings {
 
 	public FontWeight(): number {
 		return WEIGHTS[this.Weight.SelectedID] ?? 600
+	}
+
+	/** The share of its size a reading in the chosen face is let down by to sit on its box's middle. */
+	public CapShift(): number {
+		return CAP_SHIFTS.get(this.FontFamily()) ?? 0
 	}
 
 	public Effect(): string {

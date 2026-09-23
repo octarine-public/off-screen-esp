@@ -78,6 +78,24 @@ test("handles multiple promotions, new targets, removal and reset", () => {
 	assert.deepEqual(keys(priority.Update([])), [])
 })
 
+/** Runs one module of the indicators with the imports and globals it is handed. */
+function transpiled(name, { imports = {}, ...globals }) {
+	const source = readFileSync(new URL(`../src/offscreen/${name}`, import.meta.url), "utf8")
+	const compiled = ts.transpileModule(source, {
+		compilerOptions: { module: ts.ModuleKind.CommonJS }
+	}).outputText
+	const exports = {}
+	runInNewContext(compiled, {
+		...globals,
+		exports,
+		require: module => {
+			assert.ok(module in imports, `unexpected import: ${module}`)
+			return imports[module]
+		}
+	})
+	return exports
+}
+
 function trackedStore() {
 	let now = 1000
 	class Unit {
@@ -97,26 +115,20 @@ function trackedStore() {
 	}
 	class Hero extends Unit {}
 	class SpiritBear extends Unit {}
-	const source = readFileSync(
-		new URL("../src/offscreen/store.ts", import.meta.url),
-		"utf8"
-	)
-	const compiled = ts.transpileModule(source, {
-		compilerOptions: { module: ts.ModuleKind.CommonJS }
-	}).outputText
-	const exports = {}
-	runInNewContext(compiled, {
-		exports,
-		require: () => ({
-			CIndicatorPriority,
-			EVisibilityFilter: { All: 0, VisibleOnly: 1, HiddenOnly: 2 }
-		}),
+	const target = transpiled("target.ts", {})
+	const exports = transpiled("store.ts", {
 		Hero,
 		SpiritBear,
-		hrtime: () => now
+		hrtime: () => now,
+		imports: {
+			"./menu": { EVisibilityFilter: { All: 0, VisibleOnly: 1, HiddenOnly: 2 } },
+			"./priority": { CIndicatorPriority },
+			"./target": target
+		}
 	})
 	return {
 		store: exports,
+		target,
 		hero: (index, distance) => new Hero(index, distance),
 		bear: (index, distance) => new SpiritBear(index, distance),
 		unit: (index, distance) => new Unit(index, distance),
@@ -179,5 +191,5 @@ test("tracks heroes and spirit bears, skips illusions and honours the visibility
 	assert.deepEqual(keys(fixture.refresh(6, 0)), [1, 2])
 	fixture.store.UntrackEntity(hero)
 	assert.deepEqual(keys(fixture.refresh(6, 0)), [2])
-	assert.equal(fixture.store.DistanceText(fixture.refresh(6, 0)[0], 1234 ** 2), "1234")
+	assert.equal(fixture.target.DistanceText(fixture.refresh(6, 0)[0], 1234 ** 2), "1234")
 })
