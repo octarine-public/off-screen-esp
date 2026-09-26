@@ -22,16 +22,16 @@ declare class CNotificationsSDK {
 	/**
 	 * Shows a notification on its channel. On the side it is menu-sdk's card, and the id that
 	 * comes back dismisses it through `MenuSDK.Notifications.Dismiss`. In the chat it is one
-	 * line - `(Octarine): [icon] title: message[icon]` - with the title in the accent color and
-	 * the game's own textures as inline icons, and there is nothing to return. The chat is only
-	 * there in a match, so outside one the card is shown instead.
+	 * line - `(Octarine): [portrait] title: message[badge][icon]` - with the title in the accent
+	 * color and the game's own textures as inline icons, and there is nothing to return. The chat
+	 * is only there in a match, so outside one the card is shown instead.
 	 *
 	 * @example
 	 * NotificationsSDK.Show({
 	 *     title: Menu.Localization.Localize(hero.Name),
 	 *     message: Menu.Localization.Localize("Purchased an item"),
-	 *     titleIcon: hero.TexturePath,
-	 *     messageIcon: item.TexturePath,
+	 *     portrait: hero.TexturePath,
+	 *     badge: item.TexturePath,
 	 *     color: hero.Color
 	 * })
 	 */

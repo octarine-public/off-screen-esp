@@ -9,7 +9,8 @@ declare namespace MenuSDK {
 		 * An ellipse shades from `color` inside `fade` of its radius to `edgeColor` at its rim, and
 		 * the quad's corners past the rim stay clear, so a vignette is one fill and a soft halo
 		 * another; left out, the fill runs whole to an antialiased edge and `edgeColor` is nothing.
-		 * `ellipse` only.
+		 * A plain quad holds `color` over `fade` of its width and melts to clear at its right edge,
+		 * the wash a strip of art stands on, with its `radius` carved by the sdf mask. Not with `sdf`.
 		 */
 		fade?: number
 		edgeColor?: number
@@ -126,8 +127,7 @@ declare namespace MenuSDK {
 		/**
 		 * Corner radius in px, half the size for a round portrait. Carved by the sdf mask, so the
 		 * corner carries per-pixel coverage rather than the stair steps a raster clip leaves at the
-		 * menu's default 0 samples. A {@link IHudImage.fade} owns the mask instead, and rounds the
-		 * element.
+		 * menu's default 0 samples, with a {@link IHudImage.fade} or without one.
 		 */
 		radius?: number
 		/** Degrees clockwise about the image's own centre, for a glyph that carries a bearing. */
@@ -138,7 +138,8 @@ declare namespace MenuSDK {
 		fit?: "cover" | "stretch"
 		/**
 		 * Fraction of the width from which the art melts away towards its right edge, for a cover
-		 * standing on a card it has to become part of. A mask, so it composes with the radius.
+		 * standing on a card it has to become part of. A mask on the element around the rounded one,
+		 * so the two multiply and the corners keep their sdf edge.
 		 */
 		fade?: number
 		/** Sprite source rectangle in source pixels. */

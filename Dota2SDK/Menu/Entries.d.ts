@@ -351,6 +351,12 @@ declare namespace MenuSDK {
 		 * the game's own - a scoreboard on Tab - turns it off, and both act on the same press.
 		 */
 		claimsKey: boolean
+		/**
+		 * Whether the press that made the bind active was taken from the game. Auto-repeats of that
+		 * key and its release are then taken too: the game never saw the key go down, so it must not
+		 * see it held or come up either, or it would keep the key pressed until the window loses focus.
+		 */
+		claimed: boolean
 		allowLeftMouse: boolean
 		allowCombinations: boolean
 		listeners: ((entry: KeybindEntry) => void)[]
