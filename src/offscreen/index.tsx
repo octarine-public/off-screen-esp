@@ -8,18 +8,20 @@ import { CIndicatorGeometry } from "./geometry"
 import { PlaceLabel } from "./label"
 import {
 	EColorMode,
+	EHideAnimation,
 	EImageType,
 	ELabelPosition,
-	EOverlapMode,
 	EVisibilityFilter,
 	OffscreenConfig as menu
 } from "./menu"
 import {
 	ActiveObjectives,
 	ClearObjectives,
+	LieTogether,
 	ObjectiveColor,
 	ObjectiveFilter,
 	ObjectiveIcon,
+	RuneStackGroup,
 	SeedObjectives,
 	TrackedObjective,
 	TrackObjective,
@@ -34,9 +36,11 @@ import {
 } from "./overlay"
 import { CIndicatorPriority } from "./priority"
 import { RingBand } from "./ring"
+import { CIndicatorStacks, SeePiles } from "./stack"
 import {
 	ActiveHeroes,
 	ClearActive,
+	IsSighted,
 	IsTarget,
 	PassesVisibility,
 	SeedEntities,
@@ -45,30 +49,36 @@ import {
 	UntrackEntity
 } from "./store"
 import { DistanceText, ETargetKind } from "./target"
+import { CCameraView } from "./view"
 
 type Target = TrackedHero | TrackedObjective
 
 const screen: [number, number] = [0, 0]
 const feet: [number, number] = [0, 0]
-const direction: [number, number, number] = [0, 0, 0]
+const direction: [number, number] = [0, 0]
 const point: [number, number] = [0, 0]
 const labelPoint: [number, number] = [0, 0]
 const geometry = new CIndicatorGeometry()
+const view = new CCameraView()
 const combined: Target[] = []
 const retained: Target[] = []
 const priority = new CIndicatorPriority<Target>()
 const collision = new CIndicatorCollision()
-const screenCenter = new Vector2()
+const stacks = new CIndicatorStacks<Target>()
 const hudProbe = new Vector2()
 const TARGET_HEIGHT = 120
 /** How high over its origin an objective is aimed at: a rune floats, a pool and a shrine are low. */
 const OBJECTIVE_HEIGHT = 50
 const FADE_IN_MS = 130
 const FADE_OUT_MS = 220
+/** How far out of focus an indicator fading out of focus stands as it goes, as a share of its size. */
+const HIDE_BLUR = 0.12
 const PORTRAIT_ASPECT = 16 / 9
 /** The share of an objective's disc its glyph spans, clear of the ring. */
 const OBJECTIVE_ART = 0.74
-/** The lotus counts on the badge, a pool holding at most a handful. */
+const DEG_TO_RAD = Math.PI / 180
+const RAD_TO_DEG = 180 / Math.PI
+/** The counts on the badge: a pool's lotuses, or the runes a stack stands for. */
 const COUNTS = Array.from({ length: 10 }, (_, index) => (index > 0 ? String(index) : ""))
 
 let items: readonly Target[] = combined
@@ -85,6 +95,7 @@ let lotusColor = ""
 let fadeFloor = 1
 let fadeRange = 1
 let occludedFactor = 1
+let hideAnimation = EHideAnimation.Fade
 let riseStep = 1
 let fallStep = 1
 let frameAt = 0
@@ -113,6 +124,7 @@ function newDress(): IndicatorDress {
 		showDistance: true,
 		showRing: true,
 		drain: true,
+		blur: 0,
 		fontFamily: "",
 		textColor: "",
 		distanceEffect: ""
@@ -140,7 +152,8 @@ const frame: IndicatorFrame = {
 	warningColor: "",
 	warning: false,
 	badge: "",
-	opacity: 1
+	opacity: 1,
+	veil: 0
 }
 
 const objectiveFilter: ObjectiveFilter = {
@@ -188,12 +201,6 @@ function ramp(current: number, target: number): number {
 	return current + (gap > 0 ? step : -step)
 }
 
-function focusPoint(): Vector3 {
-	screenCenter.x = MenuSDK.ViewportWidth() / 2
-	screenCenter.y = MenuSDK.ViewportHeight() / 2
-	return RendererSDK.ScreenToWorld(screenCenter)
-}
-
 function readObjectiveFilter(): ObjectiveFilter {
 	objectiveFilter.runes = menu.Runes.value
 	objectiveFilter.wisdom = menu.Wisdom.value
@@ -220,7 +227,11 @@ function activeItems(): readonly Target[] {
 		return items
 	}
 	frameStamp++
-	origin = focusPoint()
+	const width = MenuSDK.ViewportWidth()
+	const height = MenuSDK.ViewportHeight()
+	Source2SDK.Projection.BeginFrame(width, height)
+	view.Begin(width, height)
+	origin = view.Focus
 	const nearHeroes = ActiveHeroes(
 		origin,
 		menu.Distance.value,
@@ -280,6 +291,7 @@ function cut(
 	dress.showDistance = styleShowDistance
 	dress.showRing = showRing
 	dress.drain = drain
+	dress.blur = size * HIDE_BLUR
 	dress.fontFamily = styleFontFamily
 	dress.textColor = styleTextColor
 	dress.distanceEffect = styleDistanceEffect
@@ -365,10 +377,10 @@ function begin(): boolean {
 	fadeFloor = menu.DistanceFade.value / 100
 	fadeRange = Math.max(1, menu.FadeDistance.value)
 	occludedFactor = menu.HiddenOpacity.value / 100
+	hideAnimation = menu.HideAnimation.SelectedID
 	maxDistanceSqr = menu.Distance.value * menu.Distance.value
 	warningDistanceSqr = menu.WarningDistance.value * menu.WarningDistance.value
 	visibility = menu.Visibility.SelectedID
-	Source2SDK.Projection.BeginFrame(width, height)
 	const reserve = Math.max(menu.EdgeInset.value * scale, size * 0.92)
 	geometry.Begin(
 		width,
@@ -378,9 +390,18 @@ function begin(): boolean {
 		menu.FocusRadius.value / 100,
 		menu.CircleFocus.value
 	)
-	const collide = menu.Overlap.SelectedID === EOverlapMode.Collision
 	for (const entry of items) {
-		const visible = prepare(entry)
+		aim(entry)
+	}
+	SeePiles(items, stackGroup, LieTogether)
+	if (menu.StackRunes.value) {
+		stacks.Update(items, stackGroup, menu.StackAngle.value * DEG_TO_RAD)
+	} else {
+		stacks.Clear(items)
+	}
+	const collide = menu.Collision.value
+	for (const entry of items) {
+		const visible = settle(entry)
 		if (!collide || !visible) {
 			entry.collisionOffset = 0
 			continue
@@ -398,12 +419,21 @@ function begin(): boolean {
 	}
 	if (collide) {
 		collision.Update(items, geometry, frameElapsed, width, height)
+		for (const entry of items) {
+			if (entry.alpha > 0 && entry.collisionOffset !== 0) {
+				pointAt(entry)
+			}
+		}
 	}
 	return true
 }
 
 function dressOf(entry: Target): IndicatorDress {
 	return entry.kind === ETargetKind.Hero ? heroDress : objectiveDress
+}
+
+function stackGroup(entry: Target): number {
+	return entry.kind === ETargetKind.Hero ? -1 : RuneStackGroup(entry)
 }
 
 function healthColor(health: number): string {
@@ -447,16 +477,24 @@ function sightFactor(entry: Target, visible: boolean): number {
 function heroWanted(unit: Unit, distanceSqr: number, visible: boolean): boolean {
 	return (
 		IsTarget(unit) &&
+		IsSighted(unit) &&
 		distanceSqr <= maxDistanceSqr &&
 		PassesVisibility(visible, visibility)
 	)
 }
 
-function prepare(entry: Target): boolean {
+/**
+ * Aims an indicator at its target, measures how far out of view the target lies, and sets the
+ * opacity it heads for this frame, which its pile and the stacks may still take away. One that
+ * cannot be aimed at all is put out at once.
+ */
+function aim(entry: Target): void {
 	const entity = entry.entity
 	if (!entity.IsValid || origin === undefined) {
 		entry.alpha = 0
-		return false
+		entry.goal = 0
+		entry.inView = false
+		return
 	}
 	const hero = entry.kind === ETargetKind.Hero
 	const distanceSqr = (hero ? entity.NetworkedPosition : entity.Position).DistanceSqr2D(
@@ -480,16 +518,21 @@ function prepare(entry: Target): boolean {
 	const onFrame =
 		(headProjected && onScreen(screen[0], screen[1])) ||
 		(feetProjected && onScreen(feet[0], feet[1]))
+	entry.inView = onFrame
+	entry.projected = headProjected
+	entry.screenX = screen[0]
+	entry.screenY = screen[1]
+	entry.edgeDistance = view.Distance(position.x, position.y, position.z)
 	const aimed = headProjected
 		? geometry.DirectionFromScreen(screen[0], screen[1], direction)
 		: geometry.Direction(position.x, position.y, targetZ, direction)
 	if (aimed) {
 		entry.directionX = direction[0]
 		entry.directionY = direction[1]
-		entry.angle = direction[2]
 	} else if (entry.directionX === 0 && entry.directionY === 0) {
 		entry.alpha = 0
-		return false
+		entry.goal = 0
+		return
 	}
 	const visible = entity.IsVisible
 	const wanted =
@@ -497,21 +540,76 @@ function prepare(entry: Target): boolean {
 		aimed &&
 		!onFrame &&
 		(!hero || heroWanted(entry.entity, distanceSqr, visible))
-	const target = wanted ? fadeOpacity(distanceSqr) * sightFactor(entry, visible) : 0
+	entry.goal = wanted ? fadeOpacity(distanceSqr) * sightFactor(entry, visible) : 0
 	entry.warning =
 		hero && wanted && menu.NearbyWarning.value && distanceSqr <= warningDistanceSqr
-	entry.alpha = ramp(entry.alpha, target)
+}
+
+/**
+ * Fades an indicator towards its goal and places it, saying whether it is drawn at all. One on
+ * its way out goes the way the menu asks: at once, or fading, out of focus as well if so.
+ */
+function settle(entry: Target): boolean {
+	const going = entry.goal <= 0
+	entry.alpha =
+		going && hideAnimation === EHideAnimation.Instant
+			? 0
+			: ramp(entry.alpha, entry.goal)
+	entry.veil = veil(entry, going)
 	if (entry.alpha <= 0) {
 		return false
 	}
 	geometry.Place(entry.directionX, entry.directionY, point)
 	entry.x = point[0]
 	entry.y = point[1]
-	const dress = dressOf(entry)
-	if (dress.showDistance) {
-		placeLabel(entry, dress, distanceSqr)
-	}
+	pointAt(entry)
 	return true
+}
+
+/**
+ * How far out of focus an indicator stands, 0 to 1. On its way out it loses focus by the share of
+ * its opacity it has lost since it began to go; brought back midway, it clears as it rises to
+ * where it is headed and never blurs past where it stood. One coming in afresh stays sharp, and
+ * so does every indicator while the menu asks for no blur.
+ */
+function veil(entry: Target, going: boolean): number {
+	if (entry.alpha <= 0 || hideAnimation !== EHideAnimation.FadeBlur) {
+		entry.veilFrom = entry.alpha
+		return 0
+	}
+	if (going) {
+		return 1 - entry.alpha / entry.veilFrom
+	}
+	const left = Math.min(entry.veil, Math.max(0, 1 - entry.alpha / entry.goal))
+	entry.veilFrom = entry.alpha / (1 - left)
+	return left
+}
+
+/**
+ * Turns the arrow from where the indicator stands onto the target itself, so the line it draws
+ * runs through it wherever the indicator was pushed to, and sets the distance across from it. A
+ * target behind the camera, or one under the disc, is pointed at along its way from the middle
+ * of the screen instead.
+ */
+function pointAt(entry: Target): void {
+	const dress = dressOf(entry)
+	let x = entry.directionX
+	let y = entry.directionY
+	if (entry.projected) {
+		const dx = entry.screenX - entry.x
+		const dy = entry.screenY - entry.y
+		const length = Math.sqrt(dx * dx + dy * dy)
+		if (length > dress.size / 2) {
+			x = dx / length
+			y = dy / length
+		}
+	}
+	entry.pointerX = x
+	entry.pointerY = y
+	entry.angle = Math.atan2(y, x) * RAD_TO_DEG
+	if (dress.showDistance) {
+		placeLabel(entry, dress)
+	}
 }
 
 /**
@@ -519,8 +617,8 @@ function prepare(entry: Target): boolean {
  * keeps the answer per string, and placed every frame, since the arrow it keeps clear of turns
  * with the target.
  */
-function placeLabel(entry: Target, dress: IndicatorDress, distanceSqr: number): void {
-	const text = DistanceText(entry, distanceSqr)
+function placeLabel(entry: Target, dress: IndicatorDress): void {
+	const text = DistanceText(entry, entry.edgeDistance)
 	if (entry.labelText !== text || entry.labelVersion !== dress.version) {
 		entry.labelText = text
 		entry.labelVersion = dress.version
@@ -533,8 +631,8 @@ function placeLabel(entry: Target, dress: IndicatorDress, distanceSqr: number): 
 	}
 	PlaceLabel(
 		labelPosition,
-		entry.directionX,
-		entry.directionY,
+		entry.pointerX,
+		entry.pointerY,
 		dress.size / 2,
 		dress.distanceOffset,
 		entry.labelWidth,
@@ -556,14 +654,15 @@ function heroIcon(entry: TrackedHero): string {
 function placeFrame(entry: Target): void {
 	frame.x = entry.x
 	frame.y = entry.y
-	frame.directionX = entry.directionX
-	frame.directionY = entry.directionY
+	frame.directionX = entry.pointerX
+	frame.directionY = entry.pointerY
 	frame.angle = entry.angle
 	frame.distance = dressOf(entry).showDistance ? entry.distanceText : ""
 	frame.labelX = entry.labelX
 	frame.labelY = entry.labelY
 	frame.warning = entry.warning
 	frame.opacity = entry.alpha
+	frame.veil = entry.veil
 }
 
 function updateHero(entry: TrackedHero, handle: MenuSDK.IWorldOverlayHandle): void {
@@ -589,9 +688,10 @@ function updateObjective(
 	frame.health = 1
 	frame.healthColor = accent
 	frame.baseColor = accent
+	const count = entry.kind === ETargetKind.Lotus ? entry.count : entry.stack
 	frame.badge =
-		entry.kind === ETargetKind.Lotus
-			? (COUNTS[entry.count] ?? String(entry.count))
+		entry.kind === ETargetKind.Lotus || count > 1
+			? (COUNTS[count] ?? String(count))
 			: ""
 	UpdateIndicator(handle, objectiveDress, frame)
 }

@@ -26,6 +26,15 @@ export function IsTarget(unit: Unit): boolean {
 	return unit.IsValid && unit.IsAlive && unit.IsEnemy() && !unit.IsIllusion
 }
 
+/**
+ * Whether where a unit stands is known: seen, or out of sight with a last position still marked
+ * on the map. The maphack marks one as the unit leaves sight or gives itself away in the fog, and
+ * moves the unit onto it; once the mark runs out, where the unit stands is only a guess.
+ */
+export function IsSighted(unit: Unit): boolean {
+	return unit.IsVisible || unit.IsFogVisible
+}
+
 export function PassesVisibility(visible: boolean, filter: EVisibilityFilter): boolean {
 	return (
 		filter === EVisibilityFilter.All ||
@@ -96,7 +105,11 @@ export function ActiveHeroes(
 	for (const entry of heroes) {
 		entry.selected = false
 		const unit = entry.entity
-		if (!IsTarget(unit) || !PassesVisibility(unit.IsVisible, filter)) {
+		if (
+			!IsTarget(unit) ||
+			!IsSighted(unit) ||
+			!PassesVisibility(unit.IsVisible, filter)
+		) {
 			continue
 		}
 		entry.distanceSqr = unit.NetworkedPosition.DistanceSqr2D(origin)

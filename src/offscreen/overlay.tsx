@@ -20,6 +20,28 @@ const PORTRAIT_MASK = MenuSDK.SdfCircle("#ffffff").decorator ?? "none"
 const BADGE_FILL = "#181b20f2"
 /** Where the badge's centre stands on the rim: down and to the right, at half past four. */
 const BADGE_REACH = Math.SQRT1_2
+/**
+ * The blur an indicator going out of focus wears, in half-pixel steps; none at all while it is
+ * sharp, since a blur of zero still composites an element into a layer of its own. It stops at
+ * 16px: a blur costs the renderer a pass of its own, and a wider one a heavier pass.
+ */
+const BLUR = Array.from({ length: 33 }, (_, index) =>
+	index > 0 ? `blur(${index / 2}px)` : "none"
+)
+/**
+ * The elements under the anchor, which the blur is written onto one by one: a filter's region is
+ * the box it is written on, and the anchor's is a single pixel, so written there it would cut the
+ * whole indicator away.
+ */
+const LAYERS = [
+	"portraitBacking",
+	"portraitClip",
+	"health",
+	"badge",
+	"distance",
+	"pointer",
+	...ARC_NAMES
+]
 
 export interface IndicatorDress {
 	version: number
@@ -50,6 +72,8 @@ export interface IndicatorDress {
 	 * maphack's teleport timer runs out, or stands whole in the accent.
 	 */
 	drain: boolean
+	/** How far out of focus the indicator stands once it is all but gone, in pixels. */
+	blur: number
 	fontFamily: string
 	textColor: string
 	distanceEffect: string
@@ -58,6 +82,7 @@ export interface IndicatorDress {
 export interface IndicatorFrame {
 	x: number
 	y: number
+	/** The way the arrow points from the indicator, and its turn in degrees. */
 	directionX: number
 	directionY: number
 	angle: number
@@ -74,6 +99,8 @@ export interface IndicatorFrame {
 	/** The reading on the badge; empty leaves the badge off. */
 	badge: string
 	opacity: number
+	/** How far out of focus the indicator stands, as a share of the dress's blur: 0 sharp. */
+	veil: number
 }
 
 interface IndicatorState {
@@ -90,6 +117,8 @@ interface IndicatorState {
 	badgeRim: string
 	batch: Nullable<MenuSDK.CChainBatch>
 	stroke: { color: string; thickness: number }
+	/** The step of {@link BLUR} the elements wear. */
+	blur: number
 }
 
 const states = new WeakMap<MenuSDK.IWorldOverlayHandle, IndicatorState>()
@@ -117,6 +146,7 @@ function portraitRef(
 				const state = states.get(handle)
 				if (state !== undefined) {
 					state.icon = ""
+					state.blur = 0
 				}
 			}
 			store(element)
@@ -362,7 +392,8 @@ export function UpdateIndicator(
 			batch: MenuSDK.CapsulesShaderSupported
 				? new MenuSDK.CChainBatch()
 				: undefined,
-			stroke: { color: "", thickness: 0 }
+			stroke: { color: "", thickness: 0 },
+			blur: 0
 		}
 		states.set(handle, state)
 	}
@@ -500,4 +531,14 @@ export function UpdateIndicator(
 		state.healthColor = frame.healthColor
 	}
 	MenuSDK.WriteStyle(anchor, "opacity", OPACITY[Math.round(frame.opacity * 50)])
+	const blur = Math.min(Math.round(frame.veil * dress.blur * 2), BLUR.length - 1)
+	if (state.blur !== blur) {
+		for (const name of LAYERS) {
+			const element = handle.Element(name)
+			if (element !== undefined) {
+				MenuSDK.WriteStyle(element, "filter", BLUR[blur])
+			}
+		}
+		state.blur = blur
+	}
 }

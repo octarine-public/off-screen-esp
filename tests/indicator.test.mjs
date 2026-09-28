@@ -124,6 +124,7 @@ function fixture(capsules, objective = false) {
 		showDistance: true,
 		showRing: true,
 		drain: !objective,
+		blur: 6,
 		fontFamily: "Stratum2",
 		textColor: "#ffffff",
 		distanceEffect: "none"
@@ -144,7 +145,8 @@ function fixture(capsules, objective = false) {
 		warningColor: "#ffb840",
 		warning: false,
 		badge: "",
-		opacity: 1
+		opacity: 1,
+		veil: 0
 	}
 	return {
 		element(name) {
@@ -158,6 +160,11 @@ function fixture(capsules, objective = false) {
 			frame.healthColor = color
 			frame.baseColor = color
 			frame.badge = badge
+			overlay.UpdateIndicator(handle, dress, frame)
+		},
+		veil(veil, blur = 6) {
+			frame.veil = veil
+			dress.blur = blur
 			overlay.UpdateIndicator(handle, dress, frame)
 		}
 	}
@@ -293,5 +300,45 @@ test("an objective wears its glyph inside the disc, its ring whole and a badge f
 		assert.equal(badge.shown, false)
 		assert.equal(health.style.decorator, `circle(#00000000|${BAND}|#b084ff|1)`)
 		assert.equal(indicator.element("pointer").style["image-color"], "#b084ff")
+	}
+})
+
+test("going out of focus blurs every part under the anchor, never the anchor, and clears after", () => {
+	for (const [capsules, objective] of [
+		[true, false],
+		[false, false],
+		[true, true]
+	]) {
+		const indicator = fixture(capsules, objective)
+		indicator.draw(1, "#ee96cd", objective ? "3" : "")
+		const parts = ["portraitBacking", "portraitClip", "health", "distance", "pointer"]
+		if (objective) {
+			parts.push("badge")
+		} else if (!capsules) {
+			parts.push("arc0", "arc31")
+		}
+		// a sharp indicator wears no filter at all: one of zero still costs a layer
+		for (const name of parts) {
+			assert.equal(indicator.element(name).style.filter, undefined)
+		}
+		// half the way out of a 6px blur, in half-pixel steps
+		indicator.veil(0.5)
+		for (const name of parts) {
+			assert.equal(indicator.element(name).style.filter, "blur(3px)")
+		}
+		assert.equal(indicator.element("anchor").style.filter, undefined)
+		// a frame at the same step writes nothing again
+		indicator.element("pointer").style.filter = "kept"
+		indicator.veil(0.49)
+		assert.equal(indicator.element("pointer").style.filter, "kept")
+		indicator.veil(0.26)
+		assert.equal(indicator.element("health").style.filter, "blur(1.5px)")
+		// a blur past 16px stops there
+		indicator.veil(1, 40)
+		assert.equal(indicator.element("portraitClip").style.filter, "blur(16px)")
+		indicator.veil(0)
+		for (const name of parts) {
+			assert.equal(indicator.element(name).style.filter, "none")
+		}
 	}
 })

@@ -1,8 +1,12 @@
 export interface CollisionItem {
 	readonly key: number
 	alpha: number
+	/** The way from the middle of the screen to the target, which places the indicator on its path. */
 	directionX: number
 	directionY: number
+	/** The way the arrow points from where the indicator stands. */
+	pointerX: number
+	pointerY: number
 	x: number
 	y: number
 	collisionOffset: number
@@ -38,8 +42,8 @@ export function SetCollisionBounds(
 	const half = size / 2
 	const arrowOffset = half + arrowSize * 0.42 + 4
 	const arrowRadius = arrowSize / Math.SQRT2
-	const arrowX = entry.directionX * arrowOffset
-	const arrowY = entry.directionY * arrowOffset
+	const arrowX = entry.pointerX * arrowOffset
+	const arrowY = entry.pointerY * arrowOffset
 	const labeled = labelWidth > 0
 	const labelHalfWidth = labelWidth / 2
 	const labelHalfHeight = labelHeight / 2

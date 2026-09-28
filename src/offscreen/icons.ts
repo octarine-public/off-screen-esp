@@ -7,6 +7,10 @@ export const OffscreenIcons = {
 	Objectives: MenuSDK.MenuIcons.Sparkles,
 	/** A cut stone: the runes on the river and at the bounty spots. */
 	Runes: `${iconsPath}/gem.svg`,
+	/** Sheets lying one on another: runes sharing one indicator. */
+	StackRunes: `${iconsPath}/layers.svg`,
+	/** Two rays and the arc between them: how far apart runes may point and still share one. */
+	StackAngle: `${iconsPath}/angle.svg`,
 	/** The rune standing over the bowl of the shrine. */
 	Wisdom: `${iconsPath}/wisdom.svg`,
 	Lotus: `${iconsPath}/lotus.svg`,
@@ -21,7 +25,8 @@ export const OffscreenIcons = {
 	Visibility: MenuSDK.MenuIcons.IconEye,
 	/** The corners of the screen the indicators sit against. */
 	Placement: MenuSDK.MenuIcons.Scan,
-	Overlap: MenuSDK.MenuIcons.SquareStack,
+	/** Cards pushed off one another: indicators kept from standing on each other. */
+	Collision: MenuSDK.MenuIcons.SquareStack,
 	EdgeInset: MenuSDK.MenuIcons.DoubleContour,
 	FocusRadius: MenuSDK.MenuIcons.Radius,
 	/** A ring around the hero's dot. */
@@ -38,6 +43,7 @@ export const OffscreenIcons = {
 	DistanceFade: MenuSDK.MenuIcons.Checkerboard,
 	/** A span between two arrowheads: the distance the fade runs over. */
 	FadeDistance: `${iconsPath}/move-horizontal.svg`,
+	HideAnimation: MenuSDK.MenuIcons.Animation,
 	ColorMode: MenuSDK.MenuIcons.IconColorPickerPaintPalette,
 	NearbyWarning: MenuSDK.MenuIcons.IconAlert,
 	/** A radar sweep: the range around the hero that raises the warning. */

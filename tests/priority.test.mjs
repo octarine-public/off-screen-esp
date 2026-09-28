@@ -106,6 +106,7 @@ function trackedStore() {
 			this.IsValid = true
 			this.IsAlive = true
 			this.IsVisible = true
+			this.IsFogVisible = false
 			this.IsIllusion = false
 			this.NetworkedPosition = { DistanceSqr2D: () => this.distance ** 2 }
 		}
@@ -186,10 +187,26 @@ test("tracks heroes and spirit bears, skips illusions and honours the visibility
 	}
 	assert.deepEqual(keys(fixture.refresh(6)), [1, 2])
 	bear.IsVisible = false
+	bear.IsFogVisible = true
 	assert.deepEqual(keys(fixture.refresh(6, 1)), [1])
 	assert.deepEqual(keys(fixture.refresh(6, 2)), [2])
 	assert.deepEqual(keys(fixture.refresh(6, 0)), [1, 2])
 	fixture.store.UntrackEntity(hero)
 	assert.deepEqual(keys(fixture.refresh(6, 0)), [2])
-	assert.equal(fixture.target.DistanceText(fixture.refresh(6, 0)[0], 1234 ** 2), "1234")
+	assert.equal(fixture.target.DistanceText(fixture.refresh(6, 0)[0], 1233.6), "1234")
+})
+
+test("a hidden enemy stays only while its last position stays marked", () => {
+	const fixture = trackedStore()
+	const hero = fixture.hero(1, 1000)
+	fixture.store.TrackEntity(hero)
+	hero.IsVisible = false
+	hero.IsFogVisible = true
+	assert.deepEqual(keys(fixture.refresh(6, 0)), [1])
+	assert.deepEqual(keys(fixture.refresh(6, 2)), [1])
+	hero.IsFogVisible = false
+	assert.deepEqual(keys(fixture.refresh(6, 0)), [])
+	assert.deepEqual(keys(fixture.refresh(6, 2)), [])
+	hero.IsVisible = true
+	assert.deepEqual(keys(fixture.refresh(6, 0)), [1])
 })

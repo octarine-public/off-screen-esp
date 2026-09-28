@@ -7,11 +7,6 @@ export const enum EPlacementMode {
 	FocusRing
 }
 
-export const enum EOverlapMode {
-	StablePriority,
-	Collision
-}
-
 export const enum EVisibilityFilter {
 	All,
 	VisibleOnly,
@@ -34,6 +29,13 @@ export const enum ELabelPosition {
 	Inside
 }
 
+/** How an indicator goes once its target is no longer pointed at. */
+export const enum EHideAnimation {
+	Instant,
+	Fade,
+	FadeBlur
+}
+
 export class OffscreenMenu {
 	public readonly Page: MenuSDK.Node
 	public readonly State: MenuSDK.Toggle
@@ -42,6 +44,8 @@ export class OffscreenMenu {
 	public readonly Visibility: MenuSDK.Dropdown
 	public readonly Runes: MenuSDK.Toggle
 	public readonly RuneTypes: MenuSDK.ImageSelector
+	public readonly StackRunes: MenuSDK.Toggle
+	public readonly StackAngle: MenuSDK.Slider
 	public readonly Wisdom: MenuSDK.Toggle
 	public readonly WisdomColor: MenuSDK.ColorPicker
 	public readonly Lotus: MenuSDK.Toggle
@@ -50,7 +54,7 @@ export class OffscreenMenu {
 	public readonly ObjectiveDistance: MenuSDK.Slider
 	public readonly ObjectiveSize: MenuSDK.Slider
 	public readonly Placement: MenuSDK.Dropdown
-	public readonly Overlap: MenuSDK.Dropdown
+	public readonly Collision: MenuSDK.Toggle
 	public readonly EdgeInset: MenuSDK.Slider
 	public readonly FocusRadius: MenuSDK.Slider
 	public readonly CircleFocus: MenuSDK.Toggle
@@ -64,6 +68,7 @@ export class OffscreenMenu {
 	public readonly HiddenOpacity: MenuSDK.Slider
 	public readonly DistanceFade: MenuSDK.Slider
 	public readonly FadeDistance: MenuSDK.Slider
+	public readonly HideAnimation: MenuSDK.Dropdown
 	public readonly ColorMode: MenuSDK.Dropdown
 	public readonly IndicatorColor: MenuSDK.ColorPicker
 	public readonly NearbyWarning: MenuSDK.Toggle
@@ -110,6 +115,16 @@ export class OffscreenMenu {
 			RuneValues,
 			RuneValues.map(value => [value, true])
 		)
+		this.StackRunes = objectives.AddToggle(
+			"Stack runes",
+			true,
+			"Runes of one type lying in about the same direction share one indicator, with how many it stands for on the badge.",
+			0,
+			OffscreenIcons.StackRunes
+		)
+		this.StackAngle = objectives.AddSlider("Stack angle", 25, 5, 90)
+		this.StackAngle.Suffix = "°"
+		this.StackAngle.IconPath = OffscreenIcons.StackAngle
 		this.Wisdom = objectives.AddToggle(
 			"Wisdom rune",
 			true,
@@ -146,9 +161,14 @@ export class OffscreenMenu {
 		this.ObjectiveSize = objectives.AddSlider("Objective size", 80, 50, 100)
 		this.ObjectiveSize.Suffix = "%"
 		this.ObjectiveSize.IconPath = OffscreenIcons.ObjectiveSize
-		this.Runes.OnValue(runes => {
-			this.RuneTypes.IsHidden = !runes.value
-		})
+		const stackRows = () => {
+			const runes = this.Runes.value
+			this.RuneTypes.IsHidden = !runes
+			this.StackRunes.IsHidden = !runes
+			this.StackAngle.IsHidden = !runes || !this.StackRunes.value
+		}
+		this.Runes.OnValue(stackRows)
+		this.StackRunes.OnValue(stackRows)
 		this.Lotus.OnValue(lotus => {
 			this.MinLotuses.IsHidden = !lotus.value
 		})
@@ -161,13 +181,13 @@ export class OffscreenMenu {
 			EPlacementMode.FocusRing
 		)
 		this.Placement.IconPath = OffscreenIcons.Placement
-		this.Overlap = layout.AddDropdown(
-			"Overlap handling",
-			["Stable priority", "Collision"],
-			EOverlapMode.StablePriority,
-			"Spread overlapping indicators along the edge or ring."
+		this.Collision = layout.AddToggle(
+			"Collision",
+			true,
+			"Spread overlapping indicators along the edge or ring, so none stands on another.",
+			0,
+			OffscreenIcons.Collision
 		)
-		this.Overlap.IconPath = OffscreenIcons.Overlap
 		this.EdgeInset = layout.AddSlider("Screen inset", 78, 48, 220)
 		this.EdgeInset.Suffix = "px"
 		this.EdgeInset.IconPath = OffscreenIcons.EdgeInset
@@ -201,7 +221,7 @@ export class OffscreenMenu {
 		this.ShowDistance = appearance.AddToggle(
 			"Show distance",
 			true,
-			"",
+			"How far the target lies past the edge of the camera's view; zero while it is on the screen.",
 			0,
 			OffscreenIcons.ShowDistance
 		)
@@ -242,6 +262,13 @@ export class OffscreenMenu {
 		this.DistanceFade.IconPath = OffscreenIcons.DistanceFade
 		this.FadeDistance = appearance.AddSlider("Fade distance", 5000, 500, 10000)
 		this.FadeDistance.IconPath = OffscreenIcons.FadeDistance
+		this.HideAnimation = appearance.AddDropdown(
+			"Hide animation",
+			["Instant", "Fade", "Fade blur"],
+			EHideAnimation.Fade,
+			"How an indicator goes once its target comes into view or drops out: at once, fading away, or fading out of focus."
+		)
+		this.HideAnimation.IconPath = OffscreenIcons.HideAnimation
 		this.ColorMode = appearance.AddDropdown(
 			"Indicator color",
 			["Player color", "Custom"],

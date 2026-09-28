@@ -39,6 +39,8 @@ function indicator(key, angle = 0, size = 52, textWidth = 55) {
 		alpha: 1,
 		directionX: Math.cos(angle),
 		directionY: Math.sin(angle),
+		pointerX: Math.cos(angle),
+		pointerY: Math.sin(angle),
 		x: 0,
 		y: 0,
 		collisionOffset: 0
@@ -113,6 +115,8 @@ test("keeps cluster slots stable across angle wrap, jitter and priority reorderi
 			const angle = Math.PI + Math.sin(tick + entry.key) * 0.001
 			entry.directionX = Math.cos(angle)
 			entry.directionY = Math.sin(angle)
+			entry.pointerX = entry.directionX
+			entry.pointerY = entry.directionY
 			SetCollisionBounds(entry, 52, 18, 0, 26 + 6 + 8, 55, 16)
 		}
 		layout.update(tick % 2 ? entries : [...entries].reverse())
@@ -187,5 +191,19 @@ test("the safe edge path stays on the inset rectangle and the ring on the ellips
 		ring.Place(Math.cos(angle), Math.sin(angle), point)
 		const radius = Math.hypot(point[0] - 960, point[1] - 540)
 		assert.ok(Math.abs(radius - (540 - 78) * 0.61) < 0.001, `ring radius: ${step}`)
+	}
+	// the ellipse is met where the ray along the direction crosses it, not at the angle's
+	// parameter, so the indicator stands on the line from the middle to its target
+	const ellipse = fixture(1, false).geometry
+	const across = (960 - 78) * 0.61
+	const down = (540 - 78) * 0.61
+	for (let step = 0; step < 64; step++) {
+		const angle = (step / 64) * Math.PI * 2
+		ellipse.Place(Math.cos(angle), Math.sin(angle), point)
+		const x = point[0] - 960
+		const y = point[1] - 540
+		assert.ok(Math.abs((x / across) ** 2 + (y / down) ** 2 - 1) < 1e-9, `off: ${step}`)
+		assert.ok(Math.abs(x * Math.sin(angle) - y * Math.cos(angle)) < 1e-9, `turn: ${step}`)
+		assert.ok(x * Math.cos(angle) + y * Math.sin(angle) > 0, `behind: ${step}`)
 	}
 })

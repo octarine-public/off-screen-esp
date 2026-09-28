@@ -1,7 +1,5 @@
 import { EPlacementMode } from "./menu"
 
-const RAD_TO_DEG = 180 / Math.PI
-
 export class CIndicatorGeometry {
 	private centerX = 0
 	private centerY = 0
@@ -43,12 +41,7 @@ export class CIndicatorGeometry {
 		this.cameraZ = camera.z
 	}
 
-	public Direction(
-		x: number,
-		y: number,
-		z: number,
-		out: [number, number, number]
-	): boolean {
+	public Direction(x: number, y: number, z: number, out: [number, number]): boolean {
 		const probe = this.probe
 		if (
 			!Source2SDK.Projection.WorldToScreenXYZ(
@@ -70,16 +63,12 @@ export class CIndicatorGeometry {
 	public DirectionFromScreen(
 		screenX: number,
 		screenY: number,
-		out: [number, number, number]
+		out: [number, number]
 	): boolean {
 		return this.screenDirection(screenX, screenY, out)
 	}
 
-	private screenDirection(
-		x: number,
-		y: number,
-		out: [number, number, number]
-	): boolean {
+	private screenDirection(x: number, y: number, out: [number, number]): boolean {
 		const dx = x - this.centerX
 		const dy = y - this.centerY
 		const length = Math.sqrt(dx * dx + dy * dy)
@@ -88,7 +77,6 @@ export class CIndicatorGeometry {
 		}
 		out[0] = dx / length
 		out[1] = dy / length
-		out[2] = Math.atan2(dy, dx) * RAD_TO_DEG
 		return true
 	}
 
@@ -96,20 +84,19 @@ export class CIndicatorGeometry {
 		return x >= 0 && x <= this.centerX * 2 && y >= 0 && y <= this.centerY * 2
 	}
 
+	/**
+	 * Where the ray from the middle of the screen along the direction meets the path: the edge of
+	 * the inset rectangle, or the ring. The indicator stands on the line to its target, so an arrow
+	 * laid along the direction runs on through the target.
+	 */
 	public Place(directionX: number, directionY: number, out: [number, number]): void {
-		let x = directionX * this.halfWidth
-		let y = directionY * this.halfHeight
-		if (this.placement === EPlacementMode.SafeEdge) {
-			const scale =
-				1 /
-				Math.max(
-					Math.abs(directionX) / this.halfWidth,
-					Math.abs(directionY) / this.halfHeight
-				)
-			x = directionX * scale
-			y = directionY * scale
-		}
-		out[0] = this.centerX + x
-		out[1] = this.centerY + y
+		const across = Math.abs(directionX) / this.halfWidth
+		const down = Math.abs(directionY) / this.halfHeight
+		const reach =
+			this.placement === EPlacementMode.SafeEdge
+				? Math.max(across, down)
+				: Math.sqrt(across * across + down * down)
+		out[0] = this.centerX + directionX / reach
+		out[1] = this.centerY + directionY / reach
 	}
 }

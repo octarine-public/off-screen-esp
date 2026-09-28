@@ -26,6 +26,11 @@ const LOTUS_MODIFIER = "modifier_passive_lotus_pool"
 const WISDOM_MODIFIER = "modifier_xp_fountain_aura"
 /** The lotus the HUD's own timer wears. */
 const LOTUS_ICON = `${PathData.ImagePath}/hud/timer/lotus_png.vtex_c`
+/**
+ * How far apart two runes may lie and still be one pile: six bounties left on one spot lie within
+ * two hundred units of each other, and no two rune spots stand anywhere this close.
+ */
+const PILE_RADIUS = 500
 
 interface RuneStyle {
 	/** The name the rune's art is filed under, and the value it stands for in the menu. */
@@ -57,6 +62,8 @@ export const RuneValues = Array.from(RUNES.values(), style => style.value)
 
 const objectives: TrackedObjective[] = []
 const active: TrackedObjective[] = []
+/** The runes asked for this frame that lie past the range, which a pile in range takes in. */
+const distant: TrackedObjective[] = []
 const byIndex = new Map<number, TrackedObjective>()
 
 function kindOf(entity: Entity): Nullable<ObjectiveKind> {
@@ -193,9 +200,29 @@ export function ObjectiveWanted(
 	}
 }
 
+/** Whether two targets lie together at one spot on the ground, the way a pile of runes does. */
+export function LieTogether(left: TrackedTarget, right: TrackedTarget): boolean {
+	const from = left.entity.Position
+	const to = right.entity.Position
+	const dx = from.x - to.x
+	const dy = from.y - to.y
+	return dx * dx + dy * dy <= PILE_RADIUS * PILE_RADIUS
+}
+
+/** Whether a rune of `group` in range this frame lies with `entry`. */
+function pileInRange(entry: TrackedObjective, group: number): boolean {
+	for (const near of active) {
+		if (RuneStackGroup(near) === group && LieTogether(near, entry)) {
+			return true
+		}
+	}
+	return false
+}
+
 /**
- * The objectives to point at this frame: every one that is there, asked for and in range. The
- * rest are let go of, so the indicators already on screen fade out.
+ * The objectives to point at this frame: every one that is there, asked for and in range. A
+ * pile of runes is in range as one, so its card does not count them up and down as the edge of
+ * the range passes over it. The rest are let go of, so the indicators already on screen fade out.
  */
 export function ActiveObjectives(
 	origin: Vector3,
@@ -212,9 +239,28 @@ export function ActiveObjectives(
 		if (entry.distanceSqr <= maxDistanceSqr) {
 			entry.selected = true
 			active.push(entry)
+		} else if (RuneStackGroup(entry) >= 0) {
+			distant.push(entry)
 		}
 	}
+	for (const entry of distant) {
+		if (pileInRange(entry, RuneStackGroup(entry))) {
+			entry.selected = true
+			active.push(entry)
+		}
+	}
+	distant.length = 0
 	return active
+}
+
+/**
+ * What an objective shares an indicator with: runes of its own type. A wisdom rune goes with the
+ * shrines, which the menu does not stack, and a shrine or a pool stands alone.
+ */
+export function RuneStackGroup(entry: TrackedObjective): number {
+	return entry.kind === ETargetKind.Rune && !isWisdomRune(entry)
+		? (entry.entity as Rune).Type
+		: -1
 }
 
 /** The art an objective is drawn with; a rune's is looked up again only when its type turns. */

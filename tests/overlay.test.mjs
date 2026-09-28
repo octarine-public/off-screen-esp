@@ -7,6 +7,7 @@ import ts from "typescript"
 import * as collision from "../src/offscreen/collision.ts"
 import * as priority from "../src/offscreen/priority.ts"
 import * as ring from "../src/offscreen/ring.ts"
+import * as stacks from "../src/offscreen/stack.ts"
 
 function load(name, imports, globals) {
 	const exports = {}
@@ -51,15 +52,18 @@ function fixture(objectives = () => [], capShift = 0) {
 			Lotus: true,
 			MinLotuses: 1,
 			ObjectiveDistance: 8000,
-			ObjectiveSize: 80
+			ObjectiveSize: 80,
+			Collision: true,
+			StackRunes: true,
+			StackAngle: 25
 		}).map(([key, value]) => [key, { value }])
 	)
 	menu.Placement = { SelectedID: 1 }
-	menu.Overlap = { SelectedID: 0 }
 	menu.Visibility = { SelectedID: 0 }
 	menu.ImageType = { SelectedID: 0 }
 	menu.DistancePosition = { SelectedID: 0 }
 	menu.ColorMode = { SelectedID: 0 }
+	menu.HideAnimation = { SelectedID: 1 }
 	menu.IndicatorColor = {}
 	menu.WarningColor = {}
 	menu.WisdomColor = { css: "#b084ff" }
@@ -82,6 +86,7 @@ function fixture(objectives = () => [], capShift = 0) {
 			this.IsValid = true
 			this.IsAlive = true
 			this.IsVisible = true
+			this.IsFogVisible = false
 			this.IsIllusion = false
 			this.HP = this.MaxHP = 100
 			this.PlayerID = index
@@ -133,13 +138,14 @@ function fixture(objectives = () => [], capShift = 0) {
 		"./collision": collision,
 		"./priority": priority,
 		"./ring": ring,
+		"./stack": stacks,
 		"./menu": {
 			OffscreenConfig: menu,
 			EPlacementMode: { SafeEdge: 0, FocusRing: 1 },
-			EOverlapMode: { StablePriority: 0, Collision: 1 },
 			EVisibilityFilter: { All: 0, VisibleOnly: 1, HiddenOnly: 2 },
 			EImageType: { Portrait: 0, Icon: 1 },
 			EColorMode: { Player: 0, Custom: 1 },
+			EHideAnimation: { Instant: 0, Fade: 1, FadeBlur: 2 },
 			ELabelPosition: { OppositeArrow: 0, Below: 1, Inside: 2 }
 		}
 	}
@@ -171,7 +177,6 @@ function fixture(objectives = () => [], capShift = 0) {
 		ImageData: { GetRuneTexture: name => `rune-${name}` },
 		PathData: { ImagePath: "panorama/images" },
 		CameraSDK: { Position: { x: 0, y: 0, z: 0 } },
-		RendererSDK: { ScreenToWorld: () => ({ x: 0, y: 0, z: 0 }) },
 		GUIInfo: {
 			ContainsMiniMap: probe => hud.minimap(probe),
 			ContainsLowerHUD: probe => hud.lowerHud(probe)
@@ -208,6 +213,16 @@ function fixture(objectives = () => [], capShift = 0) {
 	imports["./store"] = load("store.ts", imports, globals)
 	imports["./geometry"] = load("geometry.ts", imports, globals)
 	imports["./label"] = load("label.ts", imports, globals)
+	// the fixture lays the map straight onto the screen, so what the camera sees is the screen
+	imports["./view"] = {
+		CCameraView: class {
+			Focus = { x: 0, y: 0, z: 0 }
+			Begin() {}
+			Distance(x, y) {
+				return Math.hypot(Math.max(0, -x, x - 1920), Math.max(0, -y, y - 1080))
+			}
+		}
+	}
 	imports["./guide"] = {}
 	imports["../lib/gate"] = { CanDraw: () => true }
 	imports["../lib/colors"] = { PlayerColorCss: unit => `player-${unit.Index}` }
@@ -238,14 +253,24 @@ function fixture(objectives = () => [], capShift = 0) {
 	}
 }
 
-test("the live adapter switches collision mode and renders the prepared positions", () => {
+/** The arrow of `frame` runs from the indicator through the screen point (`x`, `y`). */
+function assertPointsAt(frame, x, y) {
+	const length = Math.hypot(x - frame.x, y - frame.y)
+	assert.ok(Math.abs(frame.directionX - (x - frame.x) / length) < 1e-9)
+	assert.ok(Math.abs(frame.directionY - (y - frame.y) / length) < 1e-9)
+	const turn = frame.angle - (Math.atan2(y - frame.y, x - frame.x) * 180) / Math.PI
+	assert.ok(Math.abs(turn - 360 * Math.round(turn / 360)) < 1e-9)
+}
+
+test("the live adapter switches collision on and off and renders the prepared positions", () => {
 	const overlay = fixture()
+	overlay.menu.Collision.value = false
 	let result = overlay.tick()
 	assert.equal(result.frames.size, 3)
 	const original = result.frames.get(1)
 	assert.equal(result.frames.get(2).x, original.x)
 	assert.equal(result.frames.get(2).y, original.y)
-	overlay.menu.Overlap.SelectedID = 1
+	overlay.menu.Collision.value = true
 	result = overlay.tick()
 	assert.equal(result.frames.size, 3)
 	assert.ok(result.entries.some(entry => entry.collisionOffset !== 0))
@@ -253,14 +278,13 @@ test("the live adapter switches collision mode and renders the prepared position
 		const frame = result.frames.get(entry.key)
 		assert.equal(frame.x, entry.x)
 		assert.equal(frame.y, entry.y)
-		assert.equal(frame.directionX, original.directionX)
-		assert.equal(frame.directionY, original.directionY)
-		assert.equal(frame.angle, original.angle)
-		assert.equal(frame.distance, `${3000 + entry.key * 10}`)
+		// pushed along the ring, the arrow still runs through the hero, 580 past the screen's edge
+		assertPointsAt(frame, 2500, 540)
+		assert.equal(frame.distance, "580")
 		assert.equal(frame.icon, `hero-${entry.key}-portrait`)
 		assert.equal(frame.baseColor, `player-${entry.key}`)
 	}
-	overlay.menu.Overlap.SelectedID = 0
+	overlay.menu.Collision.value = false
 	result = overlay.tick()
 	assert.ok(result.entries.every(entry => entry.collisionOffset === 0))
 	assert.ok(
@@ -268,7 +292,7 @@ test("the live adapter switches collision mode and renders the prepared position
 			frame => frame.x === original.x && frame.y === original.y
 		)
 	)
-	overlay.menu.Overlap.SelectedID = 1
+	overlay.menu.Collision.value = true
 	overlay.heroes[0].VisualPosition = { x: 960, y: 540, z: 0 }
 	for (let tick = 0; tick < 16; tick++) {
 		result = overlay.tick()
@@ -295,6 +319,7 @@ test("image type, colour mode and the visibility filter reach the frames", () =>
 	assert.equal(result.frames.get(1).warning, true)
 	assert.equal(result.frames.get(2).warning, false)
 	overlay.heroes[1].IsVisible = false
+	overlay.heroes[1].IsFogVisible = true
 	overlay.menu.Visibility.SelectedID = 1
 	for (let tick = 0; tick < 16; tick++) {
 		result = overlay.tick()
@@ -310,6 +335,23 @@ test("image type, colour mode and the visibility filter reach the frames", () =>
 	assert.ok(result.frames.get(2).opacity < 1)
 })
 
+test("a hidden enemy fades out once its last position runs out", () => {
+	const overlay = fixture()
+	overlay.heroes[1].IsVisible = false
+	overlay.heroes[1].IsFogVisible = true
+	let result
+	for (let tick = 0; tick < 16; tick++) {
+		result = overlay.tick()
+	}
+	assert.equal(result.frames.has(2), true)
+	overlay.heroes[1].IsFogVisible = false
+	for (let tick = 0; tick < 16; tick++) {
+		result = overlay.tick()
+	}
+	assert.equal(result.frames.has(1), true)
+	assert.equal(result.frames.has(2), false)
+})
+
 test("an enemy under the minimap or the lower HUD counts as off-screen", () => {
 	const overlay = fixture()
 	overlay.heroes[0].VisualPosition = { x: 100, y: 1000, z: 0 }
@@ -320,6 +362,9 @@ test("an enemy under the minimap or the lower HUD counts as off-screen", () => {
 		result = overlay.tick()
 	}
 	assert.equal(result.frames.has(1), true)
+	// on the screen, under the minimap: nothing to pan across, and the arrow is on him
+	assert.equal(result.frames.get(1).distance, "0")
+	assertPointsAt(result.frames.get(1), 100, 1000)
 	overlay.hud.minimap = () => false
 	overlay.hud.lowerHud = probe => probe.y > 900
 	overlay.heroes[0].VisualPosition = { x: 960, y: 1000, z: 0 }
@@ -327,6 +372,13 @@ test("an enemy under the minimap or the lower HUD counts as off-screen", () => {
 		result = overlay.tick()
 	}
 	assert.equal(result.frames.has(1), true)
+	// a tall HUD hides him between the middle and the ring: the arrow turns back in onto him
+	overlay.hud.lowerHud = probe => probe.y > 700
+	overlay.heroes[0].VisualPosition = { x: 960, y: 760, z: 0 }
+	result = settle(overlay)
+	assert.ok(result.frames.get(1).y > 760)
+	assertPointsAt(result.frames.get(1), 960, 760)
+	assert.equal(result.frames.get(1).directionY, -1)
 	overlay.hud.lowerHud = () => false
 	for (let tick = 0; tick < 16; tick++) {
 		result = overlay.tick()
@@ -383,7 +435,7 @@ test("runes, a ready shrine and a stocked pool get indicators dressed as objecti
 	assert.equal(haste.health, 1)
 	assert.equal(haste.badge, "")
 	assert.equal(haste.warning, false)
-	assert.equal(haste.distance, "2000")
+	assert.equal(haste.distance, "580")
 	assert.equal(haste.dress.drain, false)
 	assert.equal(haste.dress.size, 42)
 	assert.ok(haste.dress.artScale < 1)
@@ -523,4 +575,206 @@ test("a face that stands its digits high has its readings let down onto the midd
 		)
 		assert.ok(high.distanceLine > high.distanceHeight)
 	}
+})
+
+function objectiveKeys(frames) {
+	return [...frames.keys()].filter(key => key >= 10).sort((a, b) => a - b)
+}
+
+test("bounties lying one way share an indicator counting them, other runes keep their own", () => {
+	const overlay = fixture(({ Rune }) => {
+		const bounty = (index, distance, x, y) => {
+			const rune = new Rune(index, distance, x, y)
+			rune.Type = 5
+			return rune
+		}
+		return [
+			// right of the screen: at 0°, 5.9° and -8.9°
+			bounty(20, 2600, 2500, 540),
+			bounty(21, 2000, 2500, 700),
+			bounty(22, 3000, 2500, 300),
+			// below the screen, a quarter turn away
+			bounty(23, 2200, 960, 2500),
+			// a haste where the first bounty lies: another type, another card
+			new Rune(24, 2100, 2500, 540)
+		]
+	})
+	let frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [21, 23, 24])
+	assert.equal(frames.get(21).badge, "3")
+	assert.equal(frames.get(21).distance, "580")
+	assert.equal(frames.get(21).icon, "rune-bounty")
+	assert.equal(frames.get(23).badge, "")
+	assert.equal(frames.get(24).badge, "")
+	assert.equal(frames.get(24).icon, "rune-haste")
+	// a narrower angle lets the bounty at -8.9° go; the one at 0° stays, being inside the margin
+	overlay.menu.StackAngle.value = 5
+	frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [21, 22, 23, 24])
+	assert.equal(frames.get(21).badge, "2")
+	assert.equal(frames.get(22).badge, "")
+	overlay.menu.StackRunes.value = false
+	frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [20, 21, 22, 23, 24])
+	assert.ok([...frames.values()].every(frame => frame.badge === ""))
+})
+
+test("the card that leads a stack keeps its place when its runes are taken", () => {
+	const overlay = fixture(({ Rune }) =>
+		[30, 31].map((index, order) => {
+			const rune = new Rune(index, 2000 + order * 500, 2500, 540 + order * 50)
+			rune.Type = 5
+			return rune
+		})
+	)
+	const [lead, folded] = overlay.things
+	let frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [30])
+	assert.equal(frames.get(30).badge, "2")
+	folded.IsValid = false
+	overlay.objectives.UntrackObjective(folded)
+	frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [30])
+	assert.equal(frames.get(30).badge, "")
+	lead.IsValid = false
+	overlay.objectives.UntrackObjective(lead)
+	assert.deepEqual(objectiveKeys(settle(overlay).frames), [])
+})
+
+test("on the ellipse the indicator stands on the line to its target and the arrow runs through it", () => {
+	const overlay = fixture()
+	overlay.heroes[0].VisualPosition = { x: 2400, y: 1400, z: 0 }
+	overlay.heroes[1].VisualPosition = { x: -600, y: 540, z: 0 }
+	overlay.heroes[2].VisualPosition = { x: 960, y: -900, z: 0 }
+	const { frames } = settle(overlay)
+	const diagonal = frames.get(1)
+	const cross = (diagonal.x - 960) * (1400 - 540) - (diagonal.y - 540) * (2400 - 960)
+	assert.ok(Math.abs(cross) < 1e-6)
+	assert.ok(diagonal.x > 960 && diagonal.x < 1920 && diagonal.y > 540 && diagonal.y < 1080)
+	assertPointsAt(diagonal, 2400, 1400)
+	// the nearest the screen comes to it is its corner
+	assert.equal(diagonal.distance, "577")
+	assertPointsAt(frames.get(2), -600, 540)
+	assert.equal(frames.get(2).distance, "600")
+	assertPointsAt(frames.get(3), 960, -900)
+	assert.equal(frames.get(3).distance, "900")
+})
+
+test("an indicator goes at once, fading, or fading out of focus as the menu asks", () => {
+	const overlay = fixture()
+	const [first, second, third] = overlay.heroes
+	const inView = { x: 960, y: 540, z: 0 }
+	const offScreen = { x: 2500, y: 540, z: 0 }
+	for (const frame of settle(overlay).frames.values()) {
+		assert.equal(frame.opacity, 1)
+		assert.equal(frame.veil, 0)
+	}
+	// fading: it thins away over a few frames, sharp all the while
+	first.VisualPosition = inView
+	let frame = overlay.tick().frames.get(1)
+	assert.ok(frame.opacity > 0 && frame.opacity < 1)
+	assert.equal(frame.veil, 0)
+	assert.equal(settle(overlay).frames.has(1), false)
+	// instant: gone the frame its target comes into view, and still fading in when it comes back
+	overlay.menu.HideAnimation.SelectedID = 0
+	second.VisualPosition = inView
+	assert.equal(overlay.tick().frames.has(2), false)
+	second.VisualPosition = offScreen
+	frame = overlay.tick().frames.get(2)
+	assert.ok(frame.opacity > 0 && frame.opacity < 1)
+	// fading out of focus: it loses focus as fast as it loses opacity
+	overlay.menu.HideAnimation.SelectedID = 2
+	third.VisualPosition = inView
+	let veil = 0
+	for (let tick = 0; tick < 5; tick++) {
+		frame = overlay.tick().frames.get(3)
+		assert.ok(frame.veil > veil)
+		assert.ok(Math.abs(frame.veil - (1 - frame.opacity)) < 1e-9)
+		veil = frame.veil
+	}
+	// brought back midway, it clears as it rises, never blurring past where it stood
+	third.VisualPosition = offScreen
+	frame = overlay.tick().frames.get(3)
+	assert.ok(frame.veil > 0 && frame.veil < veil)
+	veil = frame.veil
+	// and sent away again, it goes on from there rather than snapping sharp or soft
+	third.VisualPosition = inView
+	frame = overlay.tick().frames.get(3)
+	assert.ok(frame.veil > veil && frame.veil < veil + 0.1)
+	assert.equal(settle(overlay).frames.has(3), false)
+	// one that comes in afresh comes in sharp
+	third.VisualPosition = offScreen
+	frame = overlay.tick().frames.get(3)
+	assert.ok(frame.opacity > 0 && frame.opacity < 1)
+	assert.equal(frame.veil, 0)
+	assert.equal(settle(overlay).frames.get(3).veil, 0)
+	// the dress carries how far out of focus a veil of one throws it: an eighth of its size or so
+	assert.ok(Math.abs(frame.dress.blur - 52 * 0.12) < 1e-9)
+})
+
+/** Bounties at `x`, `y` and on to the right, `gap` apart, the first `distance` from the focus. */
+function bountyPile(Rune, first, count, distance, x, y = 540, gap = 20) {
+	return Array.from({ length: count }, (_, order) => {
+		const rune = new Rune(first + order, distance + order * gap, x + order * gap, y)
+		rune.Type = 5
+		return rune
+	})
+}
+
+/** Moves every rune `dx` across, the way a camera panning the other way would carry them. */
+function pan(overlay, dx) {
+	for (const rune of overlay.things) {
+		rune.Position.x += dx
+	}
+	return overlay.tick().frames
+}
+
+test("a pile of runes goes out of view and out of range as one, its card counting them all", () => {
+	const overlay = fixture(({ Rune }) => bountyPile(Rune, 40, 6, 2000, 1960))
+	let frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [40])
+	assert.equal(frames.get(40).badge, "6")
+	// the edge of the screen passes over the pile a rune at a time: the card fades out saying six
+	let faded = false
+	for (let tick = 0; tick < 30; tick++) {
+		frames = pan(overlay, -5)
+		assert.ok(objectiveKeys(frames).every(key => key === 40))
+		if (frames.has(40)) {
+			assert.equal(frames.get(40).badge, "6")
+			faded ||= frames.get(40).opacity < 1
+		}
+	}
+	assert.ok(faded)
+	assert.deepEqual(objectiveKeys(frames), [])
+	// and while one rune of it is still on the screen, the pile stays seen
+	for (let tick = 0; tick < 22; tick++) {
+		assert.deepEqual(objectiveKeys(pan(overlay, 5)), [])
+	}
+	frames = pan(overlay, 5)
+	assert.deepEqual(objectiveKeys(frames), [40])
+	assert.equal(frames.get(40).badge, "6")
+	// the edge of the range cuts through the pile: it is in range as one, or not at all
+	overlay.menu.ObjectiveDistance.value = 2050
+	assert.equal(settle(overlay).frames.get(40).badge, "6")
+	overlay.menu.ObjectiveDistance.value = 1990
+	frames = overlay.tick().frames
+	assert.equal(frames.get(40).badge, "6")
+	assert.ok(frames.get(40).opacity < 1)
+	assert.deepEqual(objectiveKeys(settle(overlay).frames), [])
+})
+
+test("a pile further along the same way keeps a card of its own once the nearer one is seen", () => {
+	const overlay = fixture(({ Rune }) => [
+		...bountyPile(Rune, 50, 2, 2000, 1960),
+		...bountyPile(Rune, 52, 3, 4000, 3200)
+	])
+	let frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [50])
+	assert.equal(frames.get(50).badge, "5")
+	for (const rune of overlay.things.slice(0, 2)) {
+		rune.Position.x -= 200
+	}
+	frames = settle(overlay).frames
+	assert.deepEqual(objectiveKeys(frames), [52])
+	assert.equal(frames.get(52).badge, "3")
 })

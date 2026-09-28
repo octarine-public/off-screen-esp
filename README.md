@@ -2,15 +2,23 @@
 - [x] Displays enemy heroes off-screen as portrait indicators with a direction arrow
 - [x] Shows distance and health of enemies on a thin ring whose width is set in the menu
 - [x] Circle, ellipse or screen-edge placement with a dotted guide while the page is open
-- [x] Indicates enemies hidden in the fog
+- [x] Indicates enemies hidden in the fog while their last position is known (via Maphack)
 - [x] Points at runes (by type), ready wisdom shrines and lotus pools with their lotus count
+- [x] Stacks runes of one type lying in about the same direction into one indicator with their count
+- [x] Spreads overlapping indicators apart along the edge or ring (on by default)
+- [x] The arrow runs from the indicator through the target itself; the distance counts from the edge of the camera's view
+- [x] Hide animation: instant, fade or fade blur
 ---
 # ESP за пределами экрана
 - [x] Отображение вражеских героев за пределами экрана в виде индикаторов с портретом и стрелкой
 - [x] Показ расстояния и здоровья врагов тонким кольцом, толщина настраивается в меню
 - [x] Размещение по кругу, эллипсу или краю экрана с точечной подсказкой при открытой странице
-- [x] Индикация врагов, скрытых в тумане
+- [x] Индикация врагов, скрытых в тумане, пока известна их последняя позиция (через Maphack)
 - [x] Указатели на руны (с выбором типов), готовые руны мудрости и лотосовые пруды с числом лотосов
+- [x] Объединение рун одного типа, лежащих примерно в одном направлении, в один индикатор с их количеством
+- [x] Коллизия: перекрывающиеся индикаторы раздвигаются вдоль края или кольца (включена по умолчанию)
+- [x] Стрелка ведёт от индикатора точно через цель; дистанция отсчитывается от края видимой камерой области
+- [x] Анимация скрытия: мгновенно, затухание или затухание с размытием
 ---
 # 屏幕外ESP
 - [x] 以帶頭像和方向箭頭的指示器顯示屏幕外的敵方英雄
@@ -18,3 +26,7 @@
 - [x] 圓形、橢圓或屏幕邊緣放置，開啟頁面時顯示點狀引導
 - [x] 指示隱藏在迷霧中的敵人
 - [x] 指向神符（可選類型）、可拾取的智慧神符與蓮花池（顯示蓮花數量）
+- [x] 將大致同一方向上的同類神符合併為一個指示器並顯示數量
+- [x] 碰撞避讓：沿邊緣或圓環分散重疊的指示器（預設開啟）
+- [x] 箭頭從指示器直指目標本身；距離從鏡頭可視範圍的邊緣起算
+- [x] 隱藏動畫：立即、淡出或淡出模糊
