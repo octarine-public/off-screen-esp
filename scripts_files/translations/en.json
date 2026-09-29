@@ -1,1 +1,11 @@
-{}
+{
+	"rune_doubledamage": "Amplify Damage Rune",
+	"rune_haste": "Haste Rune",
+	"rune_illusion": "Illusion Rune",
+	"rune_invis": "Invisibility Rune",
+	"rune_regen": "Regeneration Rune",
+	"rune_arcane": "Arcane Rune",
+	"rune_shield": "Shield Rune",
+	"rune_water": "Water Rune",
+	"rune_bounty": "Bounty Rune"
+}

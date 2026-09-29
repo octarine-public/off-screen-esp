@@ -133,7 +133,6 @@ function fixture(objectives = () => [], capShift = 0) {
 	const heroes = [new Hero(1), new Hero(2), new SpiritBear(3)]
 	const things = objectives({ Rune, XPFountain, LotusPool, heroes })
 	const entities = [...heroes, ...things]
-	const hud = { minimap: () => false, lowerHud: () => false }
 	const imports = {
 		"./collision": collision,
 		"./priority": priority,
@@ -146,7 +145,14 @@ function fixture(objectives = () => [], capShift = 0) {
 			EImageType: { Portrait: 0, Icon: 1 },
 			EColorMode: { Player: 0, Custom: 1 },
 			EHideAnimation: { Instant: 0, Fade: 1, FadeBlur: 2 },
-			ELabelPosition: { OppositeArrow: 0, Below: 1, Inside: 2 }
+			ELabelPosition: {
+				OppositeArrow: 0,
+				Below: 1,
+				Inside: 2,
+				Center: 3,
+				Band: 4,
+				Plate: 5
+			}
 		}
 	}
 	const globals = {
@@ -177,9 +183,11 @@ function fixture(objectives = () => [], capShift = 0) {
 		ImageData: { GetRuneTexture: name => `rune-${name}` },
 		PathData: { ImagePath: "panorama/images" },
 		CameraSDK: { Position: { x: 0, y: 0, z: 0 } },
+		// the HUD over every pixel: an indicator must not care what it covers
 		GUIInfo: {
-			ContainsMiniMap: probe => hud.minimap(probe),
-			ContainsLowerHUD: probe => hud.lowerHud(probe)
+			Contains: () => true,
+			ContainsMiniMap: () => true,
+			ContainsLowerHUD: () => true
 		},
 		Source2SDK: {
 			Projection: {
@@ -238,7 +246,6 @@ function fixture(objectives = () => [], capShift = 0) {
 		things,
 		disabledRunes,
 		objectives: imports["./objectives"],
-		hud,
 		tick() {
 			now += 16
 			frames.clear()
@@ -352,38 +359,18 @@ test("a hidden enemy fades out once its last position runs out", () => {
 	assert.equal(result.frames.has(2), false)
 })
 
-test("an enemy under the minimap or the lower HUD counts as off-screen", () => {
+test("an enemy under the minimap or the lower HUD is on the screen, so gets no indicator", () => {
 	const overlay = fixture()
-	overlay.heroes[0].VisualPosition = { x: 100, y: 1000, z: 0 }
-	let result = overlay.tick()
-	assert.equal(result.frames.has(1), false)
-	overlay.hud.minimap = probe => probe.x < 300 && probe.y > 800
-	for (let tick = 0; tick < 16; tick++) {
-		result = overlay.tick()
+	// under the minimap, on the inventory, and in the empty strip above it the HUD's box spans
+	for (const at of [
+		{ x: 100, y: 1000 },
+		{ x: 1200, y: 1000 },
+		{ x: 1200, y: 900 }
+	]) {
+		overlay.heroes[0].VisualPosition = { ...at, z: 0 }
+		const result = settle(overlay)
+		assert.equal(result.frames.has(1), false)
 	}
-	assert.equal(result.frames.has(1), true)
-	// on the screen, under the minimap: nothing to pan across, and the arrow is on him
-	assert.equal(result.frames.get(1).distance, "0")
-	assertPointsAt(result.frames.get(1), 100, 1000)
-	overlay.hud.minimap = () => false
-	overlay.hud.lowerHud = probe => probe.y > 900
-	overlay.heroes[0].VisualPosition = { x: 960, y: 1000, z: 0 }
-	for (let tick = 0; tick < 16; tick++) {
-		result = overlay.tick()
-	}
-	assert.equal(result.frames.has(1), true)
-	// a tall HUD hides him between the middle and the ring: the arrow turns back in onto him
-	overlay.hud.lowerHud = probe => probe.y > 700
-	overlay.heroes[0].VisualPosition = { x: 960, y: 760, z: 0 }
-	result = settle(overlay)
-	assert.ok(result.frames.get(1).y > 760)
-	assertPointsAt(result.frames.get(1), 960, 760)
-	assert.equal(result.frames.get(1).directionY, -1)
-	overlay.hud.lowerHud = () => false
-	for (let tick = 0; tick < 16; tick++) {
-		result = overlay.tick()
-	}
-	assert.equal(result.frames.has(1), false)
 })
 
 const LOTUS = "modifier_passive_lotus_pool"
@@ -777,4 +764,86 @@ test("a pile further along the same way keeps a card of its own once the nearer 
 	frames = settle(overlay).frames
 	assert.deepEqual(objectiveKeys(frames), [52])
 	assert.equal(frames.get(52).badge, "3")
+})
+
+test("the reading stands where the menu puts it, and what it stands on is dressed to match", () => {
+	const overlay = fixture()
+	const ringWidth = ring.RingBand(2, 1)
+	const read = position => {
+		overlay.menu.DistancePosition.SelectedID = position
+		const frame = overlay.tick().frames.get(1)
+		assert.ok(frame.labelWidth > 0)
+		return frame
+	}
+	let frame = read(0)
+	const half = frame.dress.size / 2
+	const halfHeight = frame.dress.distanceHeight / 2
+	assert.equal(frame.dress.scrim, "")
+	assert.equal(frame.dress.plate, false)
+	assert.equal(frame.dress.badgeRaised, false)
+	// across from the arrow, which points right at the hero
+	assert.ok(frame.labelX < -half)
+	frame = read(2)
+	assert.equal(frame.dress.scrim, "")
+	assert.equal(frame.dress.badgeRaised, true)
+	// in the middle, over a shade in the middle of the disc
+	frame = read(3)
+	assert.deepEqual([frame.labelX, frame.labelY], [0, 0])
+	assert.ok(frame.dress.scrim.startsWith("radial-gradient"))
+	assert.equal(frame.dress.scrimTop * 2 + frame.dress.scrimHeight, frame.dress.size)
+	assert.equal(frame.dress.badgeRaised, false)
+	// on the band, sitting on the ring, the band running down to the bottom of the disc
+	frame = read(4)
+	assert.equal(frame.labelX, 0)
+	assert.equal(frame.labelY + halfHeight + ringWidth, half)
+	assert.ok(frame.dress.scrim.startsWith("linear-gradient"))
+	assert.equal(frame.dress.scrimTop + frame.dress.scrimHeight, frame.dress.size)
+	assert.ok(frame.dress.scrimTop < half + frame.labelY - halfHeight)
+	assert.equal(frame.dress.badgeRaised, true)
+	// on a plate over the bottom rim, clear of the tail of an arrow pointing straight down
+	frame = read(5)
+	assert.equal(frame.labelX, 0)
+	assert.ok(frame.labelY + halfHeight > half)
+	assert.ok(frame.labelY - halfHeight < half - ringWidth)
+	assert.ok(frame.labelY + halfHeight <= half + frame.dress.arrowSize * 0.14 + 2)
+	assert.equal(frame.dress.plate, true)
+	assert.equal(frame.dress.scrim, "")
+	// without the reading there is nothing to stand it on
+	overlay.menu.ShowDistance.value = false
+	frame = overlay.tick().frames.get(1)
+	assert.equal(frame.dress.plate, false)
+	assert.equal(frame.dress.badgeRaised, false)
+})
+
+test("an icon stands small in the disc, lifted clear of the band under it", () => {
+	const overlay = fixture()
+	overlay.menu.ImageType.SelectedID = 1
+	overlay.menu.DistancePosition.SelectedID = 4
+	let frame = overlay.tick().frames.get(1)
+	const { dress } = frame
+	const half = dress.size / 2
+	const artHalf = Math.round(dress.size * dress.artScale) / 2
+	assert.ok(dress.artScale < 0.7)
+	assert.ok(dress.artLift > 0)
+	// under the ring at the top no more than it ever was, and over the digits at the bottom
+	assert.ok(-dress.artLift - artHalf >= -(half - ring.RingBand(2, 1)))
+	assert.ok(artHalf - dress.artLift <= frame.labelY - dress.distanceHeight / 4)
+	// the reading across from the arrow leaves the icon in the middle, and the room for a bigger one
+	overlay.menu.DistancePosition.SelectedID = 0
+	frame = overlay.tick().frames.get(1)
+	assert.equal(frame.dress.artLift, 0)
+	assert.ok(frame.dress.artScale > dress.artScale && frame.dress.artScale < 0.8)
+	// and so does no reading at all, wherever it would have stood
+	overlay.menu.DistancePosition.SelectedID = 4
+	overlay.menu.ShowDistance.value = false
+	frame = overlay.tick().frames.get(1)
+	assert.equal(frame.dress.artLift, 0)
+	assert.ok(frame.dress.artScale > dress.artScale)
+	overlay.menu.ShowDistance.value = true
+	// a portrait fills the disc and stays there, band or not
+	overlay.menu.ImageType.SelectedID = 0
+	overlay.menu.DistancePosition.SelectedID = 4
+	frame = overlay.tick().frames.get(1)
+	assert.equal(frame.dress.artScale, 1)
+	assert.equal(frame.dress.artLift, 0)
 })

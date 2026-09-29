@@ -50,7 +50,7 @@ class Batch {
 	}
 }
 
-function fixture(capsules, objective = false) {
+function fixture(capsules, objective = false, dressed = {}, files = {}) {
 	const MenuSDK = {
 		CapsulesShaderSupported: capsules,
 		ShaderSlotSegments: 40,
@@ -74,6 +74,7 @@ function fixture(capsules, objective = false) {
 	const globals = {
 		MenuSDK,
 		__OCT_PACKAGE_ROOT__: "root",
+		fread: path => files[path],
 		React: {
 			createElement(type, props) {
 				if (typeof type === "function") {
@@ -86,9 +87,10 @@ function fixture(capsules, objective = false) {
 		}
 	}
 	const paint = load("lib/paint.ts", {}, globals)
+	const art = load("offscreen/art.ts", {}, globals)
 	const overlay = load(
 		"offscreen/overlay.tsx",
-		{ "../lib/layout": layout, "../lib/paint": paint, "./ring": ring },
+		{ "../lib/layout": layout, "../lib/paint": paint, "./art": art, "./ring": ring },
 		globals
 	)
 	const elements = new Map()
@@ -119,6 +121,7 @@ function fixture(capsules, objective = false) {
 		badgeLine: 22,
 		artAspect: objective ? 1 : 16 / 9,
 		artScale: objective ? 0.75 : 1,
+		artLift: 0,
 		badgeSize: 20,
 		badgeFontSize: 12,
 		showDistance: true,
@@ -127,7 +130,13 @@ function fixture(capsules, objective = false) {
 		blur: 6,
 		fontFamily: "Stratum2",
 		textColor: "#ffffff",
-		distanceEffect: "none"
+		distanceEffect: "none",
+		scrim: "",
+		scrimTop: 0,
+		scrimHeight: 0,
+		plate: false,
+		badgeRaised: false,
+		...dressed
 	}
 	const frame = {
 		x: 100,
@@ -139,6 +148,7 @@ function fixture(capsules, objective = false) {
 		distance: "3000",
 		labelX: -40,
 		labelY: 0,
+		labelWidth: 28,
 		health: 1,
 		healthColor: "#00ff00",
 		baseColor: "#ffffff",
@@ -166,9 +176,64 @@ function fixture(capsules, objective = false) {
 			frame.veil = veil
 			dress.blur = blur
 			overlay.UpdateIndicator(handle, dress, frame)
+		},
+		move(x, y, labelX, labelY) {
+			frame.x = x
+			frame.y = y
+			frame.labelX = labelX
+			frame.labelY = labelY
+			overlay.UpdateIndicator(handle, dress, frame)
 		}
 	}
 }
+
+/**
+ * A Source 2 texture of four bytes a pixel, blue first, the way the game ships its hero icons: the
+ * resource header, a block table naming the DATA block, the texture header and the one mip.
+ * `paint(x, y)` answers each pixel as [r, g, b, a].
+ */
+function texture(width, height, paint) {
+	const pixels = 68
+	const buffer = new ArrayBuffer(pixels + width * height * 4)
+	const view = new DataView(buffer)
+	view.setUint32(0, pixels, true)
+	view.setUint16(4, 12, true)
+	// the block table at 16, and the one block in it: DATA at 28, 40 bytes long
+	view.setUint32(8, 8, true)
+	view.setUint32(12, 1, true)
+	view.setUint32(16, 0x44415441, false)
+	view.setUint32(20, 8, true)
+	view.setUint32(24, 40, true)
+	view.setUint16(48, width, true)
+	view.setUint16(50, height, true)
+	view.setUint8(54, 28)
+	view.setUint8(55, 1)
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) {
+			const [r, g, b, a] = paint(x, y)
+			const at = pixels + (y * width + x) * 4
+			view.setUint8(at, b)
+			view.setUint8(at + 1, g)
+			view.setUint8(at + 2, r)
+			view.setUint8(at + 3, a)
+		}
+	}
+	return buffer
+}
+
+/**
+ * An icon drawn the way the game draws Ember Spirit's: the glyph high on its canvas, rows 2 to 17,
+ * a black rim hanging under it to row 29, and a faint glow across the top two rows.
+ */
+const HIGH_ICON = texture(32, 32, (x, y) =>
+	y < 2
+		? [40, 40, 40, 255]
+		: y <= 17 && x >= 8 && x <= 23
+			? [230, 90, 40, 255]
+			: y <= 29 && x >= 4 && x <= 27
+				? [0, 0, 0, 255]
+				: [0, 0, 0, 0]
+)
 
 function box(element) {
 	const { left, top, width, height } = element.style
@@ -311,7 +376,14 @@ test("going out of focus blurs every part under the anchor, never the anchor, an
 	]) {
 		const indicator = fixture(capsules, objective)
 		indicator.draw(1, "#ee96cd", objective ? "3" : "")
-		const parts = ["portraitBacking", "portraitClip", "health", "distance", "pointer"]
+		const parts = [
+			"portraitBacking",
+			"portraitClip",
+			"health",
+			"plate",
+			"distance",
+			"pointer"
+		]
 		if (objective) {
 			parts.push("badge")
 		} else if (!capsules) {
@@ -340,5 +412,79 @@ test("going out of focus blurs every part under the anchor, never the anchor, an
 		for (const name of parts) {
 			assert.equal(indicator.element(name).style.filter, "none")
 		}
+	}
+})
+
+test("a reading at the bottom stands on a plate or a band, and sends the badge up to half past one", () => {
+	const plain = fixture(true, true)
+	plain.draw(1, "#ee96cd", "3")
+	assert.equal(plain.element("plate").shown, false)
+	assert.equal(plain.element("scrim").shown, false)
+	const plated = fixture(true, true, { plate: true, badgeRaised: true })
+	plated.draw(1, "#ee96cd", "3")
+	const plate = plated.element("plate")
+	assert.equal(plate.shown, true)
+	// the reading and a margin each side, an even width, a pixel of quad all round
+	assert.deepEqual(box(plate), [-21, -9, 42, 18])
+	assert.deepEqual(plate.placement, plated.element("distance").placement)
+	assert.equal(plate.style.decorator, "shape(8|#181b20f2|1|#ee96cd|1)")
+	plated.draw(1, "#b084ff", "3")
+	assert.equal(plate.style.decorator, "shape(8|#181b20f2|1|#b084ff|1)")
+	const at = Math.round((SIZE / 2) * Math.SQRT1_2 - 10)
+	const high = Math.round(-(SIZE / 2) * Math.SQRT1_2 - 10)
+	assert.deepEqual(box(plated.element("badge")), [at, high, 20, 20])
+	const banded = fixture(true, false, {
+		scrim: "linear-gradient(x)",
+		scrimTop: 30,
+		scrimHeight: 22
+	})
+	banded.draw(1)
+	const scrim = banded.element("scrim")
+	assert.equal(scrim.shown, true)
+	assert.deepEqual(box(scrim), [0, 30, SIZE, 22])
+	assert.equal(scrim.style.decorator, "linear-gradient(x)")
+	assert.equal(banded.element("plate").shown, false)
+})
+
+test("the reading keeps its place on the disc to the pixel wherever the indicator glides to", () => {
+	const indicator = fixture(true, false, { plate: true })
+	const distance = indicator.element("distance")
+	const plate = indicator.element("plate")
+	for (const y of [200, 200.3, 200.5, 200.7, 201.2]) {
+		// half a pixel down from the middle of the band: it must not flip between rows as y moves
+		indicator.move(100.4, y, 0, 15.5)
+		assert.deepEqual(distance.placement, [0, 16, 0])
+		assert.deepEqual(plate.placement, [0, 16, 0])
+	}
+})
+
+test("art lifted clear of a reading at the bottom stands that much higher in the disc", () => {
+	const indicator = fixture(true, true, { artLift: 5 })
+	indicator.draw(1, "#ee96cd")
+	// three quarters of the disc, 39 across, 6.5 in from the edge and five pixels up
+	assert.deepEqual(box(indicator.element("portrait")), [7, 2, 39, 39])
+})
+
+test("art inside the disc is centred by what of it shows on the backing, not by its canvas", () => {
+	const indicator = fixture(true, true, {}, { hero: HIGH_ICON })
+	indicator.draw(1, "#ee96cd")
+	// the glyph's middle stands 6 of 32 texels high, 7.3 of the 39 pixels the art is cut to;
+	// neither the rim nor the glow counts, so the art comes down seven pixels from 6.5 in
+	assert.deepEqual(box(indicator.element("portrait")), [7, 14, 39, 39])
+	// and a lift clear of a reading comes on top of it
+	const lifted = fixture(true, true, { artLift: 5 }, { hero: HIGH_ICON })
+	lifted.draw(1, "#ee96cd")
+	assert.deepEqual(box(lifted.element("portrait")), [7, 9, 39, 39])
+})
+
+test("a portrait filling the disc, and art that cannot be read, stand where their box does", () => {
+	const portrait = fixture(true, false, {}, { hero: HIGH_ICON })
+	portrait.draw(1)
+	assert.deepEqual(box(portrait.element("portrait")), [-20, 0, 92, 52])
+	const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, 0, 0, 0, 0])
+	for (const file of [undefined, png.buffer, new ArrayBuffer(4)]) {
+		const indicator = fixture(true, true, {}, { hero: file })
+		indicator.draw(1, "#ee96cd")
+		assert.deepEqual(box(indicator.element("portrait")), [7, 7, 39, 39])
 	}
 })

@@ -1,5 +1,6 @@
 import { Fine, Snap } from "../lib/layout"
 import { ArcPaint, PillPaint, RingPaint } from "../lib/paint"
+import { ArtCentreOf } from "./art"
 import { RingDegrees, RingFilled, RingStart, RingSweep } from "./ring"
 
 const POINTER_PATH = `${__OCT_PACKAGE_ROOT__}/scripts_files/images/icons/pointer.svg`
@@ -18,8 +19,13 @@ const ARC_NAMES = Array.from({ length: ARC_STEPS }, (_, index) => `arc${index}`)
 const PORTRAIT_MASK = MenuSDK.SdfCircle("#ffffff").decorator ?? "none"
 /** The badge's fill: the portrait's own backing, near opaque, so its reading holds on any ground. */
 const BADGE_FILL = "#181b20f2"
-/** Where the badge's centre stands on the rim: down and to the right, at half past four. */
+/**
+ * Where the badge's centre stands on the rim: down and to the right, at half past four, or up at
+ * half past one while the reading takes the bottom of the disc.
+ */
 const BADGE_REACH = Math.SQRT1_2
+/** The margin a plate keeps each side of its reading, as a share of its height. */
+const PLATE_MARGIN = 0.35
 /**
  * The blur an indicator going out of focus wears, in half-pixel steps; none at all while it is
  * sharp, since a blur of zero still composites an element into a layer of its own. It stops at
@@ -38,6 +44,7 @@ const LAYERS = [
 	"portraitClip",
 	"health",
 	"badge",
+	"plate",
 	"distance",
 	"pointer",
 	...ARC_NAMES
@@ -62,10 +69,23 @@ export interface IndicatorDress {
 	/** The art's width over its height, and the share of the disc its height spans. */
 	artAspect: number
 	artScale: number
+	/** How far above the disc's middle the art stands, clear of a reading at the bottom. */
+	artLift: number
 	/** The badge on the rim and the size its reading is set at. */
 	badgeSize: number
 	badgeFontSize: number
 	showDistance: boolean
+	/**
+	 * The shade laid over the art under the reading, cut to the disc with it: a decorator, empty
+	 * for none, and the strip of the disc it covers, from the disc's top.
+	 */
+	scrim: string
+	scrimTop: number
+	scrimHeight: number
+	/** Whether the reading sits on a plate of its own, rimmed in the indicator's colour. */
+	plate: boolean
+	/** Whether the badge stands at half past one, clear of a reading at the bottom of the disc. */
+	badgeRaised: boolean
 	showRing: boolean
 	/**
 	 * Whether the ring drains with health, leaving the art bare where it has gone, the way
@@ -91,6 +111,8 @@ export interface IndicatorFrame {
 	/** Where the distance stands, as an offset from the indicator's centre. */
 	labelX: number
 	labelY: number
+	/** The reading's width, which a plate is cut to. */
+	labelWidth: number
 	health: number
 	healthColor: string
 	baseColor: string
@@ -106,15 +128,19 @@ export interface IndicatorFrame {
 interface IndicatorState {
 	version: number
 	icon: string
-	/** The box the art is cut to, in whole screen pixels. */
+	/** The box the art is cut to, in whole screen pixels, and where it stands centred in the disc. */
 	artWidth: number
 	artHeight: number
+	artLeft: number
+	artTop: number
 	distance: string
 	healthColor: string
 	filled: number
 	accent: string
 	badge: string
 	badgeRim: string
+	plateWidth: number
+	plateRim: string
 	batch: Nullable<MenuSDK.CChainBatch>
 	stroke: { color: string; thickness: number }
 	/** The step of {@link BLUR} the elements wear. */
@@ -192,6 +218,7 @@ function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle; objective: bool
 					ref={portraitRef(handle)}
 					style={{ position: "absolute", display: "block" }}
 				/>
+				<div ref={handle.Ref("scrim")} style={{ position: "absolute" }} />
 			</div>
 			<div
 				ref={handle.Ref("health")}
@@ -226,6 +253,14 @@ function Indicator(props: { handle: MenuSDK.IWorldOverlayHandle; objective: bool
 					}}
 				/>
 			)}
+			<div
+				ref={handle.Ref("plate")}
+				style={{
+					position: "absolute",
+					backgroundColor: "transparent",
+					borderRadius: 0
+				}}
+			/>
 			<div
 				ref={handle.Ref("distance")}
 				style={{
@@ -270,6 +305,8 @@ function layout(
 	const artWidth = Math.max(artHeight, Math.round(artHeight * dress.artAspect))
 	state.artWidth = artWidth
 	state.artHeight = artHeight
+	state.artLeft = Math.round((size - artWidth) / 2)
+	state.artTop = Math.round((size - artHeight) / 2) - dress.artLift
 	const backing = handle.Element("portraitBacking")!
 	MenuSDK.WritePx(backing, "left", -half)
 	MenuSDK.WritePx(backing, "top", -half)
@@ -282,10 +319,19 @@ function layout(
 	MenuSDK.WritePx(clip, "height", size)
 	MenuSDK.WriteStyle(clip, "mask-image", PORTRAIT_MASK)
 	const portrait = handle.Element("portrait")!
-	MenuSDK.WritePx(portrait, "left", Math.round((size - artWidth) / 2))
-	MenuSDK.WritePx(portrait, "top", Math.round((size - artHeight) / 2))
+	MenuSDK.WritePx(portrait, "left", state.artLeft)
+	MenuSDK.WritePx(portrait, "top", state.artTop)
 	MenuSDK.WritePx(portrait, "width", artWidth)
 	MenuSDK.WritePx(portrait, "height", artHeight)
+	const scrim = handle.Element("scrim")!
+	if (dress.scrim !== "") {
+		MenuSDK.WritePx(scrim, "left", 0)
+		MenuSDK.WritePx(scrim, "top", dress.scrimTop)
+		MenuSDK.WritePx(scrim, "width", size)
+		MenuSDK.WritePx(scrim, "height", dress.scrimHeight)
+		MenuSDK.WriteStyle(scrim, "decorator", dress.scrim)
+	}
+	MenuSDK.WriteShown(scrim, dress.scrim !== "")
 	if (!dress.showRing) {
 		MenuSDK.WriteShown(handle.Element("health")!, false)
 	}
@@ -307,7 +353,11 @@ function layout(
 		const badgeSize = dress.badgeSize
 		const at = Math.round(half * BADGE_REACH - badgeSize / 2)
 		MenuSDK.WritePx(badge, "left", at)
-		MenuSDK.WritePx(badge, "top", at)
+		MenuSDK.WritePx(
+			badge,
+			"top",
+			dress.badgeRaised ? Math.round(-half * BADGE_REACH - badgeSize / 2) : at
+		)
 		MenuSDK.WritePx(badge, "width", badgeSize)
 		MenuSDK.WritePx(badge, "height", badgeSize)
 		MenuSDK.WritePx(badge, "font-size", dress.badgeFontSize)
@@ -330,6 +380,13 @@ function layout(
 	MenuSDK.WriteStyle(distance, "color", dress.textColor)
 	MenuSDK.WriteStyle(distance, "font-effect", dress.distanceEffect)
 	MenuSDK.WriteText(distance, "")
+	const plate = handle.Element("plate")!
+	const plated = dress.plate && dress.showDistance
+	if (plated) {
+		MenuSDK.WritePx(plate, "top", -Math.round(dress.distanceHeight / 2) - 1)
+		MenuSDK.WritePx(plate, "height", dress.distanceHeight + 2)
+	}
+	MenuSDK.WriteShown(plate, plated)
 	const pointer = handle.Element("pointer")!
 	MenuSDK.WritePx(pointer, "left", 0)
 	MenuSDK.WritePx(pointer, "top", 0)
@@ -363,6 +420,45 @@ function updateBadge(
 	}
 }
 
+/**
+ * The plate under the reading, cut to it with a margin each side and never narrower than round.
+ * It is an even number of pixels wide, so it centres on the pixel the reading does.
+ */
+function updatePlate(
+	handle: MenuSDK.IWorldOverlayHandle,
+	dress: Readonly<IndicatorDress>,
+	frame: Readonly<IndicatorFrame>,
+	state: IndicatorState,
+	x: number,
+	y: number
+): void {
+	const plate = handle.Element("plate")!
+	const height = dress.distanceHeight
+	const span = Math.max(height, frame.labelWidth + height * PLATE_MARGIN * 2)
+	const width = 2 * Math.round(span / 2) + 2
+	if (state.plateWidth !== width) {
+		MenuSDK.WritePx(plate, "left", -width / 2)
+		MenuSDK.WritePx(plate, "width", width)
+		state.plateWidth = width
+	}
+	if (state.plateRim !== frame.baseColor) {
+		MenuSDK.WriteStyle(
+			plate,
+			"decorator",
+			PillPaint(BADGE_FILL, frame.baseColor, height / 2)
+		)
+		state.plateRim = frame.baseColor
+	}
+	MenuSDK.WritePlacement(plate, x, y, 0)
+}
+
+/**
+ * Writes one frame of an indicator through its mounted elements. Art with room around it is
+ * centred by what of it shows on the backing rather than by its canvas, since a hero icon's glyph
+ * stands high or low on its own. The reading is snapped as an offset from the anchor, not as a
+ * point on the screen, so it moves in step with the disc and never slips a pixel against it as
+ * the indicator glides.
+ */
 export function UpdateIndicator(
 	handle: MenuSDK.IWorldOverlayHandle,
 	dress: Readonly<IndicatorDress>,
@@ -383,12 +479,16 @@ export function UpdateIndicator(
 			icon: "",
 			artWidth: 0,
 			artHeight: 0,
+			artLeft: 0,
+			artTop: 0,
 			distance: "",
 			healthColor: "",
 			filled: -1,
 			accent: "",
 			badge: "",
 			badgeRim: "",
+			plateWidth: 0,
+			plateRim: "",
 			batch: MenuSDK.CapsulesShaderSupported
 				? new MenuSDK.CChainBatch()
 				: undefined,
@@ -407,6 +507,8 @@ export function UpdateIndicator(
 		state.filled = -1
 		state.badge = ""
 		state.badgeRim = ""
+		state.plateWidth = 0
+		state.plateRim = ""
 	}
 	const accent = frame.warning ? frame.warningColor : frame.baseColor
 	if (state.accent !== accent) {
@@ -422,6 +524,19 @@ export function UpdateIndicator(
 	)
 	if (state.icon !== frame.icon) {
 		const portrait = handle.Element("portrait")!
+		if (dress.artScale < 1) {
+			const centre = ArtCentreOf(frame.icon)
+			MenuSDK.WritePx(
+				portrait,
+				"left",
+				state.artLeft - Math.round(centre.x * state.artWidth)
+			)
+			MenuSDK.WritePx(
+				portrait,
+				"top",
+				state.artTop - Math.round(centre.y * state.artHeight)
+			)
+		}
 		MenuSDK.WriteSizedArt(portrait, frame.icon, state.artWidth, state.artHeight)
 		MenuSDK.WriteShown(portrait, frame.icon !== "")
 		state.icon = frame.icon
@@ -432,12 +547,12 @@ export function UpdateIndicator(
 			MenuSDK.WriteText(distance, frame.distance)
 			state.distance = frame.distance
 		}
-		MenuSDK.WritePlacement(
-			distance,
-			Snap(frame.x + frame.labelX) - anchorX,
-			Snap(frame.y + frame.labelY) - anchorY,
-			0
-		)
+		const labelX = Snap(frame.labelX)
+		const labelY = Snap(frame.labelY)
+		MenuSDK.WritePlacement(distance, labelX, labelY, 0)
+		if (dress.plate) {
+			updatePlate(handle, dress, frame, state, labelX, labelY)
+		}
 	}
 	updateBadge(handle, dress, frame, state)
 	const filled = RingFilled(frame.health)

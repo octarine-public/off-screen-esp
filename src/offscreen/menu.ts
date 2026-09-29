@@ -26,7 +26,25 @@ export const enum EColorMode {
 export const enum ELabelPosition {
 	OppositeArrow,
 	Below,
-	Inside
+	Inside,
+	/** On the middle of the portrait, over a soft shade. */
+	Center,
+	/** In a dark band the bottom of the portrait fades into, just above the ring. */
+	Band,
+	/** On a plate hung on the bottom rim, rimmed in the indicator's colour. */
+	Plate
+}
+
+/**
+ * Whether a reading placed there is moved by the text offset: the gap out from the ring or in from
+ * the edge. The middle, the band and the plate stand where they stand.
+ */
+function usesOffset(position: ELabelPosition): boolean {
+	return (
+		position === ELabelPosition.OppositeArrow ||
+		position === ELabelPosition.Below ||
+		position === ELabelPosition.Inside
+	)
 }
 
 /** How an indicator goes once its target is no longer pointed at. */
@@ -161,14 +179,6 @@ export class OffscreenMenu {
 		this.ObjectiveSize = objectives.AddSlider("Objective size", 80, 50, 100)
 		this.ObjectiveSize.Suffix = "%"
 		this.ObjectiveSize.IconPath = OffscreenIcons.ObjectiveSize
-		const stackRows = () => {
-			const runes = this.Runes.value
-			this.RuneTypes.IsHidden = !runes
-			this.StackRunes.IsHidden = !runes
-			this.StackAngle.IsHidden = !runes || !this.StackRunes.value
-		}
-		this.Runes.OnValue(stackRows)
-		this.StackRunes.OnValue(stackRows)
 		this.Lotus.OnValue(lotus => {
 			this.MinLotuses.IsHidden = !lotus.value
 		})
@@ -201,7 +211,7 @@ export class OffscreenMenu {
 			0,
 			OffscreenIcons.CircleFocus
 		)
-		this.IndicatorSize = layout.AddSlider("Indicator size", 52, 36, 76)
+		this.IndicatorSize = layout.AddSlider("Indicator size", 32, 24, 76)
 		this.IndicatorSize.Suffix = "px"
 		this.IndicatorSize.IconPath = OffscreenIcons.IndicatorSize
 		this.Placement.OnValue(placement => {
@@ -215,21 +225,28 @@ export class OffscreenMenu {
 		this.ImageType = appearance.AddDropdown(
 			"Image type",
 			["Portrait", "Icon"],
-			EImageType.Portrait
+			EImageType.Icon
 		)
 		this.ImageType.IconPath = OffscreenIcons.ImageType
 		this.ShowDistance = appearance.AddToggle(
 			"Show distance",
-			true,
+			false,
 			"How far the target lies past the edge of the camera's view; zero while it is on the screen.",
 			0,
 			OffscreenIcons.ShowDistance
 		)
 		this.DistancePosition = appearance.AddDropdown(
 			"Distance position",
-			["Opposite arrow", "Below", "Inside"],
-			ELabelPosition.OppositeArrow,
-			"Where the distance stands: across the ring from the arrow, under the ring, or over the bottom of the portrait."
+			[
+				"Opposite arrow",
+				"Below",
+				"Inside",
+				"Center",
+				"Bottom band",
+				"Bottom plate"
+			],
+			ELabelPosition.Band,
+			"Where the distance stands: across the ring from the arrow, under the ring, over the bottom of the portrait, on its middle, in a dark band across its bottom, or on a plate hung on the bottom rim."
 		)
 		this.DistancePosition.IconPath = OffscreenIcons.DistancePosition
 		this.ShowHealth = appearance.AddToggle(
@@ -254,6 +271,9 @@ export class OffscreenMenu {
 			this.DistancePosition.IsHidden = !shown.value
 			this.Text.Node.IsHidden = !shown.value
 		})
+		this.DistancePosition.OnValue(position => {
+			this.Text.Offset.IsHidden = !usesOffset(position.SelectedID)
+		})
 		this.HiddenOpacity = appearance.AddSlider("Occluded opacity", 100, 30, 100)
 		this.HiddenOpacity.Suffix = "%"
 		this.HiddenOpacity.IconPath = OffscreenIcons.HiddenOpacity
@@ -265,7 +285,7 @@ export class OffscreenMenu {
 		this.HideAnimation = appearance.AddDropdown(
 			"Hide animation",
 			["Instant", "Fade", "Fade blur"],
-			EHideAnimation.Fade,
+			EHideAnimation.Instant,
 			"How an indicator goes once its target comes into view or drops out: at once, fading away, or fading out of focus."
 		)
 		this.HideAnimation.IconPath = OffscreenIcons.HideAnimation

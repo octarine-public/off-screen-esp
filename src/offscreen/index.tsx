@@ -65,7 +65,6 @@ const retained: Target[] = []
 const priority = new CIndicatorPriority<Target>()
 const collision = new CIndicatorCollision()
 const stacks = new CIndicatorStacks<Target>()
-const hudProbe = new Vector2()
 const TARGET_HEIGHT = 120
 /** How high over its origin an objective is aimed at: a rune floats, a pool and a shrine are low. */
 const OBJECTIVE_HEIGHT = 50
@@ -76,8 +75,20 @@ const HIDE_BLUR = 0.12
 const PORTRAIT_ASPECT = 16 / 9
 /** The share of an objective's disc its glyph spans, clear of the ring. */
 const OBJECTIVE_ART = 0.74
+/**
+ * The share of a hero's disc its icon spans: a head on the backing, not one cropped by it, and a
+ * smaller one while a reading takes the bottom of the disc, so the head lifted clear of the digits
+ * still stands under the ring.
+ */
+const ICON_ART = 0.72
+const ICON_ART_LOW = 0.62
 const DEG_TO_RAD = Math.PI / 180
 const RAD_TO_DEG = 180 / Math.PI
+/** The shade a reading on the middle of the disc stands on: dark under it, gone before the rim. */
+const CENTER_SCRIM =
+	"radial-gradient(ellipse closest-side, #000000b8 35%, #00000000 100%)"
+/** The band across the bottom of the disc a reading stands in: clear at its top, dark under it. */
+const BAND_SCRIM = "linear-gradient(to bottom, #0b0d1000, #0b0d10d9 55%)"
 /** The counts on the badge: a pool's lotuses, or the runes a stack stands for. */
 const COUNTS = Array.from({ length: 10 }, (_, index) => (index > 0 ? String(index) : ""))
 
@@ -119,9 +130,15 @@ function newDress(): IndicatorDress {
 		badgeLine: 20,
 		artAspect: 1,
 		artScale: 1,
+		artLift: 0,
 		badgeSize: 20,
 		badgeFontSize: 11,
 		showDistance: true,
+		scrim: "",
+		scrimTop: 0,
+		scrimHeight: 0,
+		plate: false,
+		badgeRaised: false,
 		showRing: true,
 		drain: true,
 		blur: 0,
@@ -146,6 +163,7 @@ const frame: IndicatorFrame = {
 	distance: "",
 	labelX: 0,
 	labelY: 0,
+	labelWidth: 0,
 	health: 0,
 	healthColor: "",
 	baseColor: "",
@@ -177,6 +195,7 @@ let styleRingWidth = -1
 let styleShowDistance = false
 let styleShowHealth = false
 let styleImageType = -1
+let styleLabelPosition = -1
 let styleFontFamily = ""
 let styleTextColor = ""
 let styleDistanceEffect = ""
@@ -295,6 +314,69 @@ function cut(
 	dress.fontFamily = styleFontFamily
 	dress.textColor = styleTextColor
 	dress.distanceEffect = styleDistanceEffect
+	dressLabel(dress)
+}
+
+/**
+ * What the reading stands on where the menu puts it: a shade over the middle of the art, a band
+ * the bottom of the art fades into, or a plate of its own. A reading at the bottom of the disc
+ * sends the badge up to half past one, and art smaller than the disc up out of its way.
+ */
+function dressLabel(dress: IndicatorDress): void {
+	const position = dress.showDistance ? styleLabelPosition : -1
+	const size = dress.size
+	dress.scrim = ""
+	dress.scrimTop = 0
+	dress.scrimHeight = 0
+	if (position === ELabelPosition.Center) {
+		dress.scrimTop = Math.max(0, Math.round((size - dress.distanceHeight * 2.2) / 2))
+		dress.scrimHeight = size - dress.scrimTop * 2
+		dress.scrim = CENTER_SCRIM
+	} else if (position === ELabelPosition.Band) {
+		dress.scrimHeight = Math.min(
+			size,
+			Math.round(dress.distanceHeight * 1.6) + dress.ringWidth
+		)
+		dress.scrimTop = size - dress.scrimHeight
+		dress.scrim = BAND_SCRIM
+	}
+	dress.plate = position === ELabelPosition.Plate
+	const low = readsLow(position)
+	dress.badgeRaised = low
+	dress.artLift = low ? artLift(dress, position) : 0
+}
+
+/** Whether a reading placed there takes the bottom of the disc; -1 for no reading at all. */
+function readsLow(position: number): boolean {
+	return (
+		position === ELabelPosition.Inside ||
+		position === ELabelPosition.Band ||
+		position === ELabelPosition.Plate
+	)
+}
+
+/** The share of the disc a hero's art spans: a portrait the whole of it, an icon less. */
+function heroArt(): number {
+	if (styleImageType !== EImageType.Icon) {
+		return 1
+	}
+	return readsLow(styleShowDistance ? styleLabelPosition : -1) ? ICON_ART_LOW : ICON_ART
+}
+
+/**
+ * How far art that leaves room in the disc is lifted clear of a reading at the bottom: to halfway
+ * between the ring and the top of the digits, a quarter of the reading's box in from its top,
+ * but never up under the ring. Art filling the disc stays where it is.
+ */
+function artLift(dress: IndicatorDress, position: ELabelPosition): number {
+	if (dress.artScale >= 1) {
+		return 0
+	}
+	PlaceLabel(position, 0, 1, dress, 0, labelPoint)
+	const ceiling = dress.size / 2 - dress.ringWidth
+	const digits = labelPoint[1] - dress.distanceHeight / 4
+	const artHalf = Math.max(1, Math.round(dress.size * dress.artScale)) / 2
+	return Math.floor(Math.max(0, Math.min((ceiling - digits) / 2, ceiling - artHalf)))
 }
 
 function begin(): boolean {
@@ -325,6 +407,7 @@ function begin(): boolean {
 	const radiusScale = MenuSDK.Theme.RadiusScale
 	const fontFamily = menu.Text.FontFamily()
 	imageType = menu.ImageType.SelectedID
+	labelPosition = menu.DistancePosition.SelectedID
 	if (
 		styleThemeEpoch !== themeEpoch ||
 		styleFontScale !== fontScale ||
@@ -338,6 +421,7 @@ function begin(): boolean {
 		styleShowDistance !== showDistance ||
 		styleShowHealth !== showHealth ||
 		styleImageType !== imageType ||
+		styleLabelPosition !== labelPosition ||
 		styleFontFamily !== fontFamily ||
 		styleTextColor !== textColor ||
 		styleDistanceEffect !== distanceEffect
@@ -354,6 +438,7 @@ function begin(): boolean {
 		styleShowDistance = showDistance
 		styleShowHealth = showHealth
 		styleImageType = imageType
+		styleLabelPosition = labelPosition
 		styleFontFamily = fontFamily
 		styleCapShift = menu.Text.CapShift()
 		styleTextColor = textColor
@@ -362,13 +447,12 @@ function begin(): boolean {
 			heroDress,
 			size,
 			imageType === EImageType.Icon ? 1 : PORTRAIT_ASPECT,
-			1,
+			heroArt(),
 			showHealth,
 			true
 		)
 		cut(objectiveDress, objectiveSize, 1, OBJECTIVE_ART, true, false)
 	}
-	labelPosition = menu.DistancePosition.SelectedID
 	colorMode = menu.ColorMode.SelectedID
 	customColor = PickerColor(menu.IndicatorColor)
 	wisdomColor = PickerColor(menu.WisdomColor)
@@ -450,16 +534,6 @@ function fadeOpacity(distanceSqr: number): number {
 	return 1 - farness * (1 - fadeFloor)
 }
 
-function coveredByHud(x: number, y: number): boolean {
-	hudProbe.x = x
-	hudProbe.y = y
-	return GUIInfo.ContainsMiniMap(hudProbe) || GUIInfo.ContainsLowerHUD(hudProbe)
-}
-
-function onScreen(x: number, y: number): boolean {
-	return geometry.OnScreen(x, y) && !coveredByHud(x, y)
-}
-
 /**
  * How strongly a target is drawn for what can be seen of it: a hero or a rune out of sight at the
  * occluded opacity, since where it stands is only where it was last seen. A pool and a shrine are
@@ -486,7 +560,8 @@ function heroWanted(unit: Unit, distanceSqr: number, visible: boolean): boolean 
 /**
  * Aims an indicator at its target, measures how far out of view the target lies, and sets the
  * opacity it heads for this frame, which its pile and the stacks may still take away. One that
- * cannot be aimed at all is put out at once.
+ * cannot be aimed at all is put out at once. In view means within the screen's own bounds only:
+ * a target under the minimap or the lower HUD is still on it.
  */
 function aim(entry: Target): void {
 	const entity = entry.entity
@@ -516,8 +591,8 @@ function aim(entry: Target): void {
 		feet
 	)
 	const onFrame =
-		(headProjected && onScreen(screen[0], screen[1])) ||
-		(feetProjected && onScreen(feet[0], feet[1]))
+		(headProjected && geometry.OnScreen(screen[0], screen[1])) ||
+		(feetProjected && geometry.OnScreen(feet[0], feet[1]))
 	entry.inView = onFrame
 	entry.projected = headProjected
 	entry.screenX = screen[0]
@@ -633,10 +708,8 @@ function placeLabel(entry: Target, dress: IndicatorDress): void {
 		labelPosition,
 		entry.pointerX,
 		entry.pointerY,
-		dress.size / 2,
-		dress.distanceOffset,
+		dress,
 		entry.labelWidth,
-		dress.distanceHeight,
 		labelPoint
 	)
 	entry.labelX = labelPoint[0]
@@ -660,6 +733,7 @@ function placeFrame(entry: Target): void {
 	frame.distance = dressOf(entry).showDistance ? entry.distanceText : ""
 	frame.labelX = entry.labelX
 	frame.labelY = entry.labelY
+	frame.labelWidth = entry.labelWidth
 	frame.warning = entry.warning
 	frame.opacity = entry.alpha
 	frame.veil = entry.veil

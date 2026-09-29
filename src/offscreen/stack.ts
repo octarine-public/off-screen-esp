@@ -13,7 +13,7 @@ export interface StackItem {
 	stack: number
 	/** The key of the indicator it was folded into last frame, -1 if none. */
 	stackedInto: number
-	/** Whether the target itself stands on the screen this frame, clear of the HUD. */
+	/** Whether the target itself stands on the screen this frame, the HUD over it or not. */
 	inView: boolean
 }
 
