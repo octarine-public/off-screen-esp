@@ -101,7 +101,7 @@ export class OffscreenMenu {
 		page.SortNodes = false
 		this.Page = page
 
-		this.State = page.AddToggle("State", true)
+		this.State = page.AddToggle("State", false)
 		page.HeaderControl = this.State
 		page.Gate = this.State
 
