@@ -199,6 +199,8 @@ let styleLabelPosition = -1
 let styleFontFamily = ""
 let styleTextColor = ""
 let styleDistanceEffect = ""
+/** The dp ratio the shapes were painted at: their decorators are laid out in dp. */
+let styleUnit = -1
 /** How far the chosen face lets its digits down to centre them, as a share of their size. */
 let styleCapShift = 0
 
@@ -406,6 +408,7 @@ function begin(): boolean {
 	const fontScale = MenuSDK.Theme.FontScale
 	const radiusScale = MenuSDK.Theme.RadiusScale
 	const fontFamily = menu.Text.FontFamily()
+	const unit = MenuSDK.DpToPx(1)
 	imageType = menu.ImageType.SelectedID
 	labelPosition = menu.DistancePosition.SelectedID
 	if (
@@ -424,7 +427,8 @@ function begin(): boolean {
 		styleLabelPosition !== labelPosition ||
 		styleFontFamily !== fontFamily ||
 		styleTextColor !== textColor ||
-		styleDistanceEffect !== distanceEffect
+		styleDistanceEffect !== distanceEffect ||
+		styleUnit !== unit
 	) {
 		styleThemeEpoch = themeEpoch
 		styleFontScale = fontScale
@@ -443,6 +447,7 @@ function begin(): boolean {
 		styleCapShift = menu.Text.CapShift()
 		styleTextColor = textColor
 		styleDistanceEffect = distanceEffect
+		styleUnit = unit
 		cut(
 			heroDress,
 			size,

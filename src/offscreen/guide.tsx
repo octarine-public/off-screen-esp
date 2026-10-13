@@ -18,6 +18,7 @@ let dotDecorator = ""
 let lastAccent = ""
 let lastEpoch = -1
 let lastDotSize = -1
+let lastUnit = -1
 
 function shown(): boolean {
 	return (
@@ -81,10 +82,17 @@ function begin(): boolean {
 	const accent = accentColor()
 	const epoch = MenuSDK.Theme.PaletteEpoch
 	const nextDotSize = Math.max(4, Math.round(DOT_SIZE * scale))
-	if (accent !== lastAccent || epoch !== lastEpoch || nextDotSize !== lastDotSize) {
+	const unit = MenuSDK.DpToPx(1)
+	if (
+		accent !== lastAccent ||
+		epoch !== lastEpoch ||
+		nextDotSize !== lastDotSize ||
+		unit !== lastUnit
+	) {
 		lastAccent = accent
 		lastEpoch = epoch
 		lastDotSize = nextDotSize
+		lastUnit = unit
 		dotSize = nextDotSize
 		dotDecorator = PillPaint(`${accent.slice(0, 7)}99`, "#00000000", dotSize / 2)
 	}

@@ -41,42 +41,46 @@ export function PickerColor(picker: MenuSDK.ColorPicker): string {
 }
 
 /**
- * A ring `thickness` wide the whole way round, laid inside the edge of its circle the way the sdf
- * circle lays a border. The circle stands a pixel in from the element on every side, for the
+ * A ring `thickness` px wide the whole way round, laid inside the edge of its circle the way the
+ * sdf circle lays a border. The circle stands a pixel in from the element on every side, for the
  * antialiased edge, so the element is drawn two pixels wider than the ring.
+ *
+ * The shader reads a border and a radius in dp, so every length here goes in through the dp
+ * ratio of the moment and the decorator is kept per ratio: one taken at another resolution or
+ * menu scale draws at the wrong size.
  */
 export function RingPaint(color: string, thickness: number): string {
-	const key = `${color}|${thickness}`
+	const width = MenuSDK.ToLayoutUnits(thickness)
+	const key = `${color}|${width}`
 	const decorator = rings.get(key)
 	if (decorator === undefined) {
 		return keep(
 			rings,
 			key,
-			MenuSDK.SdfCircle("#00000000", thickness, color, 1).decorator!
+			MenuSDK.SdfCircle("#00000000", width, color, 1).decorator!
 		)
 	}
 	return decorator
 }
 
-/** A pill `thickness` wide, for a strip of a ring on a host without the capsules shader. */
+/** A pill `thickness` px wide, for a strip of a ring on a host without the capsules shader. */
 export function ArcPaint(color: string, thickness: number): string {
-	const key = `${color}|${thickness}`
+	const radius = MenuSDK.ToLayoutUnits(thickness / 2)
+	const key = `${color}|${radius}`
 	const decorator = arcs.get(key)
 	if (decorator === undefined) {
-		return keep(
-			arcs,
-			key,
-			MenuSDK.SdfShape(thickness / 2, color, 0, "", 1).decorator!
-		)
+		return keep(arcs, key, MenuSDK.SdfShape(radius, color, 0, "", 1).decorator!)
 	}
 	return decorator
 }
 
+/** A pill rounded at `radius` px, with a rim one dp wide. */
 export function PillPaint(fill: string, rim: string, radius: number): string {
-	const key = `${fill}|${rim}|${radius}`
+	const corner = MenuSDK.ToLayoutUnits(radius)
+	const key = `${fill}|${rim}|${corner}`
 	const decorator = pills.get(key)
 	if (decorator === undefined) {
-		return keep(pills, key, MenuSDK.SdfShape(radius, fill, 1, rim, 1).decorator!)
+		return keep(pills, key, MenuSDK.SdfShape(corner, fill, 1, rim, 1).decorator!)
 	}
 	return decorator
 }
