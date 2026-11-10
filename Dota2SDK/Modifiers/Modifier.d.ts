@@ -317,9 +317,10 @@ declare class Modifier {
 	 * Shadow Word heals an ally - but damage taken off the unit's health as it is
 	 * (`DamageTicks.Removal`): Prophet's Pendulum's held damage on its own bearer. Each tick through
 	 * the parent's shields as the ones before left them: `shields` when given, else as they stand
-	 * (`ShieldLedger`).
+	 * (`ShieldLedger`). `hits`, when given, takes each tick it counts, named by its ability and its
+	 * kind of damage (`DamageHits.From`).
 	 */
-	public DamageUntil(time: number, strength?: ATTACK_DAMAGE_STRENGTH, shields?: ShieldLedger, type?: DAMAGE_TYPES): number
+	public DamageUntil(time: number, strength?: ATTACK_DAMAGE_STRENGTH, shields?: ShieldLedger, type?: DAMAGE_TYPES, hits?: DamageHits): number
 	/**
 	 * Game time the last tick it deals its parent is due, of those `DamageUntil` counts at the roll
 	 * `strength` - the lowest by default - to its end: the one that finishes the parent when one
@@ -378,14 +379,15 @@ declare class Modifier {
 	 * set off from now on - a shot flying to the unit already is a blow on its way
 	 * (`Unit.HealthAt`) - and at the lowest only those set off while the unit cannot walk out of
 	 * their reach (`Unit.ImmobileUntil`), each at the unit by its chance (`Ability.TickChance`).
-	 * None for a modifier whose parent damages nothing around it.
+	 * None for a modifier whose parent damages nothing around it. `hits`, when given, takes each
+	 * tick it counts, named by its ability and its kind of damage (`DamageHits.From`).
 	 * @example
 	 * let shots = 0
 	 * for (const ward of Modifier.DamagersAround) {
 	 * 	shots += ward.DamageAround(enemy, GameState.RawGameTime + 2)
 	 * }
 	 */
-	public DamageAround(unit: Unit, time: number, strength?: ATTACK_DAMAGE_STRENGTH, shields?: ShieldLedger, type?: DAMAGE_TYPES): number
+	public DamageAround(unit: Unit, time: number, strength?: ATTACK_DAMAGE_STRENGTH, shields?: ShieldLedger, type?: DAMAGE_TYPES, hits?: DamageHits): number
 	/**
 	 * Game time the last tick its parent deals `unit` is due, of those `DamageAround` counts at the
 	 * roll `strength` - the lowest by default; `-Infinity` for none.

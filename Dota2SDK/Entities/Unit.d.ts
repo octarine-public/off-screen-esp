@@ -511,13 +511,28 @@ declare class Unit extends Entity {
 	 * the bar at, so it stays on the bar while the camera and the unit move even on a frame whose
 	 * script pass ran late. Subtract {@link HealthBarPositionCorrection} to stand on the bar's
 	 * top-left corner. Kept for the unit's life and freed with it; the offset is re-read on access.
+	 * A destroyed unit answers an anchor that is never defined, so what is pinned to it stays hidden.
 	 * @example
 	 * canvas.Anchor(unit.HealthBarRenderAnchor)
 	 * canvas.Rect(unit.HealthBarPositionCorrection.Negate(), unit.HealthBarSize, { color })
 	 */
 	public get HealthBarRenderAnchor(): CRenderAnchor
-	/** Releases {@link HealthBarRenderAnchor}'s slot; the SDK calls it when the unit is destroyed. */
+	/**
+	 * A render anchor on the unit's origin that follows it: what is painted relative to it (MenuSDK
+	 * `Canvas.Anchor`) is placed when the frame is presented, where the unit stands then. Kept for
+	 * the unit's life and freed with it, so nothing a script pins to a unit needs an anchor of its
+	 * own. The core starts reading a unit's origin one present after the first access: take the
+	 * anchor when the unit is first tracked, not on the frame its content first shows, and switch
+	 * what is drawn between this and a world anchor rather than redefining one anchor. A destroyed
+	 * unit answers an anchor that is never defined.
+	 * @example
+	 * canvas.Anchor(unit.OriginRenderAnchor)
+	 * canvas.Text("illusion", new Vector2(0, -20))
+	 */
+	public get OriginRenderAnchor(): CRenderAnchor
+	/** Releases the unit's render anchors' slots; the SDK calls it when the unit is destroyed. */
 	public ReleaseRenderAnchors_(): void
+	protected OnScreenUnlisted(): boolean
 	/**
 	 * The bar the game draws over a hero, or over a unit a player controls (a bear, a familiar, a
 	 * brewling), standing on `anchor` ({@link HealthBarAnchor}): the frame, the health and mana
@@ -1158,9 +1173,26 @@ declare class Unit extends Entity {
 	 * the units around that keep damaging it (`Modifier.DamagersAround`) - a Death Ward, the Serpent
 	 * Wards - due by then, all through its shields in turn (`ShieldLedger`) - those `pool` holds,
 	 * spending them, when given: what other blows left; of the damage `type` alone when given. The
-	 * rum's hangover among them never kills (`SpareDamageUntil`).
+	 * rum's hangover among them never kills (`SpareDamageUntil`). `hits`, when given, takes each
+	 * tick it counts, as they come - `DamageOverTimeHits` gives them in the order they land.
 	 */
-	public DamageOverTimeUntil(time: number, strength?: ATTACK_DAMAGE_STRENGTH, type?: DAMAGE_TYPES, pool?: ShieldLedger): number
+	public DamageOverTimeUntil(time: number, strength?: ATTACK_DAMAGE_STRENGTH, type?: DAMAGE_TYPES, pool?: ShieldLedger, hits?: DamageHits): number
+	/**
+	 * The ticks the damage over time on the unit deals it from now until the game time `time` at
+	 * the roll `strength` - the lowest, those that surely land, by default - one by one into `out`,
+	 * cleared first, in the order they land: what `DamageOverTimeUntil` sums. Each with the game
+	 * time it lands, what it deals the unit after and before what the unit takes of it, the ability
+	 * it is dealt through and its kind of damage (`DamageHits`). A tick finds the health and the
+	 * shields the ones before it left, whichever modifier dealt them.
+	 * @example
+	 * // whether a burn takes the creep before the hero's attack lands
+	 * const ticks = creep.DamageOverTimeHits(landsAt, ATTACK_DAMAGE_STRENGTH.DAMAGE_MAX, hits)
+	 * let health = creep.HP
+	 * for (let i = 0; i < ticks.Count && health > 0; i++) {
+	 * 	health -= ticks.Dealt[i]
+	 * }
+	 */
+	public DamageOverTimeHits(time: number, strength?: ATTACK_DAMAGE_STRENGTH, out?: DamageHits): DamageHits
 	/**
 	 * The part of `DamageOverTimeUntil` that never kills the unit (`Modifier.NeverKills`): the rum's
 	 * hangover, which leaves it 1 health at least.

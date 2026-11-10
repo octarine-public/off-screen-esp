@@ -168,10 +168,33 @@ declare class Ability extends Entity implements IPredictionProfile {
 	 * Whether a cast of it puts on the unit it lands on - its caster for one cast at nothing - a
 	 * shell that takes every spell cast at it that a Linken's Sphere would take
 	 * (`TriggersSpellBlock`) and lands while the shell stands (`GuardDuration`): Counterspell, sending
-	 * it back (`Unit.AbsorbsAt`); Linken's Sphere cast at an ally. A Lotus Orb only sends it back.
-	 * None for most.
+	 * it back (`Unit.AbsorbsAt`); Linken's Sphere cast at an ally. A Lotus Orb only sends it back
+	 * (`ReflectsTargetedSpells`). None for most.
 	 */
 	public get BlocksTargetedSpells(): boolean
+	/**
+	 * Whether a cast of it puts on the unit it lands on - its caster for one cast at nothing - a
+	 * shell that sends back at its caster every spell cast at the unit that a Linken's Sphere would
+	 * take (`TriggersSpellBlock`) and lands while the shell stands (`GuardDuration`,
+	 * `Unit.ReflectsAt`): Lotus Orb, Counterspell. The spell takes the unit all the same unless the
+	 * shell takes it too (`BlocksTargetedSpells`) - or it comes back as one that frees it
+	 * (`SentBackFrees`). None for most.
+	 */
+	public get ReflectsTargetedSpells(): boolean
+	/**
+	 * Whether its effect, sent back at its caster by a shell (`ReflectsTargetedSpells`), lets go of
+	 * the unit it was cast at: a channel whose hit takes the casting away - a stun, a hex, a silence
+	 * (`HitUnitState`) - breaks as its caster takes it, and what the channel held goes with it:
+	 * Dismember, Fiend's Grip, Shackles.
+	 * @example
+	 * const freed = hero.LotusAt(goesOff) && threat.Ability.SentBackFrees
+	 */
+	public get SentBackFrees(): boolean
+	/**
+	 * As `SentBackFrees`, for an ability of this class before any unit carries it, `data` its game
+	 * data: read off the class's prototype.
+	 */
+	public SentBackFreesOf(data: AbilityData): boolean
 	/**
 	 * Whether its guard (`GuardDuration`) keeps off a projectile homing on the unit it guards: all
 	 * do but one whose cast puts the projectile's hit off past it - Mischief, the projectile coming

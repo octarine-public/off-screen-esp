@@ -92,7 +92,7 @@ declare namespace MenuSDK {
 		 * pass ran late. Without an argument painting is in screen px again.
 		 * @example
 		 * const anchor = new CRenderAnchor()
-		 * anchor.SetEntity(unit.Index, 0, 0, 200)
+		 * anchor.SetEntity(unit.Handle, 0, 0, 200)
 		 * canvas.Anchor(anchor)
 		 * canvas.Rect(new Vector2(-50, -10), new Vector2(100, 8), { color: Color.Green })
 		 * canvas.Anchor()

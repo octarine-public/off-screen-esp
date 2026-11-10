@@ -19,13 +19,15 @@ declare enum ERenderAnchorFlags {
  * even on a frame whose script pass ran late. Define it when its target or offsets change, not
  * every frame, and `Free` it when its target is gone: there are 4096 slots.
  *
- * An entity anchor is hidden while the game has no entity at its index, and for the one present
- * after it is first pointed at an entity, whose origin the core starts reading then.
+ * An entity anchor names its entity by handle - index and serial - so it is hidden while the game
+ * has no such entity, even when another one has taken the index since, and for the one present
+ * after it is first pointed at an entity, whose origin the core starts reading then. An entity the
+ * SDK made up itself is none of the game's: pin what belongs to it with `SetWorld`.
  *
  * On a host without anchors `Slot` stays -1 and `Project` gives the same point from the script.
  * @example
  * const bar = new CRenderAnchor()
- * bar.SetEntity(unit.Index, 0, 0, unit.HealthBarOffset)
+ * bar.SetEntity(unit.Handle, 0, 0, unit.HealthBarOffset)
  * canvas.Anchor(bar)
  * canvas.Rect(new Vector2(-50, -8), new Vector2(100, 8), { color: Color.Green })
  */
@@ -35,12 +37,12 @@ declare class CRenderAnchor {
 	/** Whether the anchor has been defined and not freed since. */
 	public get Defined(): boolean
 	/**
-	 * Pins the anchor `x, y, z` world units from entity `index`'s origin and `screenX, screenY` px
-	 * from where that lands. Out-of-range arguments leave the anchor as it was.
+	 * Pins the anchor `x, y, z` world units from the origin of the entity `handle` names and
+	 * `screenX, screenY` px from where that lands. Out-of-range arguments leave the anchor as it was.
 	 * @example
-	 * anchor.SetEntity(hero.Index, 0, 0, hero.HealthBarOffset, 0, -4)
+	 * anchor.SetEntity(hero.Handle, 0, 0, hero.HealthBarOffset, 0, -4)
 	 */
-	public SetEntity(index: number, x: number, y: number, z: number, screenX?: number, screenY?: number, flags?: ERenderAnchorFlags): void
+	public SetEntity(handle: number, x: number, y: number, z: number, screenX?: number, screenY?: number, flags?: ERenderAnchorFlags): void
 	/**
 	 * Pins the anchor to the world point `x, y, z`, `screenX, screenY` px from where it lands.
 	 * @example

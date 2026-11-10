@@ -15,7 +15,18 @@ declare class CRenderer {
 	public ScaleWidth(w: number, screenSize?: Vector2): number
 	public ScaleHeight(h: number, screenSize?: Vector2): number
 	public ScaleVector(w: number, h: number, screenSize?: Vector2): Vector2
-	public WorldToScreen(position: Vector2 | Vector3, cull?: boolean): Nullable<Vector2>
+	/**
+	 * Where a world point stands on the screen, on whole pixels: a 2D point stands on the ground
+	 * under it. Undefined when it does not project, and with `cull` when it stands more than a
+	 * quarter of the window off any edge. Written into `out` when one is given, so a caller
+	 * projecting every frame allocates nothing; a new vector otherwise.
+	 * @example
+	 * const screen = new Vector2()
+	 * if (Renderer.WorldToScreen(unit.Position, true, screen) !== undefined) {
+	 * 	marker.Place(screen)
+	 * }
+	 */
+	public WorldToScreen(position: Vector2 | Vector3, cull?: boolean, out?: Vector2): Nullable<Vector2>
 	public ScreenToWorld(screen: Vector2): Vector3
 	public GetAspectRatio(windowSize?: Vector2): "4x3" | "16x9" | "16x10" | "21x9" | "unknown"
 }

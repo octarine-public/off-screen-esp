@@ -5,13 +5,14 @@
  * frame whose script pass runs late. Add them from a `WorldDraw` listener: the frame's list is sent
  * when the listeners return, before `PreDraw`, and starts empty on the next frame.
  *
- * Positions are world units. With an `entity` index they are relative to that entity's origin and
- * follow it exactly; such a shape is hidden while the game has no entity at the index, and on the
- * first frame a list names it, whose origin the core starts reading then. A shape with a
- * non-finite or out-of-range argument, or past the frame's 65536 vertices, is skipped.
+ * Positions are world units. With an `entity` handle they are relative to that entity's origin and
+ * follow it exactly; such a shape is hidden while the game has no such entity - another one that
+ * took its index is not it - and on the first frame a list names it, whose origin the core starts
+ * reading then. A shape with a non-finite or out-of-range argument, or past the frame's 65536
+ * vertices, is skipped.
  * @example
  * Events.on("WorldDraw", () => {
- * 	WorldDraw.Ring(Vector3.Zero, hero.AttackRange, new Color(0, 0, 0, 0), Color.White, 2, hero.Index)
+ * 	WorldDraw.Ring(Vector3.Zero, hero.AttackRange, new Color(0, 0, 0, 0), Color.White, 2, hero.Handle)
  * })
  */
 declare class CWorldDraw {

@@ -338,8 +338,10 @@ declare namespace MenuSDK {
 		 * would come out the same: nothing is pushed, compared or written this frame. Answers whether
 		 * it did. A surface already drawn into this frame, one standing with no frame at all - never
 		 * drawn, or wiped since - or one with an image still waiting on its texture keeps nothing, and
-		 * its frame ends as it would have. Anything
-		 * pushed after a hold in the same frame opens the frame as usual and drops the hold.
+		 * its frame ends as it would have. Arcs and paths ride in capsule slots handed out afresh every
+		 * frame, so a kept frame claims its slots again, and keeps nothing when the frame's slots have
+		 * run out. Anything pushed after a hold in the same frame opens the frame as usual and drops
+		 * the hold.
 		 *
 		 * `shiftX` / `shiftY` stand the kept frame that many px off where it was drawn, the whole of it
 		 * at once, for a card placed from a world position by hand whose point moved on screen while
@@ -411,7 +413,8 @@ declare namespace MenuSDK {
 		/**
 		 * Ends the host frame for this surface, which {@link EndHudFrame} does for every one: wiped
 		 * while the host keeps overlays down, left as it stands on a frame without a retained pass if
-		 * that is where it was drawn, and ticked otherwise.
+		 * that is where it was drawn - its capsule slots claimed again, or wiped where they ran out -
+		 * and ticked otherwise.
 		 */
 		public EndFrame_(shown: boolean, retainedPass: boolean): void
 		/** Whether what the surface shows has frosted glass on it, which needs the backdrop captured. */

@@ -56,6 +56,14 @@ declare class UnitData {
 	public readonly MinimapIcon: string
 	public readonly MinimapIconSize: number
 	public readonly HasInventory: boolean
+	/**
+	 * Whether the unit is a creep of the jungle's camps: its data marks it a neutral unit type
+	 * (`IsNeutralUnitType`) and builds it on the neutral creep class - not an event's neutral
+	 * unit, a Diretide greevil, nor Roshan.
+	 * @example
+	 * const campCreeps = [...UnitData.globalStorage.values()].filter(data => data.IsNeutralCreep)
+	 */
+	public readonly IsNeutralCreep: boolean
 	public readonly HealthBarOffset: number
 	public readonly WorkshopName: string
 	/**

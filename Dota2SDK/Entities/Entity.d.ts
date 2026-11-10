@@ -98,11 +98,12 @@ declare class Entity implements INativeEntity {
 	 */
 	public PositionsStale_: boolean
 	/**
-	 * Whether the unit stands in the view of this frame's camera, widened a little past the screen's
-	 * edges: a flag the core sets for the units it finds on screen before the frame's draw, so a
-	 * drawer skips a unit off screen without projecting it. Always false for anything but a unit;
-	 * always true while the core lists nothing (`Source2SDK.OnScreenListKnown`), so a drawer that
-	 * skips what is off screen draws everything there.
+	 * Whether the entity stands in the view of this frame's camera, widened a little past the
+	 * screen's edges. For a unit it is a flag the core sets for the units it finds on screen before
+	 * the frame's draw, so a drawer skips a unit off screen without projecting it; anything else,
+	 * which the core does not list, is projected on access. Always true while the core lists
+	 * nothing (`Source2SDK.OnScreenListKnown`), so a drawer that skips what is off screen draws
+	 * everything there.
 	 * @example
 	 * if (!enemy.IsOnScreen) {
 	 * 	return
@@ -145,6 +146,11 @@ declare class Entity implements INativeEntity {
 	public get CustomNativeID(): number
 	public get Handle(): number
 	public get Forward(): Vector3
+	/**
+	 * Whether the entity stands on screen, for a kind the core's on-screen list leaves out: its
+	 * position projected against the frame widened as the core widens it.
+	 */
+	protected OnScreenUnlisted(): boolean
 	public SerialMatches(serial: number): boolean
 	public HandleMatches(handle: number): boolean
 	public EntityMatches(ent: Entity): boolean

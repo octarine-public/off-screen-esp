@@ -110,6 +110,11 @@ interface IPredictionTarget extends IMovingBody {
 	readonly CourseChangeRate: number
 	PredictPosition(delay: number, options?: IMovementOptions, out?: MovementPrediction): MovementPrediction
 	PredictRegion(delay: number): IReachable
+	/**
+	 * The farthest the unit can be at the game time `to` from where it is at `from`: carried by a
+	 * motion, walking whenever nothing holds it.
+	 */
+	ReachBetween(from: number, to: number): number
 }
 /** What state attribution reads from a modifier: who it is, when it came and when it goes. */
 interface IStateCarrier {
