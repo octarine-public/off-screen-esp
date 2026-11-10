@@ -7,5 +7,7 @@ declare class modifier_dawnbreaker_fire_wreath_caster extends Modifier implement
 	protected GetDisableTurning(): [number, boolean]
 	protected GetMoveSpeedAbsoluteMin(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

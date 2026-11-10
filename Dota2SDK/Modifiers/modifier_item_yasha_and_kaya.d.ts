@@ -6,4 +6,5 @@ declare class modifier_item_yasha_and_kaya extends Modifier {
 	protected GetMoveSpeedBonusPercentageUnique(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

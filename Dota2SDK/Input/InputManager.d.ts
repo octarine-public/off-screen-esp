@@ -266,4 +266,36 @@ interface CInputManager {
 	QueryUnit: Nullable<Unit>
 	SelectedUnit: Nullable<Unit>
 	CursorOnWorld: Vector3
+	/**
+	 * Whether a part of the HUD that swallows a click covers the cursor (`GUIInfo.Contains`) -
+	 * the minimap, the lower HUD, the top bar, the shop: a click there lands nowhere in the world.
+	 * @example
+	 * if (!InputManager.CursorOverHUD) {
+	 * 	hero.MoveTo(InputManager.CursorOnWorld)
+	 * }
+	 */
+	readonly CursorOverHUD: boolean
+	/**
+	 * The unit a click of the player's lands on right now: the one the game itself has under the
+	 * cursor (the `weaponselect` of its user command), while the cursor stands on the world and
+	 * inside that unit's bounding box as the screen shows it. Neither alone is it: the game keeps
+	 * its pick a tick after the cursor has left the unit, longer through a fast sweep, and picks
+	 * the own hero over the lower HUD; the box reaches past the model at its corners. None when
+	 * the cursor is on no unit.
+	 * @example
+	 * if (InputManager.UnitUnderCursor === enemy) {
+	 * 	hero.AttackTarget(enemy)
+	 * }
+	 */
+	readonly UnitUnderCursor: Nullable<Unit>
+	/**
+	 * Whether a click of the player's lands on `entity` right now - a rune or an item on the
+	 * ground, which the game picks by the cursor itself rather than its `weaponselect`: the
+	 * cursor stands on the world and inside the entity's bounding box as the screen shows it.
+	 * @example
+	 * if (InputManager.IsUnderCursor(rune)) {
+	 * 	hero.PickupRune(rune)
+	 * }
+	 */
+	IsUnderCursor(entity: Entity): boolean
 }

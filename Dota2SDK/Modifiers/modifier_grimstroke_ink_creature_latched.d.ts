@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_grimstroke_ink_creature_latched extends Modifier {
+	public get IsPurgable(): boolean
 }

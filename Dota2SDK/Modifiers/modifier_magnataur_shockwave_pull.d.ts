@@ -4,4 +4,5 @@ declare class modifier_magnataur_shockwave_pull extends Modifier implements IDeb
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

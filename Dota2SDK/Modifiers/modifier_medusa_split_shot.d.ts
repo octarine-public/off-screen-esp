@@ -2,6 +2,7 @@
 declare class modifier_medusa_split_shot extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public get ForceVisible(): boolean
-	protected GetPreAttackDamagePercentage(): [number, boolean]
+	protected GetDamageOutgoingPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

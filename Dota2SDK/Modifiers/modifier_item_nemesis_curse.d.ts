@@ -4,4 +4,5 @@ declare class modifier_item_nemesis_curse extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

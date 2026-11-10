@@ -28,11 +28,10 @@ declare class Hero extends Unit {
 	public get FocusFireTarget(): Nullable<Unit>
 	public get IsRealHero(): boolean
 	public get HeroID(): number
-	public get MagicalDamageResist(): number
 	public get IsIllusion(): boolean
 	public get IsMyHero(): boolean
 	public get MaxRespawnDuration(): number
-	public get HealthBarSize(): Vector2
-	public get HealthBarPositionCorrection(): Vector2
+	protected get UnitHealthBarSize(): Vector2
+	protected get UnitHealthBarPositionCorrection(): Vector2
 	public get HeroFacet(): string
 }

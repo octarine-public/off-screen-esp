@@ -16,7 +16,6 @@ declare class AbilityData {
 	public readonly AbilityType: ABILITY_TYPES
 	public readonly BonusStats: EDOTASpecialBonusStats
 	public readonly MaxLevel: number
-	public readonly TexturePath: string
 	public readonly TargetFlags: DOTA_UNIT_TARGET_FLAGS
 	public readonly TargetTeam: DOTA_UNIT_TARGET_TEAM
 	public readonly TargetType: DOTA_UNIT_TARGET_TYPE
@@ -27,6 +26,8 @@ declare class AbilityData {
 	public readonly DependentOnAbility: string
 	public readonly IsItem: boolean
 	public readonly IsGrantedByScepter: boolean
+	/** Whether Aghanim's Shard grants the ability: the hero has no slot for it without the Shard. */
+	public readonly IsGrantedByShard: boolean
 	public readonly ID: number
 	public readonly EffectName: string
 	public readonly Cost: number
@@ -47,18 +48,34 @@ declare class AbilityData {
 	public readonly HasScepterUpgrade: boolean
 	public readonly ItemIsNeutralDrop: boolean
 	public readonly ItemIsNeutralActiveDrop: boolean
+	/**
+	 * The tier of the neutral items pool the item stands in now (`scripts/npc/neutral_items.txt`),
+	 * from 1; 0 for an item no tier holds - a shop's item, or a neutral one the pool no longer has.
+	 */
+	public readonly NeutralTier: number
 	public readonly ShouldBeSuggested: number
+	/**
+	 * Whether a Tempest Double gets the item with the rest of its hero's: every item the data does
+	 * not mark otherwise - consumables, the gem, the bottle, the rapier are marked.
+	 */
 	public readonly IsTempestDoubleClonable: boolean
 	public readonly SuggestPregame: boolean
 	public readonly ItemSupport: boolean
 	public readonly SpeciallyBannedFromNeutralSlot: boolean
 	public readonly CastAnimation: Nullable<GameActivity>
 	public readonly LinkedAbility: string
+	/**
+	 * The abilities its data names as its own (`SubAbilityNames`): those a cast of it lays - Nose
+	 * Dive's Nethertoxin and Corrosive Skin, Death Seeker's Death Pulse - or picks among.
+	 */
+	public readonly SubAbilityNames: string[]
 	public readonly ShouldBeInitiallySuggested: boolean
 	public readonly ItemStockInitial: Nullable<number>
 	public readonly ItemDisassembleRule: DOTA_ITEM_DISASSEMBLE
 	public readonly ItemAliases: string[]
 	public readonly HasCastRangeSpecial: boolean
+	/** How far past its cast range a unit cast at may get while the cast point runs before the cast breaks off. */
+	public readonly CastRangeBuffer: number
 	public readonly HasManaCostSpecial: boolean
 	public readonly HasChannelTimeSpecial: boolean
 	public readonly HasAbilityDamageSpecial: boolean
@@ -74,13 +91,33 @@ declare class AbilityData {
 	public get CanHitSpellImmuneEnemy(): boolean
 	public get CanHitSpellImmuneAlly(): boolean
 	public get IsDispellable(): boolean
+	/**
+	 * Whether the HUD shows it in the innate slot, under the innate glyph rather than a picture of
+	 * its own: an innate that is passive, or one the data puts in the innate UI - Hidden Gates - and
+	 * not one it keeps out of it, nor one bound to a key of the ability bar - Admiral's Rum. An
+	 * innate cast from the ability bar - Stone Remnant, Mischief, Invoke - shows its own.
+	 * @example
+	 * const icon = data.InInnateSlot ? innateGlyph : data.TexturePath
+	 */
+	public get InInnateSlot(): boolean
 	public HasBehavior(flag: DOTA_ABILITY_BEHAVIOR): boolean
 	public HasTargetTeam(flag: DOTA_UNIT_TARGET_TEAM): boolean
 	public HasBonusStats(flag: EDOTASpecialBonusStats): boolean
 	public HasTargetFlags(flag: DOTA_UNIT_TARGET_FLAGS): boolean
 	public HasTargetType(flag: DOTA_UNIT_TARGET_TYPE): boolean
+	/** The ability's icon, looked up in the game's files the first time it is read. */
+	public get TexturePath(): string
 	public GetTexturePath(altCastState: boolean, abilName?: string): string
 	public GetSpecialValue(specialName: string, level: number, abilityName?: string): number
+	/**
+	 * The most the special value `specialName` reaches: at the ability's top level, with every bonus
+	 * the data names for it - Aghanim's Scepter and Shard in any variant, every talent - but a
+	 * facet's, one of several a hero picks between. What the ability may do at its best, before any
+	 * unit carries it.
+	 * @example
+	 * const stun = AbilityData.GetAbilityByName("lion_impale")?.GetTopSpecialValue("duration")
+	 */
+	public GetTopSpecialValue(specialName: string, abilityName?: string): number
 	public GetSpecialValueWithTalent(owner: Unit, specialName: string, level: number, abilityName: string, { useFacet }: ISpecialValueOptions, checkShard?: boolean, checkScepter?: boolean, isStolen?: boolean): number
 	public GetCastRange(level: number): number
 	public GetHealthCost(level: number): number

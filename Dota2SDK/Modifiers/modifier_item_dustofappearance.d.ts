@@ -7,4 +7,5 @@ declare class modifier_item_dustofappearance extends Modifier implements IDebuff
 	public IsDebuff(): this is IDebuff
 	public GetTexturePath(): string
 	protected CalculateModifierMoveSpeedPercentage(): [number, boolean]
+	protected UpdateSpecialValues(): void
 }

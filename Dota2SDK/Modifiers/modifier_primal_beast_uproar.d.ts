@@ -9,4 +9,5 @@ declare class modifier_primal_beast_uproar extends Modifier implements IBuff {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

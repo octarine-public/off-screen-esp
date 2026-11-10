@@ -6,4 +6,5 @@ declare class modifier_life_stealer_unfettered extends Modifier implements IBuff
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetStatusResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

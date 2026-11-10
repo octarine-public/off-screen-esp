@@ -8,7 +8,6 @@ declare class CGridNav {
 	/** Grows whenever a cell flag changes, so a consumer can tell a stale copy of the grid from a fresh one. */
 	public Version: number
 	public readonly UnitGridPos: Map<INavUnit, Vector2>
-	public readonly UnitGridVisiblePos: Map<INavUnit, Vector2>
 	constructor(EdgeSize: number, Offset: Vector2, Size: Vector2, Min: Vector2, CellFlags: Uint8Array)
 	public IsInWorld(position: Vector3, buffer?: number): boolean
 	public IsTraversable(position: Vector3): boolean
@@ -18,6 +17,5 @@ declare class CGridNav {
 	public GetRectForGridPos(gridPosX: number, gridPosY: number): Rectangle
 	public UpdateUnitState(unit: INavUnit, deleteUnit: boolean): void
 	public UpdateTreeState(tree: INavTree): void
-	public UpdateVisionState(unit: INavUnit, deleteUnit: boolean): void
 }
 declare let GridNav: Nullable<CGridNav>

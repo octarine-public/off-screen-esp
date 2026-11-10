@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_bane_ichor_of_nyctasha extends Modifier {
+	public get IsPurgable(): boolean
 }

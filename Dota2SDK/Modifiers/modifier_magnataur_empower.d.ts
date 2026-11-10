@@ -6,6 +6,6 @@ declare class modifier_magnataur_empower extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, (_params?: IModifierParams) => [number, boolean]>
 	public PostDataUpdate(): void
 	public IsBuff(): this is IBuff
-	protected GetPreAttackBonusDamagePercentage(_params?: IModifierParams): [number, boolean]
+	protected GetBaseDamageOutgoingPercentage(_params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

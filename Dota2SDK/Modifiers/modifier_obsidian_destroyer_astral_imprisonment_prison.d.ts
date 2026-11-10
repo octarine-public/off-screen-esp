@@ -11,4 +11,5 @@ declare class modifier_obsidian_destroyer_astral_imprisonment_prison extends Mod
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

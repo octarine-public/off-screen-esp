@@ -4,4 +4,7 @@ declare class modifier_batrider_flaming_lasso extends Modifier implements IDebuf
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	/** The tow: on a leash of `drag_distance` behind Batrider, wherever he flies (`TowMotion`). */
+	public CreateMotion(): Nullable<Motion>
+	public get IsStunDebuff(): boolean
 }

@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_spirit_breaker_greater_bash_break extends Modifier {
+	public get IsPurgable(): boolean
 }

@@ -11,6 +11,11 @@ declare namespace MenuSDK {
 	 * canvas.Polyline(trajectory, 2, Color.Aqua)
 	 */
 	class WorldCanvas {
+		/**
+		 * The most segments a loop handed to {@link Area} may hold; the rest of a shader batch is
+		 * room for the edges the camera and the screen cut into it.
+		 */
+		public static readonly AreaSegments: number
 		constructor(key: string)
 		public Clear(): void
 		/** A run between two points already in screen pixels. */
@@ -20,6 +25,18 @@ declare namespace MenuSDK {
 		 * long run across native slots and falling back to individual strips when the pool is spent.
 		 */
 		public Polyline(points: Vector3[], width: number, color: Color): void
+		/**
+		 * A closed loop over the world with its inside painted: `interior` along the edge, easing to
+		 * `depth` of its alpha deepest in, under the edge stroked in `color`. The loop closes on its
+		 * first point and holds at most {@link WorldCanvas.AreaSegments} segments. What lies behind
+		 * the camera or far off screen is cut away first, so the inside stays whole however close the
+		 * camera stands. With no shader slot left this frame, or on a host without the capsules
+		 * shader, the edge is drawn alone.
+		 *
+		 * @example
+		 * canvas.Area(ring, 2, Color.Red, new Color(255, 0, 0, 110), 0.25)
+		 */
+		public Area(loop: Vector3[], width: number, color: Color, interior: Color, depth: number): void
 		/**
 		 * A ring through `edge`, centred on `center` and drawn by the shader as one element.
 		 * Segmenting a ring into quads loses every run that projects shorter than a pixel, so a small

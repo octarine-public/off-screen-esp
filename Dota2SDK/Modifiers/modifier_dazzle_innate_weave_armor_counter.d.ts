@@ -9,4 +9,5 @@ declare class modifier_dazzle_innate_weave_armor_counter extends Modifier implem
 	public GetTexturePath(): string
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

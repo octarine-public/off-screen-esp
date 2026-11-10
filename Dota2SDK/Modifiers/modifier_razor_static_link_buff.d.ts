@@ -7,4 +7,5 @@ declare class modifier_razor_static_link_buff extends Modifier implements IBuff 
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

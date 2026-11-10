@@ -4,4 +4,5 @@ declare class modifier_item_shawl extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

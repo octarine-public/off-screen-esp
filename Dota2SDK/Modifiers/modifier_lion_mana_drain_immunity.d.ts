@@ -10,4 +10,5 @@ declare class modifier_lion_mana_drain_immunity extends Modifier implements IShi
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

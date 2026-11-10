@@ -5,5 +5,6 @@ declare class modifier_skeleton_king_reincarnate_slow extends Modifier implement
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

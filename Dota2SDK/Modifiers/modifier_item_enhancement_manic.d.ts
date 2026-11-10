@@ -5,4 +5,5 @@ declare class modifier_item_enhancement_manic extends Modifier {
 	protected GetCastTimePercentage(): [number, boolean]
 	protected GetBaseAttackTimePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

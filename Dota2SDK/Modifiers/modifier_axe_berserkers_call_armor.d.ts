@@ -6,4 +6,5 @@ declare class modifier_axe_berserkers_call_armor extends Modifier implements IBu
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

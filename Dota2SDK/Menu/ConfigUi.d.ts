@@ -46,7 +46,10 @@ declare namespace MenuSDK {
 		items: MetaItem[]
 		style?: RmlStyle
 	}): React.ReactElement | null
-	/** Section header above a list or panel: quiet title, count, right-side controls. */
+	/**
+	 * Section header above a list or panel: quiet title, count, right-side controls. When the
+	 * controls do not fit beside the title in a narrow window they drop onto a line of their own.
+	 */
 	function SectionTitle(props: {
 		title: string
 		count?: number

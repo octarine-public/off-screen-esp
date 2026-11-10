@@ -7,4 +7,5 @@ declare class modifier_spectre_dispersion_boost extends Modifier implements IBuf
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

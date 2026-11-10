@@ -3,4 +3,5 @@ declare class modifier_slark_essence_shift_buff extends Modifier implements IBuf
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

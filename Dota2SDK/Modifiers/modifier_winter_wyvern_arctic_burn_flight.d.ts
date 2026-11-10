@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_winter_wyvern_arctic_burn_flight extends Modifier implements IBuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShouldDoFlyHeightVisual = true
@@ -9,4 +10,5 @@ declare class modifier_winter_wyvern_arctic_burn_flight extends Modifier impleme
 	protected GetAttackPointConstant(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_item_unrelenting_eye extends Modifier {
 	protected GetSlowResistanceStacking(): [number, boolean]
 	protected GetStatusResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

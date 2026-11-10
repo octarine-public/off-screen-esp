@@ -5,4 +5,5 @@ declare class modifier_wisp_relocate_return extends Modifier implements IBuff {
 	public get ForceVisible(): boolean
 	public Update(force?: boolean): void
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

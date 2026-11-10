@@ -3,4 +3,5 @@ declare class modifier_life_stealer_infest_enemy_hero extends Modifier implement
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

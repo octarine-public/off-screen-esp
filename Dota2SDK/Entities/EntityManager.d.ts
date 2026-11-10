@@ -27,5 +27,12 @@ type IDotaEntityManager = Pick<CEntityManager, "INVALID_INDEX" | "INVALID_HANDLE
 	EntityByIndex<E extends Entity>(handle: Nullable<number>): Nullable<E>
 	GetEntitiesByClass<E>(class_: Constructor<E>): E[]
 	GetConstructorByName<E extends Entity>(name: string): Nullable<Constructor<E>>
+	/**
+	 * The wrapper class declared for an ability's or an item's name as the game data has it, or
+	 * none - nothing reported for a name without one, as most of the data's are.
+	 * @example
+	 * const wall = EntityManager.GetDeclaredConstructor<Ability>("invoker_ice_wall")
+	 */
+	GetDeclaredConstructor<E extends Entity>(name: string): Nullable<Constructor<E>>
 }
 declare const EntityManager: IDotaEntityManager

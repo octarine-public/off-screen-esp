@@ -4,4 +4,5 @@ declare class modifier_tiny_avalanche_stun extends Modifier implements IDisable,
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

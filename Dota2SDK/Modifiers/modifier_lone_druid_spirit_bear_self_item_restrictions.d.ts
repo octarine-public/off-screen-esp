@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_lone_druid_spirit_bear_self_item_restrictions extends Modifier {
+	public get IsPurgable(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_item_desolator extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetPreAttackPhysicalArmorBonusTarget(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

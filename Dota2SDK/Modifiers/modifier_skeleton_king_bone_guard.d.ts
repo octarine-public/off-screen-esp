@@ -3,4 +3,5 @@ declare class modifier_skeleton_king_bone_guard extends Modifier implements IBuf
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

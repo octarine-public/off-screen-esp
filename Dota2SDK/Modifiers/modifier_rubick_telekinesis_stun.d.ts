@@ -4,4 +4,5 @@ declare class modifier_rubick_telekinesis_stun extends Modifier implements IDisa
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

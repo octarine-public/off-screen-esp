@@ -4,4 +4,5 @@ declare class modifier_ancientapparition_coldfeet_freeze extends Modifier implem
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

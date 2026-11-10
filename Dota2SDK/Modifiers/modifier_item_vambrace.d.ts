@@ -5,4 +5,5 @@ declare class modifier_item_vambrace extends Modifier {
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

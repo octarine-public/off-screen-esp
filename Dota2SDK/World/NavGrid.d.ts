@@ -50,10 +50,25 @@ declare class NavGrid {
 	/**
 	 * Whether a unit of `hullRadius` can stand in the cell. Flying units ignore trees and
 	 * unwalkable ground but not movement blockers. With `avoidUnits` a unit standing in the cell
-	 * blocks it only where there is no room to slide past, a clearance below two cells: measured
-	 * on the demo map, the server brushes past units in the open and detours around one in a gap.
+	 * blocks it only where there is no room to slide past, a clearance below two cells: the server
+	 * brushes past units in the open and detours around one in a gap.
 	 */
 	public IsPassable(cell: number, hullRadius: number, flying: boolean, avoidUnits: boolean): boolean
+	/**
+	 * The centre of the cell nearest `position` on the plane that a unit of `hullRadius` can stand
+	 * in (`IsPassable`), no farther than `range` from it, written into `out`: where the game sets
+	 * down a unit teleported onto ground it cannot stand on - a blink into trees or past the map's
+	 * edge lands on the nearest clear spot (hero demo, 4 November 2026: Blink Dagger cast at
+	 * unwalkable ground set the hero down 58 and 187 units off it). `undefined` with none so near.
+	 * @example
+	 * const landing = grid.NearestPassable(point, hero.HullRadius, false, 300)
+	 */
+	public NearestPassable(position: Vector3, hullRadius: number, flying: boolean, range: number, out?: Vector3): Nullable<Vector3>
+	/**
+	 * Whether a unit that walks through trees can stand in the cell: walkable, and blocked by
+	 * nothing but trees.
+	 */
+	public IsPassableThroughTrees(cell: number): boolean
 	/** Whether a tree stands in the cell. */
 	public HasTree(cell: number): boolean
 	/**
@@ -63,6 +78,12 @@ declare class NavGrid {
 	 * const blocked = PathfinderSDK.NavGrid.TreeInside(new Capsule2D(from, to, hookWidth))
 	 */
 	public TreeInside(shape: Capsule2D): boolean
+	/**
+	 * Lets go of the map's cells, the units on them and the sectors; they are built again from
+	 * the next map grid.
+	 * @internal
+	 */
+	public Release(): void
 	/** @internal */
 	public Sync(): boolean
 	/** @internal */

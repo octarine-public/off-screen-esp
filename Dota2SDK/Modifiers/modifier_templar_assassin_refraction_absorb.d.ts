@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_templar_assassin_refraction_absorb extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -10,4 +11,5 @@ declare class modifier_templar_assassin_refraction_absorb extends Modifier imple
 	protected GetAvoidDamage(): [number, boolean]
 	protected GetTotalConstantBlock(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

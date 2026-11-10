@@ -4,4 +4,5 @@ declare class night_stalker_void extends Ability implements INuke {
 	public get AppliesUnitState(): bigint
 	public IsNuke(): this is INuke
 	public GetBaseDamageForLevel(level: number): number
+	public GetBaseAOERadiusForLevel(level: number): number
 }

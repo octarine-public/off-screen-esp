@@ -6,4 +6,6 @@ declare class phantom_assassin_stifling_dagger extends Ability implements INuke 
 	public GetBaseDamageForLevel(level: number): number
 	public GetRawDamage(target: Unit): number
 	public GetDamage(target: Unit): number
+	/** Its dagger slows the unit it hits by `move_slow` percent for `duration`. */
+	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

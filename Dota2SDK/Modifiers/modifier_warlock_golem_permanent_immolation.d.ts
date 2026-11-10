@@ -3,4 +3,5 @@ declare class modifier_warlock_golem_permanent_immolation extends Modifier imple
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

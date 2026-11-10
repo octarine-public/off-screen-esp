@@ -1,5 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class npc_dota_brewmaster_storm extends Creep {
-	public get HealthBarSize(): Vector2
-	public get HealthBarPositionCorrection(): Vector2
+	protected get UnitHealthBarSize(): Vector2
+	protected get UnitHealthBarPositionCorrection(): Vector2
 }

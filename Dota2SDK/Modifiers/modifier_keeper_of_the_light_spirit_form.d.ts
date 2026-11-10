@@ -9,4 +9,5 @@ declare class modifier_keeper_of_the_light_spirit_form extends Modifier implemen
 	protected GetCastRangeBonusStacking(): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

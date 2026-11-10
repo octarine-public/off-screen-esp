@@ -1,5 +1,14 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/**
+	 * How far down a panel's place may be kept, in dp. A screen is 1080 dp high at a menu scale of
+	 * 100% and taller in dp as the scale drops, so this is its height at the lowest scale the
+	 * settings offer. It bounds what a config keeps; where a panel stands is held on screen as it is
+	 * drawn.
+	 */
+	const PlaceLimitY: number
+	/** How far right a panel's place may be kept, in dp: {@link PlaceLimitY} on the widest screen. */
+	const PlaceLimitX: number
 	interface ScreenRect {
 		x: number
 		y: number
@@ -15,8 +24,10 @@ declare namespace MenuSDK {
 	/**
 	 * Text size at a font size already in screen pixels, in `family` or the theme's own face, outside
 	 * the font-scale setting — for callers that write `font-size` in px themselves and need the width
-	 * the renderer will lay that exact line out at. Undefined until the host can answer. `weight` is
-	 * the design weight; the font weight setting is applied here, as every style writer does.
+	 * the renderer will lay that exact line out at. Undefined until the host can answer, which a
+	 * later frame's call finds: it is for drawing done every frame, and a miss never re-renders the
+	 * menu ({@link HostMeasureTextPerFrame}). `weight` is the design weight; the font weight setting
+	 * is applied here, as every style writer does.
 	 *
 	 * The answer is kept per family, size, weight and string. A size that has measured more strings
 	 * than it can be expected to show again — a distance in metres reads a new one every metre —

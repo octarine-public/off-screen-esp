@@ -4,4 +4,5 @@ declare class modifier_meepo_petrify extends Modifier implements IDebuff, IDisab
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

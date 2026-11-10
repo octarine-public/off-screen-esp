@@ -8,4 +8,5 @@ declare class modifier_spectre_spectral_dagger_in_path extends Modifier implemen
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

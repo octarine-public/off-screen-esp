@@ -4,4 +4,5 @@ declare class modifier_jakiro_ice_path_stun extends Modifier implements IDebuff,
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_magnataur_reverse_polarity_stun extends Modifier implemen
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

@@ -5,4 +5,5 @@ declare class modifier_bane_nightmare_invulnerable extends Modifier implements I
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
 	public GetTexturePath(): string
+	public get IsPurgable(): boolean
 }

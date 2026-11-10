@@ -5,6 +5,6 @@ declare class Tower extends Building {
 	public get Target(): Nullable<Unit>
 	public get TowerAttackTarget(): Nullable<Unit>
 	public get IsDeniable(): boolean
-	public get HealthBarSize(): Vector2
-	public get HealthBarPositionCorrection(): Vector2
+	protected get UnitHealthBarSize(): Vector2
+	protected get UnitHealthBarPositionCorrection(): Vector2
 }

@@ -8,4 +8,5 @@ declare class modifier_faceless_void_chronosphere_speed extends Modifier impleme
 	protected GetIgnoreMoveSpeedLimit(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

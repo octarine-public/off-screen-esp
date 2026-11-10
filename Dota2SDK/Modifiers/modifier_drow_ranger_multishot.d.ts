@@ -8,4 +8,5 @@ declare class modifier_drow_ranger_multishot extends Modifier implements IBuff, 
 	public IsChannel(): this is IChannel
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

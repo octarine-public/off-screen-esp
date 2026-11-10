@@ -2,6 +2,6 @@
 declare class modifier_rubick_arcane_supremacy extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetCastRangeBonusStacking(): [number, boolean]
-	protected GetMagicalResistanceBonus(): [number, boolean]
+	protected GetSpellAmplifyPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

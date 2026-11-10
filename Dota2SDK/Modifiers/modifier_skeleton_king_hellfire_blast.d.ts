@@ -6,4 +6,7 @@ declare class modifier_skeleton_king_hellfire_blast extends Modifier implements 
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/** The Wraithfire Blast burn ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
+	public get IsPurgable(): boolean
 }

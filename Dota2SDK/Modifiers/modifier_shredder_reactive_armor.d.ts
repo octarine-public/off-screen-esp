@@ -6,4 +6,5 @@ declare class modifier_shredder_reactive_armor extends Modifier implements IBuff
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

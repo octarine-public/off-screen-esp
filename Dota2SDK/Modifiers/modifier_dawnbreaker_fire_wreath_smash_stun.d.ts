@@ -4,4 +4,5 @@ declare class modifier_dawnbreaker_fire_wreath_smash_stun extends Modifier imple
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

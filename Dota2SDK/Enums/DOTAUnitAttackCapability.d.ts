@@ -1,5 +1,5 @@
 // AUTO-GENERATED - do not edit.
-declare const enum DOTAUnitAttackCapability {
+declare enum DOTAUnitAttackCapability {
 	DOTA_UNIT_CAP_NO_ATTACK = 0,
 	DOTA_UNIT_CAP_MELEE_ATTACK = 1,
 	DOTA_UNIT_CAP_RANGED_ATTACK = 2,

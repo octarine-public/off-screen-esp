@@ -6,4 +6,5 @@ declare class modifier_monkey_king_quadruple_tap_bonuses extends Modifier implem
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

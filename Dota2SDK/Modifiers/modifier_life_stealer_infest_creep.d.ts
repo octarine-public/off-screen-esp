@@ -9,4 +9,5 @@ declare class modifier_life_stealer_infest_creep extends Modifier implements IBu
 	protected GetMoveSpeedBaseOverride(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

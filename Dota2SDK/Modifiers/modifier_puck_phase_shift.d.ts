@@ -5,4 +5,5 @@ declare class modifier_puck_phase_shift extends Modifier implements IBuff, IShie
 	public readonly ShieldModifierName: string
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
+	public get IsPurgable(): boolean
 }

@@ -6,4 +6,7 @@ declare class modifier_mirana_solar_flare extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
+	protected GetEvasionConstant(): [number, boolean]
+	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

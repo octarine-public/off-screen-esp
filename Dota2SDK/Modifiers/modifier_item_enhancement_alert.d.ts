@@ -5,4 +5,5 @@ declare class modifier_item_enhancement_alert extends Modifier {
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

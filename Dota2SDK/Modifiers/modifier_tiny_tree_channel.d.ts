@@ -5,4 +5,5 @@ declare class modifier_tiny_tree_channel extends Modifier implements IBuff, ICha
 	public readonly ChannelModifierName: string
 	public IsBuff(): this is IBuff
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

@@ -6,4 +6,5 @@ declare class modifier_earth_spirit_magnetize_hero_self_buff extends Modifier im
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

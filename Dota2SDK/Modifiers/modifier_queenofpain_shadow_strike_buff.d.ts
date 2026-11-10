@@ -5,4 +5,5 @@ declare class modifier_queenofpain_shadow_strike_buff extends Modifier {
 	public PostDataUpdate(): void
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

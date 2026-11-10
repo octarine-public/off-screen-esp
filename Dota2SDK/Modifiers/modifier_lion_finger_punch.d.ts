@@ -8,4 +8,5 @@ declare class modifier_lion_finger_punch extends Modifier implements IBuff {
 	protected GetPreAttackBonusDamage(_params?: IModifierParams): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

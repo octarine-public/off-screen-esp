@@ -8,4 +8,5 @@ declare class modifier_item_sphere_target extends Modifier implements IBuff, ISh
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected GetLinkenProtection(): [number, boolean]
+	public get IsPurgable(): boolean
 }

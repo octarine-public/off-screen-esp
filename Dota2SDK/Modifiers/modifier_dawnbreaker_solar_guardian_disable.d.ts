@@ -5,4 +5,5 @@ declare class modifier_dawnbreaker_solar_guardian_disable extends Modifier imple
 	public readonly ChannelModifierName: string
 	public IsBuff(): this is IBuff
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

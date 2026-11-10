@@ -7,4 +7,5 @@ declare class modifier_medusa_stone_gaze_stone extends Modifier implements IDebu
 	public IsDisable(): this is IDisable
 	protected GetIncomingPhysicalDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsStunDebuff(): boolean
 }

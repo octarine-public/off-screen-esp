@@ -3,4 +3,5 @@ declare class modifier_faceless_void_time_walk_shardbuff extends Modifier implem
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

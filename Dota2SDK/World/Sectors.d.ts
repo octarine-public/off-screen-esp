@@ -40,6 +40,8 @@ declare class SectorGraph {
 	public ConnectionCost(index: number): number
 	/** Target portal of a connection, on the same sector. */
 	public ConnectionTarget(index: number): number
+	/** Lets go of the map's sectors and portals; `Build` makes them again for the next map grid. */
+	public Release(): void
 	/**
 	 * Rebuilds the graph for a grid of `width` by `height` cells whose `passable` byte is
 	 * non-zero on open cells and whose first cell has the grid coordinates `(minX, minY)`;

@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_necrolyte_ghost_shroud_active extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsGhost = true
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
@@ -11,5 +12,7 @@ declare class modifier_necrolyte_ghost_shroud_active extends Modifier implements
 	public PostDataUpdate(): void
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected GetMagicalResistanceDecrepifyUnique(): [number, boolean]
+	protected GetAbsoluteNoDamagePhysical(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

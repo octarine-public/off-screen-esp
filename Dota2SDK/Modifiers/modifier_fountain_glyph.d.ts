@@ -8,4 +8,5 @@ declare class modifier_fountain_glyph extends Modifier implements IShield {
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetAbsoluteNoDamageMagical(): [number, boolean]
 	protected GetAbsoluteNoDamagePhysical(): [number, boolean]
+	public get IsPurgable(): boolean
 }

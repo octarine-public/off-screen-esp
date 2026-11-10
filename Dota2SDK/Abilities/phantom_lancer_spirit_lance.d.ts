@@ -4,4 +4,6 @@ declare class phantom_lancer_spirit_lance extends Ability implements INuke {
 	public IsNuke(): this is INuke
 	public GetBaseSpeedForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
+	/** Its lance slows the unit it hits by `movement_speed_pct` percent for `duration`. */
+	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

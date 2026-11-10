@@ -7,4 +7,5 @@ declare class modifier_leshrac_pulse_nova extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetIncomingDamagePercentage(_params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

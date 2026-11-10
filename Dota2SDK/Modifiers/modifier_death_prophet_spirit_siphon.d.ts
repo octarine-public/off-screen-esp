@@ -3,4 +3,5 @@ declare class modifier_death_prophet_spirit_siphon extends Modifier implements I
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

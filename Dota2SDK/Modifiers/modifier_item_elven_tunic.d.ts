@@ -4,4 +4,5 @@ declare class modifier_item_elven_tunic extends Modifier {
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

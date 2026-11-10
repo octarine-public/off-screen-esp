@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_disruptor_glimpse extends Modifier {
+	public get IsPurgable(): boolean
 }

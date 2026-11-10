@@ -6,4 +6,5 @@ declare class modifier_crystal_maiden_freezing_field extends Modifier implements
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_monkey_king_fur_army_soldier_in_position extends Modifier {
+	public get IsPurgable(): boolean
 }

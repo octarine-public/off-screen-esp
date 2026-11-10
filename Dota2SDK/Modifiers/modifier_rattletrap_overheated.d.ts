@@ -6,4 +6,5 @@ declare class modifier_rattletrap_overheated extends Modifier implements IDebuff
 	public IsDebuff(): this is IDebuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

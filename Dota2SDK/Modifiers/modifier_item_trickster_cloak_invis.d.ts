@@ -3,4 +3,5 @@ declare class modifier_item_trickster_cloak_invis extends Modifier implements IB
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

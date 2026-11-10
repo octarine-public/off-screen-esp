@@ -9,4 +9,5 @@ declare class modifier_brewmaster_drunken_brawler_passive extends Modifier {
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected GetCriticalStrikeBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

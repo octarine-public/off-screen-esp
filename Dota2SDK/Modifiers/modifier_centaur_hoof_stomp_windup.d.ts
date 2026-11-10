@@ -3,4 +3,5 @@ declare class modifier_centaur_hoof_stomp_windup extends Modifier implements IBu
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

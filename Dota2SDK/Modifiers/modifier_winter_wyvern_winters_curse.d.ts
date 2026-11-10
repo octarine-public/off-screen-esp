@@ -6,4 +6,5 @@ declare class modifier_winter_wyvern_winters_curse extends Modifier implements I
 	public IsDebuff(): this is IDebuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

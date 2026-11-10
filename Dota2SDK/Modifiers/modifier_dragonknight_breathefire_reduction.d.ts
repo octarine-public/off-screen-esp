@@ -4,6 +4,6 @@ declare class modifier_dragonknight_breathefire_reduction extends Modifier imple
 	public readonly DebuffModifierName: string
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected GetPreAttackBonusDamagePercentage(): [number, boolean]
+	protected GetDamageOutgoingPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

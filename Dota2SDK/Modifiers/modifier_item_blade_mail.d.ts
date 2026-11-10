@@ -4,4 +4,5 @@ declare class modifier_item_blade_mail extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

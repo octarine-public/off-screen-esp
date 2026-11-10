@@ -4,5 +4,7 @@ declare class modifier_warlock_rain_of_chaos_golem extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetSlowResistanceStacking(): [number, boolean]
+	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

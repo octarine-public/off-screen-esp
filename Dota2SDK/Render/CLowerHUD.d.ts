@@ -49,9 +49,9 @@ declare class CLowerHUD extends CHUDSection {
 	 * The icon square of every ability the game is showing, left to right. Slots the unit does
 	 * not use are left out, so the length is the visible ability count.
 	 * @example
-	 * GUIInfo.LowerHUD.AbilitiesRects.forEach(rect =>
+	 * for (const rect of GUIInfo.LowerHUD.AbilitiesRects) {
 	 * 	RendererSDK.OutlinedRect(rect.pos1, rect.Size)
-	 * )
+	 * }
 	 */
 	public get AbilitiesRects(): Rectangle[]
 	/**

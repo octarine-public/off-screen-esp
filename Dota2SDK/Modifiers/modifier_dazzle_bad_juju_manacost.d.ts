@@ -3,4 +3,5 @@ declare class modifier_dazzle_bad_juju_manacost extends Modifier implements IDeb
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

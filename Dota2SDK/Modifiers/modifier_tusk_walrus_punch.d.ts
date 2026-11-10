@@ -5,5 +5,8 @@ declare class modifier_tusk_walrus_punch extends Modifier {
 	public get IsAnimation(): boolean
 	protected GetPreAttackBonusDamage(params?: IModifierParams): [number, boolean]
 	protected GetCriticalStrikeBonus(params?: IModifierParams): [number, boolean]
+	/** The punch strikes quicker while it is ready: on autocast or cast, with mana, not silenced. */
+	protected GetAttackAnimTimePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

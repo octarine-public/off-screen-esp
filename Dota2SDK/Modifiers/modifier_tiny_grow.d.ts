@@ -4,5 +4,6 @@ declare class modifier_tiny_grow extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GeAttackSpeedPercentage(): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
+	protected GetBaseAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

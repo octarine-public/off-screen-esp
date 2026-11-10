@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_ash_legion_shield extends Modifier {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>

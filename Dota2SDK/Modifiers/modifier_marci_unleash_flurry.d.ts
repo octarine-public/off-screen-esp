@@ -7,4 +7,5 @@ declare class modifier_marci_unleash_flurry extends Modifier implements IBuff {
 	protected GetIgnoreAttackspeedLimit(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -11,4 +11,5 @@ declare class modifier_nyx_assassin_jolt_damage_tracker extends Modifier {
 	protected readonly CanPostDataUpdate = true
 	public PostDataUpdate(): void
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

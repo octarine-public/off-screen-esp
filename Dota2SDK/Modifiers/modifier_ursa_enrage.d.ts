@@ -9,4 +9,5 @@ declare class modifier_ursa_enrage extends Modifier implements IBuff, IShield {
 	protected GetStatusResistanceStacking(): [number, boolean]
 	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

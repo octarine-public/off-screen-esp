@@ -6,4 +6,5 @@ declare class modifier_bristleback_active_conical_quill_spray extends Modifier i
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

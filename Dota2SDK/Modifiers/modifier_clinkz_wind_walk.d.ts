@@ -6,4 +6,5 @@ declare class modifier_clinkz_wind_walk extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

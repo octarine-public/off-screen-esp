@@ -7,4 +7,6 @@ declare class modifier_item_unstable_wand_critter extends Modifier implements ID
 	public IsDisable(): this is IDisable
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
+	public get IsPurgeException(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_monkey_king_boundless_strike_stun extends Modifier implem
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

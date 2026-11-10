@@ -7,4 +7,5 @@ declare class modifier_item_phase_boots_active extends Modifier implements IBuff
 	protected GetTurnRatePercentage(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -6,4 +6,5 @@ declare class modifier_muerta_ofrenda_damage_amp extends Modifier implements IBu
 	public IsBuff(): this is IBuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

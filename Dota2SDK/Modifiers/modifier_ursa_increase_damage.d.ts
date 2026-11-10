@@ -5,4 +5,5 @@ declare class modifier_ursa_increase_damage extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

@@ -1,8 +1,15 @@
 // AUTO-GENERATED - do not edit.
 declare class puck_dream_coil extends Ability implements INuke {
-	public get CanHitSpellImmuneEnemy(): boolean
+	/** The stun as it lands lasts `stun_duration`. */
+	protected AppliedFrom(values: ISpecialValues, level: number): number
+	/** The coil stuns the units it catches as it lands; one that breaks it is stunned again, for `coil_stun_duration`. */
+	public get AppliesUnitState(): bigint
 	public IsNuke(): this is INuke
+	/**
+	 * The coil catches the heroes within `coil_radius` of its point; `coil_break_radius` is only how
+	 * far one caught may go before it breaks: placed by that, a coil laid for several heroes misses them.
+	 */
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
-	public GetMaxDurationForLevel(level: number): number
+	protected DurationFrom(values: ISpecialValues, level: number): number
 }

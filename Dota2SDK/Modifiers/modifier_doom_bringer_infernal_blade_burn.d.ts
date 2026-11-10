@@ -3,4 +3,6 @@ declare class modifier_doom_bringer_infernal_blade_burn extends Modifier impleme
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	/** The burn ticks on the unit by itself: its ability's (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 }

@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_bot_challenge_ancient_npc extends Modifier {
+	public get IsPurgable(): boolean
 }

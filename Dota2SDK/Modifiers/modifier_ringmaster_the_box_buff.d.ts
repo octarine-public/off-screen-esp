@@ -8,4 +8,5 @@ declare class modifier_ringmaster_the_box_buff extends Modifier implements IBuff
 	protected GetSlowResistanceStacking(): [number, boolean]
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

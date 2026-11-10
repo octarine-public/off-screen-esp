@@ -8,4 +8,5 @@ declare class modifier_dragon_knight_frost_breath_slow extends Modifier implemen
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	protected GetSpecialValue(specialName: string, abilityName: string, level?: number): number
 }

@@ -6,4 +6,5 @@ declare class modifier_axe_culling_blade_permanent extends Modifier implements I
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

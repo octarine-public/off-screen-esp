@@ -10,4 +10,5 @@ declare class modifier_sven_warcry extends Modifier implements IShield, IBuff {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

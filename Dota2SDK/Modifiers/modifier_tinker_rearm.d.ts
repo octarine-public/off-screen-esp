@@ -5,4 +5,5 @@ declare class modifier_tinker_rearm extends Modifier implements IBuff, IChannel 
 	public readonly ChannelModifierName: string
 	public IsBuff(): this is IBuff
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

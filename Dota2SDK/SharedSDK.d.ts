@@ -58,6 +58,7 @@ declare const SharedSDK: {
 	readonly Vector3: typeof Vector3
 	readonly Vector4: typeof Vector4
 	readonly WebSocket: typeof WebSocket
+	readonly WorldVersion: () => number
 	readonly fetch: (url: string, init?: FetchInit) => Promise<Response>
 	readonly matchProducts: () => Promise<MatchProductsSnapshot>
 	readonly openLocalStorage: (name: string) => Promise<LocalStorage>

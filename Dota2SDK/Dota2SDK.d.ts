@@ -10,6 +10,7 @@ declare const Dota2SDK: {
 	readonly Additive: typeof Additive
 	readonly Announcer: typeof Announcer
 	readonly ArmorType: typeof ArmorType
+	readonly AttackCountModifier: typeof AttackCountModifier
 	readonly AttackDamageType: typeof AttackDamageType
 	readonly Attributes: typeof Attributes
 	readonly Barrack: typeof Barrack
@@ -23,9 +24,10 @@ declare const Dota2SDK: {
 	readonly CGameRules: typeof CGameRules
 	readonly CHumanizer: typeof CHumanizer
 	readonly CNotificationsSDK: typeof CNotificationsSDK
+	readonly COrderPolicy: typeof COrderPolicy
 	readonly CPanelTree: typeof CPanelTree
 	readonly CPlayerResource: typeof CPlayerResource
-	readonly CThreatSigns: typeof CThreatSigns
+	readonly CTargetReaction: typeof CTargetReaction
 	readonly CTurboHeroPickRules: typeof CTurboHeroPickRules
 	readonly CameraBounds: Nullable<CCameraBounds>
 	readonly CameraSDK: typeof CameraSDK
@@ -66,6 +68,8 @@ declare const Dota2SDK: {
 	readonly DOTA_UNIT_TARGET_FLAGS: typeof DOTA_UNIT_TARGET_FLAGS
 	readonly DOTA_UNIT_TARGET_TEAM: typeof DOTA_UNIT_TARGET_TEAM
 	readonly DOTA_UNIT_TARGET_TYPE: typeof DOTA_UNIT_TARGET_TYPE
+	readonly DamageHits: typeof DamageHits
+	readonly DamageTicks: typeof DamageTicks
 	readonly DataTeamPlayer: typeof DataTeamPlayer
 	readonly DeathProphetExorcismSpirit: typeof DeathProphetExorcismSpirit
 	readonly DotaMap: typeof DotaMap
@@ -77,11 +81,16 @@ declare const Dota2SDK: {
 	readonly EChamsOverride: typeof EChamsOverride
 	readonly EDOTASpecialBonusOperation: typeof EDOTASpecialBonusOperation
 	readonly EDOTASpecialBonusStats: typeof EDOTASpecialBonusStats
+	readonly EEscapeSpot: typeof EEscapeSpot
 	readonly EFontName: typeof EFontName
 	readonly EHitChance: typeof EHitChance
 	readonly EMatchGroupServerStatus: typeof EMatchGroupServerStatus
 	readonly EMotionKind: typeof EMotionKind
 	readonly EMovementConfidence: typeof EMovementConfidence
+	readonly EOrderDrop: typeof EOrderDrop
+	readonly EOrderPriority: typeof EOrderPriority
+	readonly EOrderStage: typeof EOrderStage
+	readonly EOrderYield: typeof EOrderYield
 	readonly EPredictionDebugLayer: typeof EPredictionDebugLayer
 	readonly EPredictionGoal: typeof EPredictionGoal
 	readonly EPredictionSample: typeof EPredictionSample
@@ -95,6 +104,7 @@ declare const Dota2SDK: {
 	readonly EThreatKind: typeof EThreatKind
 	readonly ETormentorLocation: typeof ETormentorLocation
 	readonly ETormentorSpawnPhase: typeof ETormentorSpawnPhase
+	readonly EUnitCapability: typeof EUnitCapability
 	readonly EarthSpiritStone: typeof EarthSpiritStone
 	readonly EmptyAbility: typeof EmptyAbility
 	readonly Entity: typeof Entity
@@ -167,6 +177,8 @@ declare const Dota2SDK: {
 	readonly NeutralSpawners: NeutralSpawnerBox[]
 	readonly NotificationChannel: typeof NotificationChannel
 	readonly NotificationsSDK: typeof NotificationsSDK
+	readonly OrderOwner: typeof OrderOwner
+	readonly OrderPolicy: typeof OrderPolicy
 	readonly Outpost: typeof Outpost
 	readonly PARTICLE_RENDER: typeof PARTICLE_RENDER
 	readonly PARTICLE_RENDER_NAME: typeof PARTICLE_RENDER_NAME
@@ -216,6 +228,7 @@ declare const Dota2SDK: {
 	readonly SPELL_IMMUNITY_TYPES: typeof SPELL_IMMUNITY_TYPES
 	readonly SampledShapeTimeline: typeof SampledShapeTimeline
 	readonly SetMenuScale: (value: number) => void
+	readonly ShieldLedger: typeof ShieldLedger
 	readonly Shop: typeof Shop
 	readonly Shrine: typeof Shrine
 	readonly Siege: typeof Siege
@@ -226,6 +239,7 @@ declare const Dota2SDK: {
 	readonly SpreadingShapeTimeline: typeof SpreadingShapeTimeline
 	readonly StaticShapeTimeline: typeof StaticShapeTimeline
 	readonly StockInfo: typeof StockInfo
+	readonly TargetReaction: typeof TargetReaction
 	readonly Team: typeof Team
 	readonly TeamData: typeof TeamData
 	readonly TechiesMines: typeof TechiesMines
@@ -234,9 +248,9 @@ declare const Dota2SDK: {
 	readonly Thinker: typeof Thinker
 	readonly Threat: typeof Threat
 	readonly ThreatModifier: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
+	readonly ThreatModifierEnd: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
 	readonly ThreatParticle: (path: string, roles?: IParticleRoles) => (constructor: Constructor<IThreatAbility>) => void
 	readonly ThreatSign: typeof ThreatSign
-	readonly ThreatSigns: typeof ThreatSigns
 	readonly ThreatStore: typeof ThreatStore
 	readonly ThreatUnit: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
 	readonly TickSleeper: typeof TickSleeper
@@ -252,7 +266,9 @@ declare const Dota2SDK: {
 	readonly UnitData: typeof UnitData
 	readonly UnitPortalData: typeof UnitPortalData
 	readonly UnitPrediction: typeof UnitPrediction
+	readonly UnitReaction: typeof UnitReaction
 	readonly VambraceAttribute: typeof VambraceAttribute
+	readonly VisionSDK: typeof VisionSDK
 	readonly WardObserver: typeof WardObserver
 	readonly WardSpawner: typeof WardSpawner
 	readonly WardTrueSight: typeof WardTrueSight
@@ -264,14 +280,10 @@ declare const Dota2SDK: {
 	readonly abaddon_aphotic_shield: typeof abaddon_aphotic_shield
 	readonly abaddon_borrowed_time: typeof abaddon_borrowed_time
 	readonly abaddon_death_coil: typeof abaddon_death_coil
-	readonly abaddon_font_of_avernus: typeof abaddon_font_of_avernus
 	readonly abaddon_frostmourne: typeof abaddon_frostmourne
-	readonly abaddon_soul_suck: typeof abaddon_soul_suck
-	readonly abaddon_the_quickening: typeof abaddon_the_quickening
 	readonly abaddon_withering_mist: typeof abaddon_withering_mist
 	readonly ability_capture: typeof ability_capture
 	readonly ability_lamp_use: typeof ability_lamp_use
-	readonly ability_pluck_famango: typeof ability_pluck_famango
 	readonly abyssal_underlord_abyssal_horde: typeof abyssal_underlord_abyssal_horde
 	readonly abyssal_underlord_atrophy_aura: typeof abyssal_underlord_atrophy_aura
 	readonly abyssal_underlord_cancel_dark_rift: typeof abyssal_underlord_cancel_dark_rift
@@ -316,7 +328,6 @@ declare const Dota2SDK: {
 	readonly arc_warden_tempest_recall: typeof arc_warden_tempest_recall
 	readonly axe_battle_hunger: typeof axe_battle_hunger
 	readonly axe_berserkers_call: typeof axe_berserkers_call
-	readonly axe_coat_of_blood: typeof axe_coat_of_blood
 	readonly axe_counter_helix: typeof axe_counter_helix
 	readonly axe_culling_blade: typeof axe_culling_blade
 	readonly axe_one_man_army: typeof axe_one_man_army
@@ -336,8 +347,6 @@ declare const Dota2SDK: {
 	readonly beastmaster_boar_poison: typeof beastmaster_boar_poison
 	readonly beastmaster_call_of_the_wild: typeof beastmaster_call_of_the_wild
 	readonly beastmaster_call_of_the_wild_boar: typeof beastmaster_call_of_the_wild_boar
-	readonly beastmaster_call_of_the_wild_hawk: typeof beastmaster_call_of_the_wild_hawk
-	readonly beastmaster_call_of_the_wild_hawk_attack: typeof beastmaster_call_of_the_wild_hawk_attack
 	readonly beastmaster_drums_of_slom: typeof beastmaster_drums_of_slom
 	readonly beastmaster_greater_boar_poison: typeof beastmaster_greater_boar_poison
 	readonly beastmaster_hawk_dive: typeof beastmaster_hawk_dive
@@ -347,6 +356,8 @@ declare const Dota2SDK: {
 	readonly beastmaster_mark_of_the_beast: typeof beastmaster_mark_of_the_beast
 	readonly beastmaster_primal_roar: typeof beastmaster_primal_roar
 	readonly beastmaster_rugged: typeof beastmaster_rugged
+	readonly beastmaster_summon_raptor: typeof beastmaster_summon_raptor
+	readonly beastmaster_summon_razorback: typeof beastmaster_summon_razorback
 	readonly beastmaster_wild_axes: typeof beastmaster_wild_axes
 	readonly berserker_troll_break: typeof berserker_troll_break
 	readonly big_thunder_lizard_frenzy: typeof big_thunder_lizard_frenzy
@@ -389,7 +400,6 @@ declare const Dota2SDK: {
 	readonly brewmaster_storm_dispel_magic: typeof brewmaster_storm_dispel_magic
 	readonly brewmaster_storm_wind_walk: typeof brewmaster_storm_wind_walk
 	readonly brewmaster_thunder_clap: typeof brewmaster_thunder_clap
-	readonly brewmaster_void_astral_pull: typeof brewmaster_void_astral_pull
 	readonly brewmaster_void_astral_pulse: typeof brewmaster_void_astral_pulse
 	readonly bristleback_bristleback: typeof bristleback_bristleback
 	readonly bristleback_hairball: typeof bristleback_hairball
@@ -419,7 +429,6 @@ declare const Dota2SDK: {
 	readonly centaur_work_horse: typeof centaur_work_horse
 	readonly chaos_knight_chaos_bolt: typeof chaos_knight_chaos_bolt
 	readonly chaos_knight_chaos_strike: typeof chaos_knight_chaos_strike
-	readonly chaos_knight_innate_spell_refund: typeof chaos_knight_innate_spell_refund
 	readonly chaos_knight_phantasm: typeof chaos_knight_phantasm
 	readonly chaos_knight_phantasmagoria: typeof chaos_knight_phantasmagoria
 	readonly chaos_knight_reality_rift: typeof chaos_knight_reality_rift
@@ -433,6 +442,7 @@ declare const Dota2SDK: {
 	readonly chen_summon_convert: typeof chen_summon_convert
 	readonly chen_test_of_faith: typeof chen_test_of_faith
 	readonly chen_test_of_faith_teleport: typeof chen_test_of_faith_teleport
+	readonly chen_zealot: typeof chen_zealot
 	readonly clinkz_bone_and_arrow: typeof clinkz_bone_and_arrow
 	readonly clinkz_burning_army: typeof clinkz_burning_army
 	readonly clinkz_burning_barrage: typeof clinkz_burning_barrage
@@ -464,7 +474,6 @@ declare const Dota2SDK: {
 	readonly courier_transfer_items_to_other_player: typeof courier_transfer_items_to_other_player
 	readonly creep_irresolute: typeof creep_irresolute
 	readonly creep_siege: typeof creep_siege
-	readonly crystal_maiden_blueheart_floe: typeof crystal_maiden_blueheart_floe
 	readonly crystal_maiden_brilliance_aura: typeof crystal_maiden_brilliance_aura
 	readonly crystal_maiden_crystal_clone: typeof crystal_maiden_crystal_clone
 	readonly crystal_maiden_crystal_nova: typeof crystal_maiden_crystal_nova
@@ -501,6 +510,7 @@ declare const Dota2SDK: {
 	readonly dazzle_good_juju: typeof dazzle_good_juju
 	readonly dazzle_innate_weave: typeof dazzle_innate_weave
 	readonly dazzle_nothl_boon: typeof dazzle_nothl_boon
+	readonly dazzle_nothl_projection: typeof dazzle_nothl_projection
 	readonly dazzle_poison_touch: typeof dazzle_poison_touch
 	readonly dazzle_rain_of_vermin: typeof dazzle_rain_of_vermin
 	readonly dazzle_shadow_wave: typeof dazzle_shadow_wave
@@ -534,8 +544,6 @@ declare const Dota2SDK: {
 	readonly dragon_knight_dragon_tail: typeof dragon_knight_dragon_tail
 	readonly dragon_knight_elder_dragon_form: typeof dragon_knight_elder_dragon_form
 	readonly dragon_knight_fireball: typeof dragon_knight_fireball
-	readonly dragon_knight_frost_breath: typeof dragon_knight_frost_breath
-	readonly dragon_knight_inherited_vigor: typeof dragon_knight_inherited_vigor
 	readonly dragon_knight_wyrms_wrath: typeof dragon_knight_wyrms_wrath
 	readonly drow_ranger_creep_rally: typeof drow_ranger_creep_rally
 	readonly drow_ranger_frost_arrows: typeof drow_ranger_frost_arrows
@@ -544,7 +552,6 @@ declare const Dota2SDK: {
 	readonly drow_ranger_multishot: typeof drow_ranger_multishot
 	readonly drow_ranger_silence: typeof drow_ranger_silence
 	readonly drow_ranger_trueshot: typeof drow_ranger_trueshot
-	readonly drow_ranger_vantage_point: typeof drow_ranger_vantage_point
 	readonly drow_ranger_wave_of_silence: typeof drow_ranger_wave_of_silence
 	readonly earth_spirit_boulder_smash: typeof earth_spirit_boulder_smash
 	readonly earth_spirit_geomagnetic_grip: typeof earth_spirit_geomagnetic_grip
@@ -569,11 +576,11 @@ declare const Dota2SDK: {
 	readonly ember_spirit_activate_fire_remnant: typeof ember_spirit_activate_fire_remnant
 	readonly ember_spirit_fire_remnant: typeof ember_spirit_fire_remnant
 	readonly ember_spirit_flame_guard: typeof ember_spirit_flame_guard
+	readonly ember_spirit_immolation: typeof ember_spirit_immolation
 	readonly ember_spirit_searing_chains: typeof ember_spirit_searing_chains
 	readonly ember_spirit_sleight_of_fist: typeof ember_spirit_sleight_of_fist
 	readonly enchantress_bunny_hop: typeof enchantress_bunny_hop
 	readonly enchantress_enchant: typeof enchantress_enchant
-	readonly enchantress_forest_freebie: typeof enchantress_forest_freebie
 	readonly enchantress_impetus: typeof enchantress_impetus
 	readonly enchantress_little_friends: typeof enchantress_little_friends
 	readonly enchantress_natures_attendants: typeof enchantress_natures_attendants
@@ -688,7 +695,6 @@ declare const Dota2SDK: {
 	readonly gyrocopter_rocket_barrage: typeof gyrocopter_rocket_barrage
 	readonly harpy_scout_take_off: typeof harpy_scout_take_off
 	readonly harpy_storm_chain_lightning: typeof harpy_storm_chain_lightning
-	readonly hero_candy_bucket: typeof hero_candy_bucket
 	readonly high_five: typeof high_five
 	readonly hill_troll_rally: typeof hill_troll_rally
 	readonly hoodwink_acorn_shot: typeof hoodwink_acorn_shot
@@ -738,26 +744,21 @@ declare const Dota2SDK: {
 	readonly item_aegis: typeof item_aegis
 	readonly item_aeon_disk: typeof item_aeon_disk
 	readonly item_aether_lens: typeof item_aether_lens
-	readonly item_aetherial_halo: typeof item_aetherial_halo
 	readonly item_aghanims_shard: typeof item_aghanims_shard
 	readonly item_aghanims_shard_roshan: typeof item_aghanims_shard_roshan
 	readonly item_ancient_guardian: typeof item_ancient_guardian
 	readonly item_ancient_janggo: typeof item_ancient_janggo
-	readonly item_ancient_perseverance: typeof item_ancient_perseverance
 	readonly item_angels_demise: typeof item_angels_demise
 	readonly item_apex: typeof item_apex
 	readonly item_arcane_blink: typeof item_arcane_blink
 	readonly item_arcane_boots: typeof item_arcane_boots
 	readonly item_arcane_ring: typeof item_arcane_ring
-	readonly item_arcane_scout: typeof item_arcane_scout
 	readonly item_armlet: typeof item_armlet
 	readonly item_ascetic_cap: typeof item_ascetic_cap
 	readonly item_ash_legion_shield: typeof item_ash_legion_shield
-	readonly item_assassins_dagger: typeof item_assassins_dagger
 	readonly item_assault: typeof item_assault
 	readonly item_avianas_feather: typeof item_avianas_feather
 	readonly item_ballista: typeof item_ballista
-	readonly item_barricade: typeof item_barricade
 	readonly item_basher: typeof item_basher
 	readonly item_belt_of_strength: typeof item_belt_of_strength
 	readonly item_bfury: typeof item_bfury
@@ -768,7 +769,6 @@ declare const Dota2SDK: {
 	readonly item_blade_of_alacrity: typeof item_blade_of_alacrity
 	readonly item_blades_of_attack: typeof item_blades_of_attack
 	readonly item_blight_stone: typeof item_blight_stone
-	readonly item_blighted_spirit: typeof item_blighted_spirit
 	readonly item_blink: typeof item_blink
 	readonly item_blitz_knuckles: typeof item_blitz_knuckles
 	readonly item_blood_grenade: typeof item_blood_grenade
@@ -799,7 +799,6 @@ declare const Dota2SDK: {
 	readonly item_cloak: typeof item_cloak
 	readonly item_cloak_of_flames: typeof item_cloak_of_flames
 	readonly item_clumsy_net: typeof item_clumsy_net
-	readonly item_combo_breaker: typeof item_combo_breaker
 	readonly item_consecrated_wraps: typeof item_consecrated_wraps
 	readonly item_cornucopia: typeof item_cornucopia
 	readonly item_courier: typeof item_courier
@@ -825,7 +824,6 @@ declare const Dota2SDK: {
 	readonly item_dezun_bloodrite: typeof item_dezun_bloodrite
 	readonly item_diadem: typeof item_diadem
 	readonly item_diffusal_blade: typeof item_diffusal_blade
-	readonly item_dimensional_doorway: typeof item_dimensional_doorway
 	readonly item_disperser: typeof item_disperser
 	readonly item_divine_regalia: typeof item_divine_regalia
 	readonly item_divine_regalia_broken: typeof item_divine_regalia_broken
@@ -880,7 +878,6 @@ declare const Dota2SDK: {
 	readonly item_force_boots: typeof item_force_boots
 	readonly item_force_field: typeof item_force_field
 	readonly item_force_staff: typeof item_force_staff
-	readonly item_fortitude_ring: typeof item_fortitude_ring
 	readonly item_fusion_rune: typeof item_fusion_rune
 	readonly item_gale_guard: typeof item_gale_guard
 	readonly item_gauntlets: typeof item_gauntlets
@@ -888,12 +885,9 @@ declare const Dota2SDK: {
 	readonly item_ghost: typeof item_ghost
 	readonly item_giant_maul: typeof item_giant_maul
 	readonly item_giants_ring: typeof item_giants_ring
-	readonly item_gladiator_helm: typeof item_gladiator_helm
 	readonly item_glimmer_cape: typeof item_glimmer_cape
 	readonly item_gloves: typeof item_gloves
-	readonly item_gloves_of_travel: typeof item_gloves_of_travel
 	readonly item_gossamer_cape: typeof item_gossamer_cape
-	readonly item_grandmasters_glaive: typeof item_grandmasters_glaive
 	readonly item_great_famango: typeof item_great_famango
 	readonly item_greater_crit: typeof item_greater_crit
 	readonly item_greater_faerie_fire: typeof item_greater_faerie_fire
@@ -913,18 +907,14 @@ declare const Dota2SDK: {
 	readonly item_heavy_blade: typeof item_heavy_blade
 	readonly item_helm_of_iron_will: typeof item_helm_of_iron_will
 	readonly item_helm_of_the_dominator: typeof item_helm_of_the_dominator
-	readonly item_helm_of_the_dominator_2: typeof item_helm_of_the_dominator_2
 	readonly item_helm_of_the_overlord: typeof item_helm_of_the_overlord
 	readonly item_helm_of_the_undying: typeof item_helm_of_the_undying
-	readonly item_hermes_sandals: typeof item_hermes_sandals
 	readonly item_holy_locket: typeof item_holy_locket
 	readonly item_hood_of_defiance: typeof item_hood_of_defiance
 	readonly item_horizon: typeof item_horizon
-	readonly item_horizons_equilibrium: typeof item_horizons_equilibrium
 	readonly item_hurricane_pike: typeof item_hurricane_pike
 	readonly item_hydras_breath: typeof item_hydras_breath
 	readonly item_hyperstone: typeof item_hyperstone
-	readonly item_icarus_wings: typeof item_icarus_wings
 	readonly item_idol_of_screeauk: typeof item_idol_of_screeauk
 	readonly item_illusionsts_cape: typeof item_illusionsts_cape
 	readonly item_imp_claw: typeof item_imp_claw
@@ -942,16 +932,13 @@ declare const Dota2SDK: {
 	readonly item_lesser_crit: typeof item_lesser_crit
 	readonly item_lifesteal: typeof item_lifesteal
 	readonly item_light_collector: typeof item_light_collector
-	readonly item_light_robes: typeof item_light_robes
 	readonly item_lotus_orb: typeof item_lotus_orb
-	readonly item_lunar_crest: typeof item_lunar_crest
 	readonly item_maelstrom: typeof item_maelstrom
 	readonly item_mage_slayer: typeof item_mage_slayer
 	readonly item_magic_stick: typeof item_magic_stick
 	readonly item_magic_wand: typeof item_magic_wand
 	readonly item_magnifying_monocle: typeof item_magnifying_monocle
 	readonly item_mana_draught: typeof item_mana_draught
-	readonly item_manacles_of_power: typeof item_manacles_of_power
 	readonly item_mango_tree: typeof item_mango_tree
 	readonly item_manta: typeof item_manta
 	readonly item_mantle: typeof item_mantle
@@ -982,7 +969,6 @@ declare const Dota2SDK: {
 	readonly item_ninja_gear: typeof item_ninja_gear
 	readonly item_null_talisman: typeof item_null_talisman
 	readonly item_nullifier: typeof item_nullifier
-	readonly item_oakheart: typeof item_oakheart
 	readonly item_oblivion_staff: typeof item_oblivion_staff
 	readonly item_occult_bracelet: typeof item_occult_bracelet
 	readonly item_ocean_heart: typeof item_ocean_heart
@@ -998,7 +984,6 @@ declare const Dota2SDK: {
 	readonly item_orb_of_venom: typeof item_orb_of_venom
 	readonly item_orchid: typeof item_orchid
 	readonly item_outworld_staff: typeof item_outworld_staff
-	readonly item_overflowing_elixir: typeof item_overflowing_elixir
 	readonly item_overwhelming_blink: typeof item_overwhelming_blink
 	readonly item_paintball: typeof item_paintball
 	readonly item_paladin_sword: typeof item_paladin_sword
@@ -1058,12 +1043,9 @@ declare const Dota2SDK: {
 	readonly item_royal_jelly: typeof item_royal_jelly
 	readonly item_royale_with_cheese: typeof item_royale_with_cheese
 	readonly item_safety_bubble: typeof item_safety_bubble
-	readonly item_sample_picker: typeof item_sample_picker
-	readonly item_samurai_tabi: typeof item_samurai_tabi
 	readonly item_sange: typeof item_sange
 	readonly item_sange_and_yasha: typeof item_sange_and_yasha
 	readonly item_satanic: typeof item_satanic
-	readonly item_satchel: typeof item_satchel
 	readonly item_searing_signet: typeof item_searing_signet
 	readonly item_seeds_of_serenity: typeof item_seeds_of_serenity
 	readonly item_seer_stone: typeof item_seer_stone
@@ -1075,7 +1057,6 @@ declare const Dota2SDK: {
 	readonly item_silver_edge: typeof item_silver_edge
 	readonly item_sisters_shroud: typeof item_sisters_shroud
 	readonly item_skadi: typeof item_skadi
-	readonly item_slime_vial: typeof item_slime_vial
 	readonly item_slippers: typeof item_slippers
 	readonly item_smoke_of_deceit: typeof item_smoke_of_deceit
 	readonly item_sobi_mask: typeof item_sobi_mask
@@ -1091,7 +1072,6 @@ declare const Dota2SDK: {
 	readonly item_splintmail: typeof item_splintmail
 	readonly item_spy_gadget: typeof item_spy_gadget
 	readonly item_staff_of_wizardry: typeof item_staff_of_wizardry
-	readonly item_star_mace: typeof item_star_mace
 	readonly item_stonefeather_satchel: typeof item_stonefeather_satchel
 	readonly item_stormcrafter: typeof item_stormcrafter
 	readonly item_stout_shield: typeof item_stout_shield
@@ -1112,7 +1092,6 @@ declare const Dota2SDK: {
 	readonly item_titan_sliver: typeof item_titan_sliver
 	readonly item_tome_of_aghanim: typeof item_tome_of_aghanim
 	readonly item_tome_of_knowledge: typeof item_tome_of_knowledge
-	readonly item_tome_of_omniscience: typeof item_tome_of_omniscience
 	readonly item_tpscroll: typeof item_tpscroll
 	readonly item_tranquil_boots: typeof item_tranquil_boots
 	readonly item_travel_boots: typeof item_travel_boots
@@ -1120,7 +1099,6 @@ declare const Dota2SDK: {
 	readonly item_trickster_cloak: typeof item_trickster_cloak
 	readonly item_trident: typeof item_trident
 	readonly item_trusty_shovel: typeof item_trusty_shovel
-	readonly item_turtle_shell: typeof item_turtle_shell
 	readonly item_ultimate_orb: typeof item_ultimate_orb
 	readonly item_ultimate_scepter: typeof item_ultimate_scepter
 	readonly item_ultimate_scepter_2: typeof item_ultimate_scepter_2
@@ -1133,27 +1111,20 @@ declare const Dota2SDK: {
 	readonly item_vampire_fangs: typeof item_vampire_fangs
 	readonly item_vanguard: typeof item_vanguard
 	readonly item_veil_of_discord: typeof item_veil_of_discord
-	readonly item_vengeances_shadow: typeof item_vengeances_shadow
-	readonly item_venom_gland: typeof item_venom_gland
 	readonly item_vindicators_axe: typeof item_vindicators_axe
 	readonly item_vitality_booster: typeof item_vitality_booster
 	readonly item_vladmir: typeof item_vladmir
 	readonly item_void_stone: typeof item_void_stone
 	readonly item_voodoo_mask: typeof item_voodoo_mask
-	readonly item_wand_of_sanctitude: typeof item_wand_of_sanctitude
-	readonly item_wand_of_the_brine: typeof item_wand_of_the_brine
 	readonly item_ward_dispenser: typeof item_ward_dispenser
 	readonly item_ward_observer: typeof item_ward_observer
 	readonly item_ward_sentry: typeof item_ward_sentry
-	readonly item_warhammer: typeof item_warhammer
 	readonly item_weighted_dice: typeof item_weighted_dice
 	readonly item_whisper_of_the_dread: typeof item_whisper_of_the_dread
 	readonly item_wind_lace: typeof item_wind_lace
 	readonly item_wind_waker: typeof item_wind_waker
 	readonly item_witch_blade: typeof item_witch_blade
-	readonly item_witches_switch: typeof item_witches_switch
 	readonly item_witless_shako: typeof item_witless_shako
-	readonly item_wizard_glass: typeof item_wizard_glass
 	readonly item_wizard_hat: typeof item_wizard_hat
 	readonly item_woodland_striders: typeof item_woodland_striders
 	readonly item_wraith_band: typeof item_wraith_band
@@ -1188,28 +1159,27 @@ declare const Dota2SDK: {
 	readonly keeper_of_the_light_recall: typeof keeper_of_the_light_recall
 	readonly keeper_of_the_light_special_reserve: typeof keeper_of_the_light_special_reserve
 	readonly keeper_of_the_light_spirit_form: typeof keeper_of_the_light_spirit_form
-	readonly keeper_of_the_light_spirit_form_illuminate: typeof keeper_of_the_light_spirit_form_illuminate
-	readonly keeper_of_the_light_spirit_form_illuminate_end: typeof keeper_of_the_light_spirit_form_illuminate_end
 	readonly keeper_of_the_light_will_o_wisp: typeof keeper_of_the_light_will_o_wisp
 	readonly kez_echo_slash: typeof kez_echo_slash
 	readonly kez_falcon_rush: typeof kez_falcon_rush
+	readonly kez_falcon_rush_ad: typeof kez_falcon_rush_ad
 	readonly kez_grappling_claw: typeof kez_grappling_claw
 	readonly kez_kazurai_katana: typeof kez_kazurai_katana
 	readonly kez_raptor_dance: typeof kez_raptor_dance
 	readonly kez_ravens_veil: typeof kez_ravens_veil
+	readonly kez_ravens_veil_ad: typeof kez_ravens_veil_ad
 	readonly kez_shadowhawk_passive: typeof kez_shadowhawk_passive
 	readonly kez_shodo_sai: typeof kez_shodo_sai
+	readonly kez_shodo_sai_ad: typeof kez_shodo_sai_ad
 	readonly kez_shodo_sai_parry_cancel: typeof kez_shodo_sai_parry_cancel
 	readonly kez_switch_weapons: typeof kez_switch_weapons
 	readonly kez_talon_toss: typeof kez_talon_toss
+	readonly kez_talon_toss_ad: typeof kez_talon_toss_ad
 	readonly kobold_disarm: typeof kobold_disarm
 	readonly kobold_taskmaster_speed_aura: typeof kobold_taskmaster_speed_aura
 	readonly kobold_tunneler_prospecting: typeof kobold_tunneler_prospecting
 	readonly kunkka_admirals_rum: typeof kunkka_admirals_rum
-	readonly kunkka_ghost_ship_fire_cannons: typeof kunkka_ghost_ship_fire_cannons
 	readonly kunkka_ghostship: typeof kunkka_ghostship
-	readonly kunkka_innate_kunkkas_flask: typeof kunkka_innate_kunkkas_flask
-	readonly kunkka_innate_kunkkas_spyglass: typeof kunkka_innate_kunkkas_spyglass
 	readonly kunkka_return: typeof kunkka_return
 	readonly kunkka_tidal_wave: typeof kunkka_tidal_wave
 	readonly kunkka_tidebringer: typeof kunkka_tidebringer
@@ -1244,10 +1214,7 @@ declare const Dota2SDK: {
 	readonly lich_frost_nova: typeof lich_frost_nova
 	readonly lich_frost_shield: typeof lich_frost_shield
 	readonly lich_ice_spire: typeof lich_ice_spire
-	readonly lich_innate_chain_frost_bounces: typeof lich_innate_chain_frost_bounces
-	readonly lich_innate_chain_frost_projectile_speed: typeof lich_innate_chain_frost_projectile_speed
 	readonly lich_sinister_gaze: typeof lich_sinister_gaze
-	readonly lich_variant_ice_rite: typeof lich_variant_ice_rite
 	readonly life_stealer_assimilate: typeof life_stealer_assimilate
 	readonly life_stealer_assimilate_eject: typeof life_stealer_assimilate_eject
 	readonly life_stealer_consume: typeof life_stealer_consume
@@ -1274,7 +1241,7 @@ declare const Dota2SDK: {
 	readonly lion_mana_drain: typeof lion_mana_drain
 	readonly lion_to_hell_and_back: typeof lion_to_hell_and_back
 	readonly lion_voodoo: typeof lion_voodoo
-	readonly lone_druid_entangling_claws: typeof lone_druid_entangling_claws
+	readonly lone_druid_entangle: typeof lone_druid_entangle
 	readonly lone_druid_rabid: typeof lone_druid_rabid
 	readonly lone_druid_savage_roar: typeof lone_druid_savage_roar
 	readonly lone_druid_savage_roar_bear: typeof lone_druid_savage_roar_bear
@@ -1295,7 +1262,6 @@ declare const Dota2SDK: {
 	readonly luna_lunar_grace: typeof luna_lunar_grace
 	readonly luna_lunar_orbit: typeof luna_lunar_orbit
 	readonly luna_moon_glaive: typeof luna_moon_glaive
-	readonly luna_selemenes_favor: typeof luna_selemenes_favor
 	readonly lycan_apex_predator: typeof lycan_apex_predator
 	readonly lycan_feral_impulse: typeof lycan_feral_impulse
 	readonly lycan_howl: typeof lycan_howl
@@ -1333,10 +1299,8 @@ declare const Dota2SDK: {
 	readonly medusa_mystic_snake: typeof medusa_mystic_snake
 	readonly medusa_split_shot: typeof medusa_split_shot
 	readonly medusa_stone_gaze: typeof medusa_stone_gaze
-	readonly medusa_venomed_volley: typeof medusa_venomed_volley
 	readonly meepo_divided_we_stand: typeof meepo_divided_we_stand
 	readonly meepo_earthbind: typeof meepo_earthbind
-	readonly meepo_geostrike: typeof meepo_geostrike
 	readonly meepo_megameepo: typeof meepo_megameepo
 	readonly meepo_megameepo_fling: typeof meepo_megameepo_fling
 	readonly meepo_pack_rat: typeof meepo_pack_rat
@@ -3305,8 +3269,6 @@ declare const Dota2SDK: {
 	readonly modifier_medusa_stone_gaze_slow: typeof modifier_medusa_stone_gaze_slow
 	readonly modifier_medusa_stone_gaze_stone: typeof modifier_medusa_stone_gaze_stone
 	readonly modifier_medusa_stone_gaze_tracker: typeof modifier_medusa_stone_gaze_tracker
-	readonly modifier_medusa_venomed_volley: typeof modifier_medusa_venomed_volley
-	readonly modifier_medusa_venomed_volley_slow: typeof modifier_medusa_venomed_volley_slow
 	readonly modifier_meepo_divided_we_stand: typeof modifier_meepo_divided_we_stand
 	readonly modifier_meepo_divided_we_stand_support_group: typeof modifier_meepo_divided_we_stand_support_group
 	readonly modifier_meepo_earthbind: typeof modifier_meepo_earthbind
@@ -4082,7 +4044,6 @@ declare const Dota2SDK: {
 	readonly modifier_slardar_seaborn_sentinel_passive: typeof modifier_slardar_seaborn_sentinel_passive
 	readonly modifier_slardar_seaborn_sentinel_river: typeof modifier_slardar_seaborn_sentinel_river
 	readonly modifier_slardar_sprint: typeof modifier_slardar_sprint
-	readonly modifier_slark_armor_reduction_debuff: typeof modifier_slark_armor_reduction_debuff
 	readonly modifier_slark_dark_pact: typeof modifier_slark_dark_pact
 	readonly modifier_slark_dark_pact_pulses: typeof modifier_slark_dark_pact_pulses
 	readonly modifier_slark_depth_shroud: typeof modifier_slark_depth_shroud
@@ -4724,11 +4685,9 @@ declare const Dota2SDK: {
 	readonly monkey_king_wukongs_command: typeof monkey_king_wukongs_command
 	readonly morphling_accumulation: typeof morphling_accumulation
 	readonly morphling_adaptive_strike_agi: typeof morphling_adaptive_strike_agi
-	readonly morphling_adaptive_strike_str: typeof morphling_adaptive_strike_str
 	readonly morphling_ebb: typeof morphling_ebb
 	readonly morphling_flow: typeof morphling_flow
 	readonly morphling_hybrid: typeof morphling_hybrid
-	readonly morphling_morph: typeof morphling_morph
 	readonly morphling_morph_agi: typeof morphling_morph_agi
 	readonly morphling_morph_replicate: typeof morphling_morph_replicate
 	readonly morphling_morph_str: typeof morphling_morph_str
@@ -4956,6 +4915,7 @@ declare const Dota2SDK: {
 	readonly obsidian_destroyer_astral_imprisonment: typeof obsidian_destroyer_astral_imprisonment
 	readonly obsidian_destroyer_equilibrium: typeof obsidian_destroyer_equilibrium
 	readonly obsidian_destroyer_essence_aura: typeof obsidian_destroyer_essence_aura
+	readonly obsidian_destroyer_objurgation: typeof obsidian_destroyer_objurgation
 	readonly obsidian_destroyer_ominous_discernment: typeof obsidian_destroyer_ominous_discernment
 	readonly obsidian_destroyer_sanity_eclipse: typeof obsidian_destroyer_sanity_eclipse
 	readonly ogre_bruiser_ogre_smash: typeof ogre_bruiser_ogre_smash
@@ -5118,8 +5078,6 @@ declare const Dota2SDK: {
 	readonly sandking_burrowstrike: typeof sandking_burrowstrike
 	readonly sandking_caustic_finale: typeof sandking_caustic_finale
 	readonly sandking_epicenter: typeof sandking_epicenter
-	readonly sandking_innate_caustic_impediment: typeof sandking_innate_caustic_impediment
-	readonly sandking_innate_caustic_volatility: typeof sandking_innate_caustic_volatility
 	readonly sandking_sand_storm: typeof sandking_sand_storm
 	readonly sandking_scorpion_strike: typeof sandking_scorpion_strike
 	readonly satyr_hellcaller_shockwave: typeof satyr_hellcaller_shockwave
@@ -5136,7 +5094,6 @@ declare const Dota2SDK: {
 	readonly seasonal_summon_dragon: typeof seasonal_summon_dragon
 	readonly seasonal_summon_penguin: typeof seasonal_summon_penguin
 	readonly seasonal_summon_snowman: typeof seasonal_summon_snowman
-	readonly seasonal_summon_ti11_balloon: typeof seasonal_summon_ti11_balloon
 	readonly seasonal_summon_ti9_balloon: typeof seasonal_summon_ti9_balloon
 	readonly seasonal_throw_snowball: typeof seasonal_throw_snowball
 	readonly seasonal_ti10_disco_ball: typeof seasonal_ti10_disco_ball
@@ -5166,10 +5123,10 @@ declare const Dota2SDK: {
 	readonly shadow_shaman_ether_shock: typeof shadow_shaman_ether_shock
 	readonly shadow_shaman_fowl_play: typeof shadow_shaman_fowl_play
 	readonly shadow_shaman_innate_piglet_pole: typeof shadow_shaman_innate_piglet_pole
-	readonly shadow_shaman_innate_snake_jar: typeof shadow_shaman_innate_snake_jar
 	readonly shadow_shaman_mass_serpent_ward: typeof shadow_shaman_mass_serpent_ward
 	readonly shadow_shaman_serpentine: typeof shadow_shaman_serpentine
 	readonly shadow_shaman_shackles: typeof shadow_shaman_shackles
+	readonly shadow_shaman_urnaconda: typeof shadow_shaman_urnaconda
 	readonly shadow_shaman_voodoo: typeof shadow_shaman_voodoo
 	readonly shoot_firework: typeof shoot_firework
 	readonly shredder_chakram: typeof shredder_chakram
@@ -5194,7 +5151,6 @@ declare const Dota2SDK: {
 	readonly skeleton_king_mortal_strike: typeof skeleton_king_mortal_strike
 	readonly skeleton_king_reincarnation: typeof skeleton_king_reincarnation
 	readonly skeleton_king_spectral_blade: typeof skeleton_king_spectral_blade
-	readonly skeleton_king_vampiric_aura: typeof skeleton_king_vampiric_aura
 	readonly skeleton_king_vampiric_spirit: typeof skeleton_king_vampiric_spirit
 	readonly skywrath_mage_ancient_seal: typeof skywrath_mage_ancient_seal
 	readonly skywrath_mage_arcane_bolt: typeof skywrath_mage_arcane_bolt
@@ -5209,7 +5165,6 @@ declare const Dota2SDK: {
 	readonly slardar_seaborn_sentinel: typeof slardar_seaborn_sentinel
 	readonly slardar_slithereen_crush: typeof slardar_slithereen_crush
 	readonly slardar_sprint: typeof slardar_sprint
-	readonly slark_barracuda: typeof slark_barracuda
 	readonly slark_dark_pact: typeof slark_dark_pact
 	readonly slark_depth_shroud: typeof slark_depth_shroud
 	readonly slark_essence_shift: typeof slark_essence_shift
@@ -5239,8 +5194,8 @@ declare const Dota2SDK: {
 	readonly spectre_desolate: typeof spectre_desolate
 	readonly spectre_dispersion: typeof spectre_dispersion
 	readonly spectre_haunt: typeof spectre_haunt
-	readonly spectre_haunt_single: typeof spectre_haunt_single
 	readonly spectre_reality: typeof spectre_reality
+	readonly spectre_shadow_step: typeof spectre_shadow_step
 	readonly spectre_spectral: typeof spectre_spectral
 	readonly spectre_spectral_dagger: typeof spectre_spectral_dagger
 	readonly spirit_breaker_bulldoze: typeof spirit_breaker_bulldoze
@@ -5266,6 +5221,7 @@ declare const Dota2SDK: {
 	readonly techies_focused_detonate: typeof techies_focused_detonate
 	readonly techies_land_mines: typeof techies_land_mines
 	readonly techies_minefield_sign: typeof techies_minefield_sign
+	readonly techies_mutually_assured_destruction: typeof techies_mutually_assured_destruction
 	readonly techies_reactive_tazer: typeof techies_reactive_tazer
 	readonly techies_reactive_tazer_stop: typeof techies_reactive_tazer_stop
 	readonly techies_remote_mines: typeof techies_remote_mines
@@ -5297,7 +5253,6 @@ declare const Dota2SDK: {
 	readonly tidehunter_dead_in_the_water: typeof tidehunter_dead_in_the_water
 	readonly tidehunter_gush: typeof tidehunter_gush
 	readonly tidehunter_kraken_shell: typeof tidehunter_kraken_shell
-	readonly tidehunter_krill_eater: typeof tidehunter_krill_eater
 	readonly tidehunter_ravage: typeof tidehunter_ravage
 	readonly tinker_defense_matrix: typeof tinker_defense_matrix
 	readonly tinker_deploy_turrets: typeof tinker_deploy_turrets
@@ -5332,7 +5287,6 @@ declare const Dota2SDK: {
 	readonly troll_warlord_berserkers_rage: typeof troll_warlord_berserkers_rage
 	readonly troll_warlord_fervor: typeof troll_warlord_fervor
 	readonly troll_warlord_innate_masterful: typeof troll_warlord_innate_masterful
-	readonly troll_warlord_innate_unflinching: typeof troll_warlord_innate_unflinching
 	readonly troll_warlord_rampage: typeof troll_warlord_rampage
 	readonly troll_warlord_scepter: typeof troll_warlord_scepter
 	readonly troll_warlord_switch_stance: typeof troll_warlord_switch_stance
@@ -5358,8 +5312,6 @@ declare const Dota2SDK: {
 	readonly undying_tombstone_unit_grab: typeof undying_tombstone_unit_grab
 	readonly undying_tombstone_zombie_aura: typeof undying_tombstone_zombie_aura
 	readonly undying_tombstone_zombie_deathstrike: typeof undying_tombstone_zombie_deathstrike
-	readonly undying_zombie_master: typeof undying_zombie_master
-	readonly urbolg_enrage_damage: typeof urbolg_enrage_damage
 	readonly ursa_bear_down: typeof ursa_bear_down
 	readonly ursa_earthshock: typeof ursa_earthshock
 	readonly ursa_enrage: typeof ursa_enrage
@@ -5379,10 +5331,9 @@ declare const Dota2SDK: {
 	readonly venomancer_poison_nova: typeof venomancer_poison_nova
 	readonly venomancer_poison_sting: typeof venomancer_poison_sting
 	readonly venomancer_sepsis: typeof venomancer_sepsis
+	readonly venomancer_snakebite: typeof venomancer_snakebite
 	readonly venomancer_venomous_gale: typeof venomancer_venomous_gale
 	readonly viper_corrosive_skin: typeof viper_corrosive_skin
-	readonly viper_innate_corrosive_skin_vile: typeof viper_innate_corrosive_skin_vile
-	readonly viper_innate_corrosive_skin_virulent: typeof viper_innate_corrosive_skin_virulent
 	readonly viper_nethertoxin: typeof viper_nethertoxin
 	readonly viper_nose_dive: typeof viper_nose_dive
 	readonly viper_poison_attack: typeof viper_poison_attack
@@ -5436,7 +5387,6 @@ declare const Dota2SDK: {
 	readonly wisp_essence_conduction: typeof wisp_essence_conduction
 	readonly wisp_overcharge: typeof wisp_overcharge
 	readonly wisp_relocate: typeof wisp_relocate
-	readonly wisp_sight_seer: typeof wisp_sight_seer
 	readonly wisp_spirits: typeof wisp_spirits
 	readonly wisp_spirits_in: typeof wisp_spirits_in
 	readonly wisp_spirits_out: typeof wisp_spirits_out

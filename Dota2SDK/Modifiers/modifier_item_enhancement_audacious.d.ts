@@ -5,4 +5,5 @@ declare class modifier_item_enhancement_audacious extends Modifier {
 	protected GetProcAttackBonusDamageMagical(): [number, boolean]
 	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

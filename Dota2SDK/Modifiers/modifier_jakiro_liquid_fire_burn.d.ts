@@ -4,6 +4,8 @@ declare class modifier_jakiro_liquid_fire_burn extends Modifier implements IDebu
 	public readonly DebuffModifierName: string
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
+	/** The burn ticks on the unit by itself: its ability's (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

@@ -4,6 +4,7 @@ declare class modifier_morphling_ebb_and_flow_intrinsic extends Modifier {
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected GetSlowResistanceStacking(): [number, boolean]
-	protected GetCastRangeBonusPercentage(): [number, boolean]
+	protected GetCastRangeBonusStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

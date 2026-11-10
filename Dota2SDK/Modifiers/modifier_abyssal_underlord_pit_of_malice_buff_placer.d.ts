@@ -4,4 +4,5 @@ declare class modifier_abyssal_underlord_pit_of_malice_buff_placer extends Modif
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

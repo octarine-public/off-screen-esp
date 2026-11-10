@@ -6,4 +6,5 @@ declare class modifier_alchemist_scepter_bonus_damage extends Modifier implement
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

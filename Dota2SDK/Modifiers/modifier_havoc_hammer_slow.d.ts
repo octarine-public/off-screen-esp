@@ -5,5 +5,6 @@ declare class modifier_havoc_hammer_slow extends Modifier implements IDebuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

@@ -4,4 +4,5 @@ declare class modifier_item_enhancement_mystical extends Modifier {
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetManaCostPercentageStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

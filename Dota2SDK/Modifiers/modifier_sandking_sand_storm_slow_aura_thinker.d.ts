@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_sandking_sand_storm_slow_aura_thinker extends Modifier {
+	public get IsPurgable(): boolean
 }

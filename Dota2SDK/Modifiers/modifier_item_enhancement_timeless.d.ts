@@ -2,5 +2,7 @@
 declare class modifier_item_enhancement_timeless extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetSpellAmplifyPercentage(): [number, boolean]
+	protected GetStatusResistanceCaster(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

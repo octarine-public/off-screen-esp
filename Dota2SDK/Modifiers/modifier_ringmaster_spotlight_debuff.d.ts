@@ -3,4 +3,5 @@ declare class modifier_ringmaster_spotlight_debuff extends Modifier implements I
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

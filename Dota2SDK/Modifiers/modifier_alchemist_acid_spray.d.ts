@@ -8,4 +8,10 @@ declare class modifier_alchemist_acid_spray extends Modifier implements IDebuff,
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/**
+	 * Acid Spray ticks on the unit by itself while it is on it - renewed while the unit
+	 * stays in the area: its ability's damage over time (`Ability.DamageOverTime`).
+	 */
+	protected readonly DeclaredEvents: EModifierfunction[]
+	public get IsPurgable(): boolean
 }

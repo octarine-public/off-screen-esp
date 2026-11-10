@@ -1,3 +1,5 @@
 // AUTO-GENERATED - do not edit.
-declare class modifier_pugna_nether_ward extends Modifier {
+declare class modifier_pugna_nether_ward extends AttackCountModifier {
+	protected get RangedHeroHit(): number
+	public get IsPurgable(): boolean
 }

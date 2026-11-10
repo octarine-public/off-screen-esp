@@ -7,4 +7,5 @@ declare class modifier_necrolyte_sadist_counter extends Modifier implements IBuf
 	public GetTexturePath(): string
 	protected GetAoeBonusConstantStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

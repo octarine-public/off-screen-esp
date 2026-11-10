@@ -7,4 +7,5 @@ declare class modifier_broodmother_spin_web extends Modifier implements IBuff {
 	protected GetTurnRateConstant(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

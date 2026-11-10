@@ -9,4 +9,5 @@ declare class modifier_force_boots_active extends Modifier implements IBuff, IDe
 	public IsDisable(): this is IDisable
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

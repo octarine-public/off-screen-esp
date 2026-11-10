@@ -7,4 +7,5 @@ declare class modifier_nyx_assassin_burrow extends Modifier implements IBuff {
 	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected GetCastRangeBonusStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

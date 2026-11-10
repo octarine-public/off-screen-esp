@@ -7,4 +7,5 @@ declare class modifier_slark_shadow_dance_passive_regen extends Modifier impleme
 	public GetTexturePath(): string
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

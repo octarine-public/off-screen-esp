@@ -7,4 +7,5 @@ declare class modifier_arc_warden_tempest_double_debuff extends Modifier impleme
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

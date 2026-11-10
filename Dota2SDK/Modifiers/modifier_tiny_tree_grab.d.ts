@@ -9,4 +9,5 @@ declare class modifier_tiny_tree_grab extends Modifier implements IBuff {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetPreAttackBonusDamagePercentage(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

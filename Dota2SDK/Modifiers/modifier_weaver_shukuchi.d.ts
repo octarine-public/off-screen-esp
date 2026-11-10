@@ -7,4 +7,5 @@ declare class modifier_weaver_shukuchi extends Modifier implements IBuff {
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected GetMoveSpeedAbsoluteMin(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

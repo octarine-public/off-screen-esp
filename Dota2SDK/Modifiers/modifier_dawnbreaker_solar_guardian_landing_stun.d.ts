@@ -3,4 +3,5 @@ declare class modifier_dawnbreaker_solar_guardian_landing_stun extends Modifier 
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

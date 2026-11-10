@@ -3,4 +3,6 @@ declare class modifier_tusk_walrus_kick_air_time extends Modifier implements IDi
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
+	public get IsStunDebuff(): boolean
 }

@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class monkey_king_boundless_strike extends Ability implements INuke {
+	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number

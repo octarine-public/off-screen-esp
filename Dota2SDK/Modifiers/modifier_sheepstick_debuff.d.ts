@@ -7,4 +7,6 @@ declare class modifier_sheepstick_debuff extends Modifier implements IDebuff, ID
 	public IsDisable(): this is IDisable
 	protected GetMoveSpeedBaseOverride(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
+	public get IsPurgeException(): boolean
 }

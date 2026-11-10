@@ -8,4 +8,5 @@ declare class modifier_lycan_shapeshift extends Modifier implements IBuff {
 	protected GetMaxAttackRange(): [number, boolean]
 	protected GetBonusNightVision(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

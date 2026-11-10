@@ -7,4 +7,10 @@ declare class modifier_viper_viper_strike_slow extends Modifier implements IDebu
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/**
+	 * Viper Strike's slow is what ticks on the unit by itself - its ability's damage over time
+	 * (`Ability.DamageOverTime`) - as the game's server has it (`CDOTA_Modifier_Viper_ViperStrike_Slow`).
+	 */
+	protected readonly DeclaredEvents: EModifierfunction[]
+	public get IsPurgable(): boolean
 }

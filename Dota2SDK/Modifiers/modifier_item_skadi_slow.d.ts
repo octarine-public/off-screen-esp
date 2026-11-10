@@ -7,4 +7,5 @@ declare class modifier_item_skadi_slow extends Modifier implements IDebuff {
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

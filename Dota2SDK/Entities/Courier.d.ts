@@ -7,6 +7,6 @@ declare class Courier extends Unit {
 	public readonly StateHero_: number
 	public get StateHero(): Nullable<Hero>
 	public get ShouldUnifyOrders(): boolean
-	public get HealthBarSize(): Vector2
-	public get HealthBarPositionCorrection(): Vector2
+	protected get UnitHealthBarSize(): Vector2
+	protected get UnitHealthBarPositionCorrection(): Vector2
 }

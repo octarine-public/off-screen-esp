@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_pugna_decrepify extends Modifier implements IDebuff, IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsGhost = true
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
@@ -11,5 +12,6 @@ declare class modifier_pugna_decrepify extends Modifier implements IDebuff, IBuf
 	public IsShield(): this is IShield
 	protected GetMagicalResistanceDecrepifyUnique(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected GetAbsoluteNoDamagePhysical(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

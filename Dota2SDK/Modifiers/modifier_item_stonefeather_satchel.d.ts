@@ -4,4 +4,5 @@ declare class modifier_item_stonefeather_satchel extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

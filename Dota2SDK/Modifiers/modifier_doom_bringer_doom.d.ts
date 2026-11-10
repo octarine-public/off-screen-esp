@@ -4,4 +4,5 @@ declare class modifier_doom_bringer_doom extends Modifier implements IDebuff, ID
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_vengefulspirit_nether_swap_damage_reduction extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -9,5 +10,6 @@ declare class modifier_vengefulspirit_nether_swap_damage_reduction extends Modif
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected GetTotalConstantBlock(): [number, boolean]
+	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

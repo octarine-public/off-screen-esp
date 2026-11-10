@@ -5,5 +5,5 @@ declare class modifier_gyrocopter_afterburner extends Modifier implements IBuff 
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

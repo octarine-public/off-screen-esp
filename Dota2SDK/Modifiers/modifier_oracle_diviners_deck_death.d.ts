@@ -6,4 +6,5 @@ declare class modifier_oracle_diviners_deck_death extends Modifier implements IB
 	public IsBuff(): this is IBuff
 	protected GetSpellAmplifyPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

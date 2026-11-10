@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_crystal_maiden_let_it_go_slow extends Modifier {
+	public get IsPurgable(): boolean
 }

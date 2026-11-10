@@ -6,4 +6,5 @@ declare class modifier_lone_druid_spirit_link extends Modifier implements IBuff 
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

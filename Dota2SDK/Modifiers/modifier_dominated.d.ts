@@ -1,9 +1,9 @@
 // AUTO-GENERATED - do not edit.
+/**
+ * A dominated unit's mark: no property of its own (server.dll declares none) - the Helm of the
+ * Dominator's and Overlord's bonuses are `modifier_item_helm_of_the_dominator_bonushealth`.
+ */
 declare class modifier_dominated extends Modifier {
 	public readonly IsHidden = false
-	protected readonly DeclaredFunction: Map<EModifierfunction, (_params?: IModifierParams) => [number, boolean]>
-	protected GetPreAttackDamageBonus(_params?: IModifierParams): [number, boolean]
-	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected GetHealthRegenConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

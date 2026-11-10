@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_nian_hurricane_whirlpool extends Modifier {
+	public get IsPurgable(): boolean
 }

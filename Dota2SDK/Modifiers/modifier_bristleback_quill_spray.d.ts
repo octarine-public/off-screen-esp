@@ -5,4 +5,5 @@ declare class modifier_bristleback_quill_spray extends Modifier implements IDebu
 	public GetBonusDamagePerStack(_target: Unit): number
 	public IsDebuff(): this is IDebuff
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

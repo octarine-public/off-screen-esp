@@ -5,4 +5,5 @@ declare class modifier_item_armlet extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

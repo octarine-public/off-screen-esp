@@ -40,6 +40,11 @@ interface EventsMap {
 }
 
 interface EventsMap {
+	/**
+	 * The frame's world-shape stage, right after the interpolated positions are applied and before
+	 * `PreDraw`: what `WorldDraw` is given here is drawn with the camera of the frame on screen.
+	 */
+	WorldDraw: []
 	NewConnection: []
 	ConfigsChanged: []
 	PanoramaFrame: []
@@ -63,7 +68,15 @@ interface NativeEventsMap {
 	PanoramaWindowDestroy: [windowName: string]
 	CustomGameEvent: [eventName: string, data: RecursiveMap]
 	DebuggerPrepareUnitOrders: [isUserInput: boolean, wasCancelled: boolean]
-	Draw: [visualData: ArrayBuffer, w: number, h: number, x: number, y: number]
+	/** onScreen: the uint32 entity indices of the units on screen, undefined from a core that does not list them */
+	Draw: [
+		visualData: ArrayBuffer,
+		w: number,
+		h: number,
+		x: number,
+		y: number,
+		onScreen?: ArrayBuffer
+	]
 	GCPingResponse: []
 	GameEvent: [eventName: string, obj: unknown]
 	InputCaptured: [isCaptured: boolean]
@@ -98,7 +111,14 @@ interface EventsMap {
 	 */
 	EntityVisibleChanged: [entity: Entity]
 	UnitVisibleStateChanged: [data: TeamData]
+	/** Emitted when `Unit.IsInEnemySight` of a unit of the local team changes (`VisionSDK`). */
 	UnitTeamVisibilityChanged: [unit: Unit]
+	/** Emitted when a threat comes on its way (`PredictionSDK.Threats`): a cast seen, a projectile, a landing. */
+	ThreatAdded: [threat: Threat]
+	/** Emitted when a threat is over: it passed, was cancelled, or its sign let go of it. */
+	ThreatRemoved: [threat: Threat]
+	/** Emitted when a threat hurt `unit`, as the game's `entity_hurt` of its ability says. */
+	ThreatLanded: [threat: Threat, unit: Unit]
 	FakeUnitCreated: [unit: FakeUnit]
 	FakeUnitDestroyed: [unit: FakeUnit]
 	/**
@@ -117,6 +137,8 @@ interface EventsMap {
 	ParticleReleased: [particle: DotaNetworkedParticle]
 	ParticleDestroyed: [particle: DotaNetworkedParticle]
 	PrepareUnitOrders: [order: ExecuteOrder]
+	/** An order got to the game (`EOrderStage.Sent`) or never will (`EOrderStage.Dropped`). */
+	OrderStageChanged: [order: ExecuteOrder]
 	DebuggerPrepareUnitOrders: [order: ExecuteOrder, is_user_input: boolean, was_cancelled: boolean]
 	LinearProjectileCreated: [proj: LinearProjectile]
 	LinearProjectileDestroyed: [proj: LinearProjectile]
@@ -124,7 +146,11 @@ interface EventsMap {
 	TrackingProjectileUpdated: [proj: TrackingProjectile]
 	TrackingProjectileDestroyed: [proj: TrackingProjectile]
 	TrackingProjectilesDodged: [ent: Unit | FakeUnit, attacks_only: boolean]
-	UnitAnimation: [npc: Nullable<Unit | FakeUnit>, sequenceVariant: number, playbackrate: number, castpoint: number, type: number, activity: GameActivity, lagCompensationTime: number, rawCastPoint: number]
+	/**
+	 * `startTime` is the game time of the tick the animation began on, also when the client shows
+	 * several ticks in one frame: the game sends the message ahead of that tick's own `net_Tick`.
+	 */
+	UnitAnimation: [npc: Nullable<Unit | FakeUnit>, sequenceVariant: number, playbackrate: number, castpoint: number, type: number, activity: GameActivity, lagCompensationTime: number, rawCastPoint: number, startTime: number]
 	UnitAnimationEnd: [npc: Unit | FakeUnit, snap: boolean]
 	GameEvent: [eventName: string, obj: any]
 	/**
@@ -138,6 +164,15 @@ interface EventsMap {
 	UnitRemoveAllGestures: [npc: Nullable<Unit | FakeUnit>]
 	UnitFadeGesture: [npc: Nullable<Unit | FakeUnit>, activity: number]
 	GameStateChanged: [newState: DOTAGameState]
+	/**
+	 * Emitted once per flip of `GameRules.IsNight`: the regular cycle, Nightstalker's night and
+	 * temporary day or night alike. Not emitted for the value a match starts with.
+	 * @example
+	 * EventsSDK.on("DayNightChanged", isNight => {
+	 * 	console.log(isNight ? "night" : "day")
+	 * })
+	 */
+	DayNightChanged: [isNight: boolean]
 	LifeStateChanged: [ent: Entity]
 	UnitAbilitiesChanged: [ent: Unit]
 	UnitWearablesChanged: [ent: Unit]
@@ -157,7 +192,15 @@ interface EventsMap {
 	NetworkActivityChanged: [npc: Unit]
 	ModifierCreated: [mod: Modifier]
 	ModifierChanged: [mod: Modifier]
+	/**
+	 * @description Emitted when the server re-sends a modifier unchanged, which it does for every
+	 * modifier of a unit once another team gains vision of that unit
+	 */
 	ModifierChangedVBE: [mod: Modifier]
+	/**
+	 * @description Emitted at most once per tick when an allied unit becomes visible to the enemy
+	 * team, and when its visible-for-enemies debuffs change
+	 */
 	UnitVBEModifierChanged: [unit: Unit]
 	ModifierRemoved: [mod: Modifier]
 	UnitAbilityDataUpdated: []
@@ -219,4 +262,68 @@ interface NativeEventsMap {
 		rankData4: number
 	]
 	DOTAFullHeroGlobalDataUpdated: [obj: unknown]
+	/** The account's switch for sharing the changer's items as the server keeps it, and whether the server has said yet */
+	ChangerShareEnabledChanged: [enabled: boolean, known: boolean]
+	/** The players whose units the changer dresses in the loadouts they share, the whole set each time it changes */
+	ChangerSharedPlayersChanged: [playerIDs: number[]]
+	/**
+	 * A move message went out (Beta native only): its `hrtime`, whether the commands are the
+	 * scripts' (false: the game's own) and the commands as the server decodes them.
+	 */
+	UserCmdSent: [time: number, own: boolean, commands: WireUserCmd[]]
+	/**
+	 * Orders went out in an ExecuteOrders message (Beta native only): its `hrtime`, the orders,
+	 * and whether the game sent them rather than the scripts.
+	 */
+	OrdersSent: [time: number, orders: WireOrder[], fromGame: boolean]
+}
+
+/** A user command as the server decodes it from a move message (`UserCmdSent`). */
+interface WireUserCmd {
+	readonly tick: number
+	/** The cursor's x on the screen, 0..511. */
+	readonly mouseX: number
+	/** The cursor's y on the screen, 0..384. */
+	readonly mouseY: number
+	readonly cameraX: number
+	readonly cameraY: number
+	/** The world point under the cursor (crosshairtrace). */
+	readonly underX: number
+	readonly underY: number
+	readonly underZ: number
+	/** The entity under the cursor. */
+	readonly weaponSelect: number
+	readonly click: number
+	/** The buttons held (buttons_pb.buttonstate1..3). */
+	readonly buttons1: number
+	readonly buttons2: number
+	readonly buttons3: number
+	readonly forwardMove: number
+	readonly leftMove: number
+	readonly upMove: number
+	/** The view angles' pitch and yaw. */
+	readonly pitch: number
+	readonly yaw: number
+	readonly impulse: number
+	readonly cmdFlags: number
+	/** How many subtick moves the command carries, and every one's button or-ed. */
+	readonly subticks: number
+	readonly subtickButtons: number
+}
+
+/** An order as it went out in an ExecuteOrders message (`OrdersSent`). */
+interface WireOrder {
+	readonly sequence: number
+	/** Its `dotaunitorder_t`. */
+	readonly type: number
+	readonly positionX: number
+	readonly positionY: number
+	readonly positionZ: number
+	/** The target's entity index, -1 for none. */
+	readonly target: number
+	readonly ability: number
+	readonly queue: boolean
+	/** Whether this message sends it for the first time rather than again. */
+	readonly firstSend: boolean
+	readonly issuers: number[]
 }

@@ -3,4 +3,5 @@ declare class modifier_silencer_glaives_of_wisdom_buff_counter extends Modifier 
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

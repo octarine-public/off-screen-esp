@@ -5,4 +5,5 @@ declare class modifier_abyssal_underlord_atrophy_aura_dmg_buff_counter extends M
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

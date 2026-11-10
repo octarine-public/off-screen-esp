@@ -3,4 +3,5 @@ declare class modifier_obsidian_destroyer_equilibrium_debuff_counter extends Mod
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

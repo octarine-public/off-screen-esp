@@ -4,4 +4,5 @@ declare class modifier_elder_titan_echo_stomp extends Modifier implements IDebuf
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

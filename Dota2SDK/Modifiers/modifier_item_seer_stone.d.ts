@@ -5,4 +5,5 @@ declare class modifier_item_seer_stone extends Modifier {
 	protected GetBonusDayVision(): [number, boolean]
 	protected GetCastRangeBonusStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

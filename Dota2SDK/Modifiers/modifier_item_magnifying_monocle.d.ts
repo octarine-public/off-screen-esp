@@ -4,4 +4,5 @@ declare class modifier_item_magnifying_monocle extends Modifier {
 	protected GetCastRangeBonus(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

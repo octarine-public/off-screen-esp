@@ -37,6 +37,12 @@ declare class Particle {
 	public SetInFogVisible(state?: boolean): this
 	public Restart(): void
 	public Destroy(immediate?: boolean): this
+	/**
+	 * Lets go of the game's particle without asking the game to remove it, for one the game
+	 * already took down with the match.
+	 * @internal
+	 */
+	public Forget(): void
 	public toJSON(): {
 		Key: any
 		Path: string

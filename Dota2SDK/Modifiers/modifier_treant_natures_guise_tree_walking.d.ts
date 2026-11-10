@@ -5,4 +5,5 @@ declare class modifier_treant_natures_guise_tree_walking extends Modifier {
 	public PostDataUpdate(): void
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -3,4 +3,5 @@ declare class modifier_riki_tricks_of_the_trade_phase extends Modifier implement
 	public readonly ChannelModifierName: string
 	public get ForceVisible(): boolean
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

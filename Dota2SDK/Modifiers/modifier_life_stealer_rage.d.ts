@@ -10,4 +10,5 @@ declare class modifier_life_stealer_rage extends Modifier implements IBuff, IShi
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

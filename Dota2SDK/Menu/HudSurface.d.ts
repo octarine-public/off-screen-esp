@@ -238,15 +238,35 @@ declare namespace MenuSDK {
 		points: readonly number[]
 		thickness: number
 		color: number
+		/**
+		 * Paints the run's interior as well, the run read as a closed loop: this colour along the
+		 * edge, under the stroke, easing towards the middle. A host whose shader predates interiors
+		 * draws the stroke alone.
+		 */
+		interior?: number
+		/** The share of {@link interior}'s alpha left deepest in, 0 to 1; 1 when omitted. */
+		depth?: number
 		/** The native capsule slot the geometry rides in, claimed by the emitter for this frame. */
 		slot: number
 	}
 	type HudCommand = IHudRect | IHudText | IHudImage | IHudStrip | IHudCircle | IHudArc | IHudPath
 	/**
+	 * A point HUD commands can be pinned to, placed by the core when the frame is presented; Source 2's
+	 * `CRenderAnchor` is one.
+	 */
+	interface IHudAnchor {
+		/** The core's anchor slot, or -1 where the host has none: the surface then projects it itself. */
+		readonly Slot: number
+		/** Where the anchor lands in this frame's projection, in screen px; false when off the frame. */
+		Project(out: [number, number]): boolean
+	}
+	/**
 	 * One overlay's slice of the RmlUi document. The HUD keeps its immediate-mode API - a caller still
-	 * emits a frame's worth of draw calls - and this turns that stream into pools of elements written
-	 * straight through the world writers, so a frame costs no React render and an unchanged command
-	 * costs nothing at all. Only growing a pool asks React for a pass.
+	 * emits a frame's worth of draw calls. On a host with HUD lists ({@link HudListsSupported}) the
+	 * stream is encoded into `<hud-surface>` lists the host draws itself, and only what a list cannot
+	 * draw (see {@link DrawnNatively}) keeps an element; elsewhere every command does. Elements live
+	 * in pools written straight through the world writers, so a frame costs no React render and an
+	 * unchanged command costs nothing at all. Only growing a pool asks React for a pass.
 	 */
 	class CHudSurface {
 		/**
@@ -267,11 +287,12 @@ declare namespace MenuSDK {
 		/**
 		 * How strongly the whole surface is drawn, 0 to 1.
 		 *
-		 * It reaches everything the surface draws EXCEPT what carries an opacity of its own: RmlUi
-		 * hands opacity down the tree rather than compositing it, and a run of text carries one so its
-		 * glyph and the effect baked beside it fade together — so text stands at full strength while
-		 * everything around it thins away. Fading a card whose readings must go with it belongs in
-		 * {@link SetHudAlphaScale}, which every primitive multiplies into what it pushes.
+		 * On a host with HUD lists it reaches everything the surface draws. Elsewhere it reaches
+		 * everything EXCEPT what carries an opacity of its own: RmlUi hands opacity down the tree rather
+		 * than compositing it, and a run of text carries one so its glyph and the effect baked beside
+		 * it fade together — so text stands at full strength while everything around it thins away.
+		 * Fading a card whose readings must go with it belongs in {@link SetHudAlphaScale}, which every
+		 * primitive multiplies into what it pushes.
 		 */
 		public Fade(value: number): void
 		/**
@@ -312,7 +333,55 @@ declare namespace MenuSDK {
 		 * @see MenuHost.onRetainedPass
 		 */
 		public get Retained(): boolean
+		/**
+		 * Leaves what the surface shows exactly as the last frame wrote it, for a drawer whose frame
+		 * would come out the same: nothing is pushed, compared or written this frame. Answers whether
+		 * it did. A surface already drawn into this frame, one standing with no frame at all - never
+		 * drawn, or wiped since - or one with an image still waiting on its texture keeps nothing, and
+		 * its frame ends as it would have. Anything
+		 * pushed after a hold in the same frame opens the frame as usual and drops the hold.
+		 *
+		 * `shiftX` / `shiftY` stand the kept frame that many px off where it was drawn, the whole of it
+		 * at once, for a card placed from a world position by hand whose point moved on screen while
+		 * nothing on it changed. What stands on an anchor ({@link CHudSurface.Anchor}) needs no shift:
+		 * the core moves it. A frame that stood anything on an anchor the surface projected itself, on
+		 * a host without anchors, is not kept: it would stay where the camera left it.
+		 * The next frame drawn stands where its own commands put it again.
+		 *
+		 * @example
+		 * if (unchanged && surface.Keep(anchor.x - drawnAt.x, anchor.y - drawnAt.y)) {
+		 * 	return
+		 * }
+		 */
+		public Keep(shiftX?: number, shiftY?: number): boolean
 		public Open(): void
+		/**
+		 * Pins the commands pushed after it, until the next call or the end of the frame, to `anchor`:
+		 * their positions are px from the point it lands on, which the core places when the frame is
+		 * presented, so they keep up with the camera even on a frame whose script pass ran late. Called
+		 * without one, the commands after it stand on the screen again. On a host without anchors the
+		 * surface projects the anchor itself, and drops what is pinned to one off the frame.
+		 * @example
+		 * const anchor = new CRenderAnchor()
+		 * anchor.SetWorld(rune.x, rune.y, rune.z + 64)
+		 * surface.Anchor(anchor)
+		 * surface.Push({ kind: "rect", x: -50, y: -8, w: 100, h: 8, color })
+		 * surface.Anchor()
+		 */
+		public Anchor(anchor?: IHudAnchor): void
+		/**
+		 * {@link CHudSurface.Anchor} on the world point `x, y, z`, `screenX, screenY` px from where it
+		 * lands, through an anchor the surface keeps for the frame: a marker at a place in the world -
+		 * a rune, a ward, a spell's area - needs no anchor of its own to define and free. The anchors
+		 * go out in the order of the calls, and those a frame leaves unused are freed when it ends, so
+		 * a marker drawn in the same order every frame keeps its anchor. Pin what moves to an anchor
+		 * of its own (`CRenderAnchor.SetEntity`), which follows it at every present.
+		 * @example
+		 * canvas.AnchorWorld(rune.x, rune.y, rune.z)
+		 * canvas.Image(path, new Vector2(-16, -16), new Vector2(32, 32))
+		 * canvas.Anchor()
+		 */
+		public AnchorWorld(x: number, y: number, z: number, screenX?: number, screenY?: number): void
 		/**
 		 * A frame opens at its first command rather than on a call, so a caller drawing from more than
 		 * one phase of the tick lands in one frame instead of having the earlier phase discarded.
@@ -380,12 +449,26 @@ declare namespace MenuSDK {
 	 */
 	function EndHudFrame(): void
 	/**
+	 * Draws `drawer` at the end of every retained pass, so what it puts on a surface stands until the
+	 * next pass; on a host without a retained pass every frame is one, see {@link RunRetainedHudPass}.
+	 * For an overlay that stands on the screen and changes at a tick's rate - anything placed from a
+	 * world position is drawn every frame, or it trails the camera.
+	 * @example
+	 * OnRetainedHudPass(() => panel.Draw(size, origin => DrawStrip(origin)))
+	 */
+	function OnRetainedHudPass(drawer: () => void): void
+	/**
 	 * The host's retained pass begins: a surface opened from here until {@link EndRetainedHudPass}
 	 * keeps what it draws until the next pass. Wired to {@link MenuHost.onRetainedPass}.
 	 */
 	function BeginRetainedHudPass(): void
-	/** The host's retained pass is over; see {@link BeginRetainedHudPass}. */
+	/**
+	 * The host's retained pass is over once the drawers handed to {@link OnRetainedHudPass} have drawn;
+	 * see {@link BeginRetainedHudPass}.
+	 */
 	function EndRetainedHudPass(): void
+	/** A whole retained pass at once, every frame, for a host that runs none of its own. */
+	function RunRetainedHudPass(): void
 	/**
 	 * Asks the host to run its retained pass on the next frame, for a surface drawn in it that the
 	 * user is moving by hand - a panel in a drag, a hover easing in - which the pass's own rate would

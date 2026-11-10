@@ -8,4 +8,6 @@ declare class modifier_axe_battle_hunger extends Modifier implements IDebuff {
 	public PostDataUpdate(): void
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/** Battle Hunger ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 }

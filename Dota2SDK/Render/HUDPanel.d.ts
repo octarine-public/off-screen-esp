@@ -56,7 +56,8 @@ declare class HUDPanel {
 	 * True when the last reading's measurement differs from the one before it — the panel moved,
 	 * resized, or came into or went out of layout.
 	 *
-	 * It answers for the last reading, which GUIInfo takes once a `Draw2D` pass.
+	 * It answers for the last reading. GUIInfo reads the HUD whenever something says it may have
+	 * moved, and a few times a second otherwise.
 	 * @example
 	 * if (GUIInfo.HUD.Descendant("inventory").HasChanged) { rebuildOverlay() }
 	 */
@@ -121,7 +122,7 @@ declare class HUDPanel {
 	 *
 	 * Panorama reads are not locked on the native side and the script runs on its own
 	 * thread, so a read racing the game's own layout can catch a panel as it is being
-	 * destroyed. GUIInfo runs this for every panel inside one main-thread session a pass,
+	 * destroyed. GUIInfo runs this for every panel inside one main-thread session a reading,
 	 * where the game main thread is parked and cannot be part-way through anything.
 	 */
 	public Snapshot_(): void
@@ -136,6 +137,11 @@ declare class CPanelTree {
 	 * one stretch where a panel may be read out of the game directly.
 	 */
 	public get Reading(): boolean
+	/**
+	 * True when a panel was built or first asked about outside a reading since the last one. Its
+	 * answer waits for a reading, so GUIInfo takes one on the next pass.
+	 */
+	public get Wanted(): boolean
 	/** Bumped whenever every cached lookup has to be made again. */
 	public get ResolveEpoch(): number
 	/** Counts every panel measurement that came out different from the one before it. */
@@ -158,10 +164,15 @@ declare class CPanelTree {
 	/** Opens a new frame: the next read of any panel measures it again. */
 	public Tick(): void
 	/**
-	 * Takes every panel the tree has handed out; a panel registers itself when built, and one
-	 * built during a reading is read at once.
+	 * Takes every panel the tree has handed out. A panel registers itself when built and is read
+	 * the way {@link CPanelTree.Read_} reads it.
 	 */
 	public Register_(panel: HUDPanel): void
+	/**
+	 * Reads a panel that was just built or asked something for the first time: at once during a
+	 * reading, and otherwise by asking for the next one ({@link CPanelTree.Wanted}).
+	 */
+	public Read_(panel: HUDPanel): void
 	/**
 	 * Reads the whole tree out of the game in one go, then runs `during` with the reading still
 	 * open, so whatever it asks about for the first time is read on the spot rather than a

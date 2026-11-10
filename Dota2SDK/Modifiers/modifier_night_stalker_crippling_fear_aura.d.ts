@@ -3,4 +3,5 @@ declare class modifier_night_stalker_crippling_fear_aura extends Modifier implem
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

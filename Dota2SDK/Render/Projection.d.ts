@@ -17,6 +17,17 @@ declare class CProjection {
 	/** The viewport this projection currently targets, in pixels. */
 	public get Viewport(): [number, number]
 	/**
+	 * Counts the frames the camera or the viewport moved on. While it holds, a point that stands
+	 * still in the world falls on the same pixel it did, so its projection can be kept rather than
+	 * asked of the engine again.
+	 * @example
+	 * if (this.projectedAt !== Projection.ViewEpoch) {
+	 * 	this.projectedAt = Projection.ViewEpoch
+	 * 	this.screen = RendererSDK.WorldToScreen(camp.Position)
+	 * }
+	 */
+	public get ViewEpoch(): number
+	/**
 	 * Captures the viewport and the camera for this frame. Call once per frame, before projecting.
 	 * @example
 	 * Projection.BeginFrame(screenWidth, screenHeight)

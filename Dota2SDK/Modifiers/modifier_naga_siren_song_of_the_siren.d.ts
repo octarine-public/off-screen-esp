@@ -4,4 +4,5 @@ declare class modifier_naga_siren_song_of_the_siren extends Modifier implements 
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

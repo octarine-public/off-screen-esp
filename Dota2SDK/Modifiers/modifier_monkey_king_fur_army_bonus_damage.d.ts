@@ -6,4 +6,5 @@ declare class modifier_monkey_king_fur_army_bonus_damage extends Modifier implem
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

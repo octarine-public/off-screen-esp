@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_legion_commander_overwhelming_odds_shield extends Modifier implements IShield, IBuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string

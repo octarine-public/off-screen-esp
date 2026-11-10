@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_spirit_breaker_bulldoze extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string

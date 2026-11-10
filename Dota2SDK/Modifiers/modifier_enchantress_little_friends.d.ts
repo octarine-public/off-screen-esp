@@ -4,4 +4,5 @@ declare class modifier_enchantress_little_friends extends Modifier {
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

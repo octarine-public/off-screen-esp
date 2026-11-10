@@ -3,4 +3,5 @@ declare class modifier_item_eternal_shroud_bonus_magic_resist extends Modifier i
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

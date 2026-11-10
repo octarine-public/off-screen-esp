@@ -16,6 +16,36 @@ interface IPredictOptions {
 	readonly SourcePosition?: Vector3
 	/** Seconds added to the timeline before the effect lands, such as a combo step in front. */
 	readonly Delay?: number
+	/**
+	 * Time the cast as one whose order goes now (`PrepareOrder`'s `now`), ahead of what the
+	 * humanizer still finishes of the orders sent; off by default.
+	 */
+	readonly Now?: boolean
+	/**
+	 * Farthest a walk into range is looked for over the grid, in a straight line
+	 * (`ICastTimelineOptions.approachSearchRange`); Infinity by default.
+	 */
+	readonly ApproachSearchRange?: number
+	/**
+	 * Milliseconds of grid searches this tick past which a walk into range is the straight line
+	 * (`ICastTimelineOptions.searchBudget`); Infinity by default.
+	 */
+	readonly SearchBudget?: number
+	/**
+	 * Where a circle that activates after a delay is centred on a target walking on (`CircleLead`);
+	 * `Dodge` by default.
+	 */
+	readonly CircleLead?: ECircleLead
+	/**
+	 * Of the way from where the target stands now to the end of its course, the share `Share`
+	 * centres such a circle at: 0 - on the target, 1 - the end; a half by default.
+	 */
+	readonly CircleShare?: number
+	/**
+	 * Seconds a target walks on after such a circle is laid before it walks out of it, against
+	 * which `Dodge` places it; `PredictionTuning.DodgeReaction` by default.
+	 */
+	readonly DodgeReaction?: number
 }
 /**
  * The hooks the core calls back on the ability while it predicts; `Ability` implements them
@@ -23,7 +53,7 @@ interface IPredictOptions {
  */
 interface IPredictionHooks {
 	/** How a cast at `target` plays out; the ability's `GetCastTimeline` with the prediction's options. */
-	Timeline(target: IPredictionTarget | Vector3, out: CastTimeline): CastTimeline
+	Timeline(target: IPredictionTarget | Vector3, out: CastTimeline, options?: ICastTimelineOptions): CastTimeline
 	/** Whether the effect landing at the game time `time` affects `target`. */
 	CanHitAt(target: IPredictionTarget, time: number): boolean
 	/** Seconds the effect needs from `from` to `to`; the projectile flight by default. */
@@ -46,6 +76,7 @@ interface IPredictionProfile extends IPredictionHooks {
 	readonly CollisionFlags: CollisionFlag
 	readonly CollisionTeam: CollisionTeam
 	HasBehavior(flag: DOTA_ABILITY_BEHAVIOR): boolean
+	HasTargetFlags(flag: DOTA_UNIT_TARGET_FLAGS): boolean
 }
 /**
  * Everything one prediction reads: the caster, the target, the candidates around, the profile
@@ -63,12 +94,20 @@ declare class PredictionInput {
 	public Candidates: readonly IPredictionTarget[]
 	/** Units a projectile may hit on the way, whether or not the ability could target them. */
 	public Obstacles: readonly IPredictionTarget[]
+	/** Runes on the map, which a projectile that catches them (`CollisionFlag.Runes`) stops at on the way. */
+	public Runes: readonly IPickup[]
 	public Goal: EPredictionGoal
 	public MinTargets: number
 	public MinHitChance: EHitChance
 	public UseBlink: boolean
 	public ExtraRangeFromCaster: number
 	public Delay: number
+	/** Where a circle that activates after a delay is centred on a target walking on. */
+	public CircleLead: ECircleLead
+	/** Of the way from the target to the end of its course, the share `Share` centres the circle at. */
+	public CircleShare: number
+	/** Seconds the target walks on after the circle is laid; the tuning's when none is given. */
+	public DodgeReaction: Nullable<number>
 	public readonly SourcePosition: Vector3
 	public SkillShotType: ESkillShotType
 	public Radius: number
@@ -79,12 +118,24 @@ declare class PredictionInput {
 	public ActivationDelay: number
 	public CollisionFlags: CollisionFlag
 	public CollisionTeam: CollisionTeam
+	/** Whether the ability does not affect ancient creeps, so its projectile flies through them. */
+	public PassesAncients: boolean
 	public TargetsUnit: boolean
 	public TargetsPoint: boolean
 	public TargetsNothing: boolean
 	public TargetsVector: boolean
 	/** The timeline of the cast at the target, filled by the core per placement. */
 	public readonly Timeline: CastTimeline
+	/**
+	 * How the timeline is reckoned: whether the cast's order goes now (`IPredictOptions.Now`) and
+	 * how far and how long the walk into range is searched for (`ApproachSearchRange`,
+	 * `SearchBudget`).
+	 */
+	public readonly TimelineOptions: {
+		now: boolean
+		approachSearchRange: number
+		searchBudget: number
+	}
 	/**
 	 * Reads the ability's profile of this moment and the script's options into `out`. The
 	 * candidates default to what the ability can target within reach.

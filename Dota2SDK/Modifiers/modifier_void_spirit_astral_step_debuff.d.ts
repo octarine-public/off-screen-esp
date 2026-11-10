@@ -4,6 +4,8 @@ declare class modifier_void_spirit_astral_step_debuff extends Modifier implement
 	public readonly DebuffModifierName: string
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
+	/** The mark pops as it ends: its ability's (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

@@ -4,4 +4,5 @@ declare class modifier_sandking_impale extends Modifier implements IDebuff, IDis
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

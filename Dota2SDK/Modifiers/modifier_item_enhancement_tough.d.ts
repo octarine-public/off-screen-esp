@@ -4,4 +4,5 @@ declare class modifier_item_enhancement_tough extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

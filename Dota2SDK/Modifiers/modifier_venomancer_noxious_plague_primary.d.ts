@@ -7,4 +7,6 @@ declare class modifier_venomancer_noxious_plague_primary extends Modifier implem
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/** The plague ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 }

@@ -81,9 +81,45 @@ declare class ParticlesSDK implements IParticleOwner {
 	 * 4: Alpha
 	 */
 	public DrawBoundingArea(key: any, entity: Entity, startPos: Entity | Vector3, endPosition?: Entity | Vector3, options?: IDrawBoundingAreaOptions): Particle
+	/**
+	 * Stands a model where `position` is, through a particle built the way the Octarine model
+	 * particles are: one `C_OP_RenderModels` model in a single particle emitted by a
+	 * `C_OP_ContinuousEmitter` at CP3 × 1000, held at CP2, turned by CP5 and tinted by CP7 in its
+	 * ghost variant. Creates the particle, or updates its control points while `path` and `entity`
+	 * stay the same.
+	 *
+	 * Attach it to an entity that is always networked, such as `LocalPlayer`: a particle on a
+	 * dormant entity is not drawn at all.
+	 * @param position Where the model stands (CP2).
+	 * @param scale The model's scale (CP3); 0 holds the emitter back and folds the model away.
+	 * @param angles Which way the model faces (CP5), in degrees; a yaw of 0 faces east.
+	 * @param color The tint of a ghost variant (CP7).
+	 * @example
+	 * particles.DrawModel(
+	 * 	"courier",
+	 * 	"particles/octarine/my-script/donkey_ghost.vpcf",
+	 * 	LocalPlayer!,
+	 * 	position,
+	 * 	courier.ModelScale,
+	 * 	angles,
+	 * 	Color.Aqua
+	 * )
+	 */
+	public DrawModel(key: any, path: string, entity: Entity, position: Vector3, scale: number, angles: QAngle, color: Color): Particle
 	public SetConstrolPointByKey(key: any, id: number, point: ControlPoint): void
 	public SetInFogVisibleByKey(key: any, state: boolean): void
 	public SetConstrolPointsByKey(key: any, ...points: ControlPointParam[]): void
+	/**
+	 * Moves and turns a model stood by {@link DrawModel} (CP2 and CP5), leaving its scale and tint.
+	 * Write it from `Draw`: positions read in `PostDataUpdate` run behind the drawn ones, and
+	 * writing those every tick steps the model back.
+	 */
+	public SetModelPlacementByKey(key: any, position: Vector3, angles: QAngle): void
+	/**
+	 * Sets the scale (CP3; 0 folds the model away) and the ghost tint (CP7) of a model stood by
+	 * {@link DrawModel}, leaving where it stands and faces.
+	 */
+	public SetModelLookByKey(key: any, scale: number, color: Color): void
 	public RestartByKey(key: any): void
 	public DestroyByKey(key: any, immediate?: boolean): void
 	public DestroyAll(immediate?: boolean): void

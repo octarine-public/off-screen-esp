@@ -3,4 +3,7 @@ declare class modifier_primal_beast_pulverize extends Modifier implements IDebuf
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	/** Held in Primal Beast's hand, then thrown before him (`primal_beast_pulverize.DropOf`). */
+	public CreateMotion(): Nullable<Motion>
+	public get IsStunDebuff(): boolean
 }

@@ -3,4 +3,5 @@ declare class modifier_obsidian_destroyer_equilibrium_buff_counter extends Modif
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

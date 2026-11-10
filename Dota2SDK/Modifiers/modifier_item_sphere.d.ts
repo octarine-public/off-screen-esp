@@ -10,4 +10,5 @@ declare class modifier_item_sphere extends Modifier implements IBuff, IShield {
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected GetLinkenProtection(): [number, boolean]
+	public get IsPurgable(): boolean
 }

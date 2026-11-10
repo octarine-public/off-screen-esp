@@ -5,4 +5,11 @@ declare class modifier_warlock_shadow_word extends Modifier implements IBuff, ID
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsBuff(): this is IBuff
+	/**
+	 * Shadow Word ticks on the unit by itself: at an enemy its ability's damage over time
+	 * (`Ability.DamageOverTime`), at an ally a heal (`HealPerSecond`).
+	 */
+	protected readonly DeclaredEvents: EModifierfunction[]
+	/** At an ally of its caster: `damage` a second while it lasts; none at an enemy. */
+	public get HealPerSecond(): number
 }

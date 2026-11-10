@@ -9,4 +9,5 @@ declare class modifier_elder_titan_echo_stomp_magic_immune extends Modifier impl
 	public GetTexturePath(): string
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
+	public get IsPurgable(): boolean
 }

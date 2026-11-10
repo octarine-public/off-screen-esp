@@ -6,4 +6,5 @@ declare class modifier_phantom_assassin_blur_active extends Modifier implements 
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

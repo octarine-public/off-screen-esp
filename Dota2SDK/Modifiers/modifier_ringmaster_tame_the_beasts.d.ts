@@ -9,4 +9,5 @@ declare class modifier_ringmaster_tame_the_beasts extends Modifier implements IC
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

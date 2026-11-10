@@ -7,4 +7,5 @@ declare class modifier_alchemist_chemical_rage extends Modifier implements IBuff
 	protected GetBaseAttackTimeConstant(): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

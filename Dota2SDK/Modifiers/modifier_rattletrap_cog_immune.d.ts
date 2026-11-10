@@ -9,4 +9,5 @@ declare class modifier_rattletrap_cog_immune extends Modifier implements IBuff, 
 	public GetTexturePath(): string
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
+	public get IsPurgable(): boolean
 }

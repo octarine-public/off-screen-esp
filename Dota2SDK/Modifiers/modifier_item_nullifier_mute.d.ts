@@ -6,4 +6,5 @@ declare class modifier_item_nullifier_mute extends Modifier implements IDebuff {
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

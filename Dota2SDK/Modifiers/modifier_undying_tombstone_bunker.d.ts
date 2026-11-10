@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_undying_tombstone_bunker extends Modifier {
+	public get IsPurgable(): boolean
 }

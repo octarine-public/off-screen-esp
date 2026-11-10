@@ -5,6 +5,9 @@ declare class CSoundSDK {
 	 *
 	 * @param position where the sound is placed in the world; ignored by a game whose sound
 	 * manager is the portable panorama one, which can only play the event in 2D
+	 * @param guid an id to stop the sound by later with {@link EmitStopSoundEvent}; a sound started
+	 * with one that is still playing when the script unloads is stopped with it. On a core that
+	 * takes 0 as no guid, 0 leaves the sound to play to its own end
 	 * @example
 	 * SoundSDK.EmitStartSoundEvent("General.Ping")
 	 * SoundSDK.EmitStartSoundEvent("Roshan.Attack", entity.Position, entity)

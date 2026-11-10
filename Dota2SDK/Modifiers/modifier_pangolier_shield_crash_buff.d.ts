@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_pangolier_shield_crash_buff extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string

@@ -8,4 +8,5 @@ declare class modifier_item_crimson_guard_extra extends Modifier implements IShi
 	public IsShield(): this is IShield
 	protected GetPhysicalConstantBlock(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -7,4 +7,6 @@ declare class modifier_lion_voodoo extends Modifier implements IDebuff, IDisable
 	public IsDisable(): this is IDisable
 	protected GetMoveSpeedBaseOverride(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
+	public get IsPurgeException(): boolean
 }

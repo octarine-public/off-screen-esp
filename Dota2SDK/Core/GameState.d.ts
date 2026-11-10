@@ -30,6 +30,15 @@ declare class CGameState {
 	public get InputLag(): number
 	public get IsConnected(): boolean
 	public ExecuteCommand(command: string): void
+	/**
+	 * Runs `command` the way the client runs its own input, through the engine's client command
+	 * path, so `+`/`-` input commands press and release like the bound key; `false` when the
+	 * engine refused it.
+	 *
+	 * @example
+	 * GameState.ExecuteClientCommand("+in_mantle; -in_mantle")
+	 */
+	public ExecuteClientCommand(command: string): boolean
 	public GetIOLag(latency: number): number
 	public GetInputLag(latency: number): number
 }
@@ -51,6 +60,13 @@ declare class CDotaGameState extends CGameState {
 	public get AvgPing(): number
 	public get IOLag(): number
 	public get InputLag(): number
+	/**
+	 * Seconds between an order leaving the client and its result showing in the client's own state,
+	 * for a unit that does not have to turn first: the order reaching the server, the server acting
+	 * on it the tick after, and the snapshot of that tick coming back.
+	 */
+	public get AnswerLag(): number
+	/** Whether the game is the hero demo (the `hero_demo` addon), whatever map it runs on. */
 	public get IsDemo(): boolean
 	/**
 	 * Whether a screen overlay would land on the game world right now: connected, with the match
@@ -60,9 +76,9 @@ declare class CDotaGameState extends CGameState {
 	public GetLatency(flow?: Flow): number
 	public GetAvgLatency(flow?: Flow): number
 	/**
-	 * Seconds between an order leaving the client and the server acting on it, from the outgoing
-	 * latency; one tick on a listen server, where attacks measured on the demo map land exactly a
-	 * tick after the order is processed.
+	 * Seconds between an order leaving the client and the server acting on it, on the client's
+	 * clock of the game: the latency rounded up to whole ticks (`IOLag`) and the tick the server
+	 * takes; one tick on a listen server.
 	 */
 	public GetInputLag(latency: number): number
 }

@@ -6,4 +6,5 @@ declare class modifier_kez_switch_weapons_flutter_sai extends Modifier implement
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

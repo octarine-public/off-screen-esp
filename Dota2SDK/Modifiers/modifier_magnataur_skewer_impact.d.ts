@@ -4,4 +4,5 @@ declare class modifier_magnataur_skewer_impact extends Modifier implements IDebu
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

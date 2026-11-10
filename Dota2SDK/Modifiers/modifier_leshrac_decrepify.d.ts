@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_leshrac_decrepify extends Modifier implements IDebuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsGhost = true
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string

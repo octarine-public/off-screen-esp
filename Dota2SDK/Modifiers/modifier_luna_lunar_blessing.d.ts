@@ -4,4 +4,5 @@ declare class modifier_luna_lunar_blessing extends Modifier {
 	protected GetBonusNightVision(): [number, boolean]
 	protected UpdateSpecialValues(): void
 	protected GetSpecialValue(specialName: string, abilityName: string, level?: number, _optional?: ISpecialValueOptions): number
+	public get IsPurgable(): boolean
 }

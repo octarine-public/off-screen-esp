@@ -1,8 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare class necrolyte_death_pulse extends Ability implements IHealthRestore<Unit>, INuke {
-	public readonly RestoresAlly = true
-	public readonly RestoresSelf = true
-	public readonly InstantRestore = true
+	public get RestoresAlly(): boolean
+	public get RestoresSelf(): boolean
+	public get InstantRestore(): boolean
 	public IsNuke(): this is INuke
 	public GetHealthRestore(_target: Unit): number
 	public GetBaseAOERadiusForLevel(level: number): number

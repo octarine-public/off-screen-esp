@@ -3,4 +3,5 @@ declare class modifier_broodmother_spin_web_degen extends Modifier implements ID
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

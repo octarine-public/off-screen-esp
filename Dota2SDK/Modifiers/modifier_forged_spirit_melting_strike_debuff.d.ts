@@ -6,4 +6,5 @@ declare class modifier_forged_spirit_melting_strike_debuff extends Modifier impl
 	public IsDebuff(): this is IDebuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

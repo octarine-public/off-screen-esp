@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_mutation_crit_chance_team_aura extends Modifier {
+	public get IsPurgable(): boolean
 }

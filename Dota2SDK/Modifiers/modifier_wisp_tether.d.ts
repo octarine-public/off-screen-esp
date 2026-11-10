@@ -9,4 +9,5 @@ declare class modifier_wisp_tether extends Modifier implements IBuff {
 	public PostDataUpdate(): void
 	protected GetMoveSpeedAbsolute(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

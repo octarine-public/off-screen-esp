@@ -5,4 +5,5 @@ declare class modifier_spirit_breaker_planar_pocket_aura extends Modifier implem
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -9,4 +9,5 @@ declare class modifier_luna_moon_glaive_shield extends Modifier implements IBuff
 	protected GetIncomingDamagePercentage(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

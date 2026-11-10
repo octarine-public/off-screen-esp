@@ -9,5 +9,7 @@ declare class modifier_nyx_assassin_vendetta extends Modifier implements IBuff {
 	protected GetBonusAttackRange(): [number, boolean]
 	protected GetPreAttackBonusDamagePure(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected GetAttackAnimTimePercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

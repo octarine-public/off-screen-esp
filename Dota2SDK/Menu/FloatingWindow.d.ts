@@ -93,7 +93,10 @@ declare namespace MenuSDK {
 		public Reveal(): void
 		/** What the title bar's close button does: the closer given at birth, or plain hiding. */
 		public Close(): void
-		/** Where the window stands, in px: the hand that drags it, else the sliders that keep it. */
+		/**
+		 * Where the window stands, in px: the hand that drags it, else the sliders that keep it, held
+		 * on screen - a place kept on a wider or taller screen would otherwise stand off this one.
+		 */
 		public get Position(): {
 			x: number
 			y: number

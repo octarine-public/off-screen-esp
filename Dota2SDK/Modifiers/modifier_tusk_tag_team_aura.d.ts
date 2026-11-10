@@ -6,4 +6,5 @@ declare class modifier_tusk_tag_team_aura extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

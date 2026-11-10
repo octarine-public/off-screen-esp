@@ -5,6 +5,7 @@ declare class modifier_windrunner_whirlwind extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public get ForceVisible(): boolean
 	public IsBuff(): this is IBuff
-	protected GetPreAttackBonusDamagePercentage(): [number, boolean]
+	protected GetDamageOutgoingPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

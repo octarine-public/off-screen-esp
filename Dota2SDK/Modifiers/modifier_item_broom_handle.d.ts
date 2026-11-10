@@ -5,4 +5,5 @@ declare class modifier_item_broom_handle extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetAttackRangeBonusUnique(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

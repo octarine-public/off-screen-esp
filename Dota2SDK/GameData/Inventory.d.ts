@@ -5,6 +5,8 @@ declare class Inventory {
 	public get TPScroll(): Nullable<Item>
 	public get NeutralItem(): Nullable<Item>
 	public get Items(): Item[]
+	/** Whether one of `Items` channels, the list not built. */
+	public get IsChanneling(): boolean
 	public get Backpack(): Item[]
 	public get Stash(): Item[]
 	public get FreeSlotsInventory(): DOTAScriptInventorySlot[]

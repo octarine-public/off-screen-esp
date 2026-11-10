@@ -60,7 +60,11 @@ declare namespace MenuSDK {
 		readonly flags?: TextFlags
 		readonly division?: number
 	}
-	/** The natural image size reported by RmlUi. */
+	/**
+	 * An image's own size in the file's pixels — the units `sourcePosition`, `sourceSize` and a crop
+	 * region are given in — the same at every resolution and menu scale. Zero until RmlUi has
+	 * measured it.
+	 */
 	function ImageSize(path: string): Vector2
 	/** The size of a text run in screen pixels. */
 	function TextSize(text: string, style?: CanvasTextStyle): Vector3
@@ -81,6 +85,29 @@ declare namespace MenuSDK {
 		constructor(key: string, layer?: EPanelLayer, placement?: EHudPlacement)
 		/** Hides the surface immediately. */
 		public Clear(): void
+		/**
+		 * Paints what follows, until the next call or the end of the frame, in px from where `anchor`
+		 * lands rather than from the screen's corner: the core places it when the frame is presented,
+		 * so a bar over a unit stays on the unit while the camera pans, even on a frame whose script
+		 * pass ran late. Without an argument painting is in screen px again.
+		 * @example
+		 * const anchor = new CRenderAnchor()
+		 * anchor.SetEntity(unit.Index, 0, 0, 200)
+		 * canvas.Anchor(anchor)
+		 * canvas.Rect(new Vector2(-50, -10), new Vector2(100, 8), { color: Color.Green })
+		 * canvas.Anchor()
+		 */
+		public Anchor(anchor?: IHudAnchor): void
+		/**
+		 * {@link Canvas.Anchor} on the world point `x, y, z`, `screenX, screenY` px from where it lands,
+		 * through an anchor the canvas keeps for the frame: a marker at a place in the world needs no
+		 * anchor of its own. Pin what moves to an anchor of its own (`CRenderAnchor.SetEntity`).
+		 * @example
+		 * canvas.AnchorWorld(ward.x, ward.y, ward.z)
+		 * canvas.Image(path, new Vector2(-16, -16), new Vector2(32, 32))
+		 * canvas.Anchor()
+		 */
+		public AnchorWorld(x: number, y: number, z: number, screenX?: number, screenY?: number): void
 		/** Paints a rectangular image with optional clipping, tint, rotation and desaturation. */
 		public Image(path: string, position: Vector2, size: Vector2, style?: CanvasImageStyle): void
 		/** Paints a square frame from a horizontal sprite sheet once its intrinsic size is available. */

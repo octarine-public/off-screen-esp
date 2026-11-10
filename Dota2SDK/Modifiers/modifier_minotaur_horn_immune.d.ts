@@ -9,4 +9,5 @@ declare class modifier_minotaur_horn_immune extends Modifier implements IShield,
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

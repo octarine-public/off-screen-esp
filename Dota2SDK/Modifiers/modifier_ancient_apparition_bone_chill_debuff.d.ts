@@ -6,4 +6,5 @@ declare class modifier_ancient_apparition_bone_chill_debuff extends Modifier imp
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

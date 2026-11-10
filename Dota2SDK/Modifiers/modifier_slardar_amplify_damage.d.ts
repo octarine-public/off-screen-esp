@@ -6,4 +6,5 @@ declare class modifier_slardar_amplify_damage extends Modifier implements IDebuf
 	public IsDebuff(): this is IDebuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

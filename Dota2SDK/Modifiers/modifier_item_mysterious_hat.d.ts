@@ -4,4 +4,5 @@ declare class modifier_item_mysterious_hat extends Modifier {
 	protected GetSpellAmplifyPercentage(): [number, boolean]
 	protected GetManaCostPercentageStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_bot_challenge_skeleton_king_bone_guard extends Modifier {
+	public get IsPurgable(): boolean
 }

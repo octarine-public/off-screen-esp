@@ -6,4 +6,5 @@ declare class modifier_black_dragon_dragonhide_aura_bonus extends Modifier imple
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

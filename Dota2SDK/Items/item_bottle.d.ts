@@ -1,8 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare class item_bottle extends Item implements IManaRestore<Unit>, IHealthRestore<Unit> {
-	public readonly RestoresAlly = true
-	public readonly RestoresSelf = true
-	public readonly InstantRestore = false
+	public get RestoresAlly(): boolean
+	public get RestoresSelf(): boolean
+	public get InstantRestore(): boolean
 	public readonly ManaRestoreModifierName = "modifier_bottle_regeneration"
 	public readonly HealthRestoreModifierName = "modifier_bottle_regeneration"
 	public StoredRune: DOTA_RUNES
@@ -22,7 +22,7 @@ declare class item_bottle extends Item implements IManaRestore<Unit>, IHealthRes
 	public CanBeCasted(bonusMana?: number): boolean
 	public GetManaRestore(_target: Unit): number
 	public GetHealthRestore(_target: Unit): number
-	public GetMaxDurationForLevel(level: number): number
+	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsManaRestore(): this is IManaRestore<Unit>
 	public IsHealthRestore(): this is IHealthRestore<Unit>
 }

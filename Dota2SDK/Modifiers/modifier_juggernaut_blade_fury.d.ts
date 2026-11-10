@@ -10,4 +10,5 @@ declare class modifier_juggernaut_blade_fury extends Modifier implements IBuff, 
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

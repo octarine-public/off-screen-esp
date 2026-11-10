@@ -6,4 +6,5 @@ declare class modifier_life_stealer_infest_effect extends Modifier implements IB
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -3,4 +3,5 @@ declare class modifier_slark_essence_shift_debuff_counter extends Modifier imple
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

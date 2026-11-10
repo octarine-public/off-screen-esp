@@ -12,6 +12,8 @@ declare class FakeUnit {
 	public LastPredictedPositionUpdate: number
 	public LastRealPredictedPositionUpdate: number
 	public get Angles(): Vector3
+	/** @internal A hint - a particle the game ties to the unit - shows it at `position` now. */
+	public HintAt(position: Vector3): void
 	public get PlayerCustomData(): Nullable<PlayerCustomData>
 	public get BaseAttackRange(): number
 	public get MoveSpeed(): number

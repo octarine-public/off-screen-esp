@@ -10,4 +10,5 @@ declare class modifier_phantom_assassin_mark_of_death extends Modifier implement
 	public GetCriticalStrikeBonusTarget(params?: IModifierParams): [number, boolean]
 	protected GetCriticalStrikeBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

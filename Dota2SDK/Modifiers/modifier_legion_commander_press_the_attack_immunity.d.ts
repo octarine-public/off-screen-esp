@@ -10,4 +10,5 @@ declare class modifier_legion_commander_press_the_attack_immunity extends Modifi
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

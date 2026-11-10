@@ -7,4 +7,5 @@ declare class modifier_invoker_ghost_walk_self extends Modifier implements IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 	protected GetSpecialValue(specialName?: string, abilityName?: string, _level?: number): number
+	public get IsPurgable(): boolean
 }

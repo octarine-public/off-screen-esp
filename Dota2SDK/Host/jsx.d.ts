@@ -6,6 +6,7 @@ interface RmlBaseProps {
 	style?: RmlStyle
 	children?: React.ReactNode
 	onClick?: (event: Event) => void
+	onDblClick?: (event: Event) => void
 	onMouseOver?: (event: Event) => void
 	onMouseOut?: (event: Event) => void
 	onMouseDown?: (event: Event) => void

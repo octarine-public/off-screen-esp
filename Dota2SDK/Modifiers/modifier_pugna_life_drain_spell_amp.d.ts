@@ -7,4 +7,5 @@ declare class modifier_pugna_life_drain_spell_amp extends Modifier implements ID
 	public IsDebuff(): this is IDebuff
 	public IsBuff(): this is IBuff
 	protected GetSpellAmplifyPercentage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

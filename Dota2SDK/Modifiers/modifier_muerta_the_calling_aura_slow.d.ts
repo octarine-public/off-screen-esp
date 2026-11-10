@@ -6,4 +6,5 @@ declare class modifier_muerta_the_calling_aura_slow extends Modifier implements 
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

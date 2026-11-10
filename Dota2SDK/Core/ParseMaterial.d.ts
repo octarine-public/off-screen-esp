@@ -26,5 +26,10 @@ declare class CMaterial {
 	 * 	preview.SetMaterialParam(material, name, value)
 	 * }
 	 */
-	public EvaluateDynamicParams(attributes: ReadonlyMap<number, number>): Map<string, number[]>
+	/**
+	 * The render attributes parameter `name`'s dynamic expression reads, by token; undefined for a
+	 * parameter with no expression or one that cannot be evaluated.
+	 */
+	public DynamicParamAttributes(name: string): Nullable<Set<number>>
+	public EvaluateDynamicParams(attributes: ReadonlyMap<number, MaterialAttributeValue>): Map<string, number[]>
 }

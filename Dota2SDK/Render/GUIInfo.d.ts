@@ -32,7 +32,10 @@ declare class CGUIInfo {
 	public get Scoreboard(): CScoreboard
 	/** The lower HUD of the unit the game currently has selected. */
 	public get LowerHUD(): CLowerHUD
-	/** True while the player keeps the minimap on the right-hand side. */
+	/**
+	 * True while the player keeps the minimap on the right-hand side: the game marks its HUD with
+	 * the `HUDFlipped` class and mirrors the minimap and the lower HUD to the other side.
+	 */
 	public get HUDFlipped(): boolean
 	/**
 	 * The root of any Panorama window, for panels outside the HUD.
@@ -54,24 +57,60 @@ declare class CGUIInfo {
 	 * const buffs = GUIInfo.Find("buffs")
 	 */
 	public Find(id: string): HUDPanel
-	/** Draws the debug overlay from what the last reading found. */
+	/**
+	 * Counts the times what {@link CGUIInfo.Contains} answers may have changed: the HUD laid out
+	 * anew, the window resized, the shop or the stats panel opened or closed. While it holds, and the camera with it
+	 * (`Source2SDK.Projection.ViewEpoch`), a point that stands still in the world is still under
+	 * the HUD or still clear of it.
+	 * @example
+	 * if (this.checkedAt !== GUIInfo.Epoch) {
+	 * 	this.checkedAt = GUIInfo.Epoch
+	 * 	this.underHUD = GUIInfo.Contains(screen)
+	 * }
+	 */
+	public get Epoch(): number
+	/**
+	 * Watches what moves the HUD without a reading noticing it: the shop or the stats panel
+	 * opening, another unit selected, the game's UI or rules state changing. Any of them has
+	 * the passes read the HUD for a moment. Also draws the debug overlay from what the last
+	 * reading found.
+	 */
 	public OnDraw(): void
 	/**
-	 * Reads the HUD out of the game once a `Draw2D` pass.
+	 * Reads the HUD out of the game on a `Draw2D` pass when it may have moved, and four times a
+	 * second otherwise.
+	 *
+	 * A pass reads when a panel was built or first asked about outside a reading. It also reads
+	 * for half a second after the window was resized, the HUD's windows were built or torn down,
+	 * {@link CGUIInfo.OnDraw} saw the HUD change, or a reading found it moved, so a layout the
+	 * game finishes over several frames is followed until it lands. A pass asked for on top of
+	 * the throttled rate - the menu asks for one every frame while it is open and an overlay
+	 * panel stands on screen, for the panel's own motion - reads nothing anew within `ReadEvery`
+	 * of the last reading, even then.
 	 *
 	 * The reading is queued onto the main thread rather than done here. Panorama reads take no
 	 * lock on the native side and scripts run on their own thread, so a panel read while the
 	 * game is part-way through its own layout can be caught being destroyed; inside a
 	 * main-thread session the game main thread is parked and cannot be. Parked is the cost: the
 	 * game waits out the whole reading, and whatever the script thread still has queued before
-	 * it - a server tick's worth of work on the frames that carry one. The pass runs at the tick
-	 * rate on frames without a tick, so the main thread is parked a few dozen times a second,
-	 * never behind a tick. The session is drained asynchronously, so every rectangle a script
-	 * reads was measured a pass earlier — far less than the HUD takes to move anywhere.
+	 * it, which is why a HUD standing still is not read every pass. The pass skips frames that
+	 * carry a server tick, so the main thread is never parked behind one. The session is
+	 * drained asynchronously, so every rectangle a script reads was measured at the last
+	 * reading.
 	 */
 	public OnDraw2D(): void
-	/** Drops every cached panel; the next read looks them up in the game's tree again. */
+	/** Drops every cached panel; the next readings look them up in the game's tree again. */
 	public Invalidate(): void
+	/**
+	 * Hands out fresh sections once the window has been resized, and reads the HUD every pass
+	 * until the new layout has landed.
+	 *
+	 * The game lays the HUD out anew on its own schedule, and the reading that finds it moved
+	 * can land before the new window size does. A script that worked numbers out of a section
+	 * then — a size through `ScaleHeight`, a copy of a rectangle — took them at the old scale,
+	 * and with nothing in the HUD moving again, nothing would tell it to work them out anew.
+	 */
+	public OnWindowSizeChanged(): void
 	public DebugDraw(): void
 	/** How many abilities the game is showing for the selected unit. */
 	public GetVisibleAbilities(): number

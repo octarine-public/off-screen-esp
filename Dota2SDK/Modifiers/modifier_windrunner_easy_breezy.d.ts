@@ -5,4 +5,5 @@ declare class modifier_windrunner_easy_breezy extends Modifier {
 	protected GetMoveSpeedAbsoluteMin(): [number, boolean]
 	protected GetMoveSpeedLimit(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

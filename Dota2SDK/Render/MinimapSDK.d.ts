@@ -1,9 +1,28 @@
 // AUTO-GENERATED - do not edit.
+/**
+ * An icon of the game's minimap (`scripts/mod_textures.txt`, `minimap_*`): the texture it is cut
+ * from and, for one of a sheet, where on the sheet it stands, in the texture's own pixels.
+ */
+declare class MinimapIcon {
+	public readonly path: string
+	public readonly sourcePosition?: Vector2 | undefined
+	public readonly sourceSize?: Vector2 | undefined
+	constructor(path: string, sourcePosition?: Vector2 | undefined, sourceSize?: Vector2 | undefined)
+	public get size(): Vector2
+	public Draw(pos: Vector2, size: Vector2, color: Color): void
+}
 declare class MinimapOverview {
 	public readonly material: string
 	public readonly simpleMaterial: string
+	/** The world position of the overview's top-left corner. */
 	public readonly pos: Vector2
-	constructor(material: string, simpleMaterial: string, pos: Vector2)
+	/** The world units the overview spans on each side. */
+	public readonly size: number
+	constructor(material: string, simpleMaterial: string, 
+	/** The world position of the overview's top-left corner. */
+	pos: Vector2, 
+	/** The world units the overview spans on each side. */
+	size: number)
 }
 declare class CMinimapSDK {
 	public readonly MinimapBounds: Rectangle
@@ -20,6 +39,12 @@ declare class CMinimapSDK {
 	public DrawIcon(name: string, worldPos: Vector3, size?: number, color?: Color, endTime?: number, uid?: any, minSizeAnimated?: number, animationCycle?: number, priority?: number): void
 	public DeleteIcon(uid: any): void
 	public GetIconSize(name: string): Nullable<Vector2>
+	/**
+	 * The minimap's icon `name` (without its `minimap_` prefix): its texture and its place on the
+	 * sheet, to draw it as the minimap does - e.g. a neutral camp's `creepcamp`, `creepcamp_mid`,
+	 * `creepcamp_big`, `creepcamp_ancient`; none before the server's info or for an unknown name.
+	 */
+	public GetIcon(name: string): Nullable<MinimapIcon>
 	/**
 	 * Draws ping at minimap
 	 *

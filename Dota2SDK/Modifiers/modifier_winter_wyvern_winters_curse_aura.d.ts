@@ -7,4 +7,5 @@ declare class modifier_winter_wyvern_winters_curse_aura extends Modifier impleme
 	protected GetAbsoluteNoDamagePure(params?: IModifierParams): [number, boolean]
 	protected GetAbsoluteNoDamageMagical(params?: IModifierParams): [number, boolean]
 	protected GetAbsoluteNoDamagePhysical(params?: IModifierParams): [number, boolean]
+	public get IsPurgable(): boolean
 }

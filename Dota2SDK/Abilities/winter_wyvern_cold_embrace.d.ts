@@ -1,14 +1,19 @@
 // AUTO-GENERATED - do not edit.
-declare class winter_wyvern_cold_embrace extends Ability implements IHealthRestore<Unit>, IManaRestore<Unit> {
-	public readonly RestoresAlly = true
-	public readonly RestoresSelf = true
-	public readonly InstantRestore = false
+/**
+ * Cold Embrace: an ally frozen in ice, healing - a shield that takes the fight from its bearer, the
+ * stun it lays its own (`AppliesUnitState`).
+ */
+declare class winter_wyvern_cold_embrace extends Ability implements IHealthRestore<Unit>, IShield {
+	public readonly ShieldModifierName = "modifier_winter_wyvern_cold_embrace"
+	public get RestoresAlly(): boolean
+	public get RestoresSelf(): boolean
+	public get InstantRestore(): boolean
 	public readonly HealthRestoreModifierName = "modifier_winter_wyvern_cold_embrace"
-	public readonly ManaRestoreModifierName = "modifier_winter_wyvern_essence_of_the_blueheart"
 	public GetHealthRestore(target: Unit): number
-	public GetManaRestore(target: Unit): number
-	public GetMaxDurationForLevel(level: number): number
-	public IsManaRestore(): this is IManaRestore<Unit>
+	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsHealthRestore(): this is IHealthRestore<Unit>
+	public IsShield(): this is IShield
+	/** Its frozen ally takes no physical damage. */
+	public GuardsDamageOf(type: DAMAGE_TYPES): boolean
 	public get AppliesUnitState(): bigint
 }

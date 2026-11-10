@@ -6,4 +6,6 @@ declare class modifier_hexxed extends Modifier implements IDebuff, IDisable {
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
 	protected GetMoveSpeedBaseOverride(): [number, boolean]
+	public get IsPurgable(): boolean
+	public get IsPurgeException(): boolean
 }

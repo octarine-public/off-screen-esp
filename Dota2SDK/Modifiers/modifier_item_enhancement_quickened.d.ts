@@ -2,5 +2,7 @@
 declare class modifier_item_enhancement_quickened extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
+	protected GetEvasionConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

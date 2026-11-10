@@ -65,11 +65,8 @@ declare namespace MenuSDK {
 	 * artwork the element is still drawing. An element the document lets go of is passed to
 	 * {@link ReleaseSizedArt}.
 	 *
-	 * The host cuts a copy in the background after it is minted, and an element that loads it
-	 * before it is cut is painted with nothing, or with a plain colour, and never asks again. So the
-	 * element takes a copy only once the host has it decoded, and keeps what it showed until then,
-	 * nothing where it showed nothing: {@link SettleSizedArt} lands the copy at the end of the frame
-	 * it is ready, whether or not the element is written again.
+	 * The element takes the copy in the frame it is written: the host cuts it the first time it is
+	 * drawn, so it shows from that frame on.
 	 *
 	 * A `region` shows only that rectangle of the file, in the file's own pixels, cut out by the host
 	 * and fitted to the box - one sprite of a sheet. Where the host cannot cut it the element is
@@ -80,12 +77,6 @@ declare namespace MenuSDK {
 	 * WriteSizedArt(icon, sheet, 32, 32, 0, { x: 32, y: 0, width: 32, height: 32 })
 	 */
 	function WriteSizedArt(element: HTMLElement, path: string, width: number, height: number, radius?: number, region?: ImageRegion): void
-	/**
-	 * Lands the copies the host has cut on the elements waiting for them, once a frame after everything
-	 * has drawn: an element written once and then left alone would otherwise wait for ever. An element
-	 * the document has let go of in the meantime hands its copy back instead of being written.
-	 */
-	function SettleSizedArt(): void
 	/**
 	 * Hands the source an element took from {@link WriteSizedArt} back to the host, for an element the
 	 * document has let go of. An element still standing keeps its own until its artwork or its box

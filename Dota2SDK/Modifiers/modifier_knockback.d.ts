@@ -3,4 +3,5 @@ declare class modifier_knockback extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsStunDebuff(): boolean
 }

@@ -40,6 +40,10 @@ declare class Item extends Ability {
 	 */
 	public get DisplayCharges(): number
 	public get Cooldown(): number
+	/**
+	 * Whether it may be used now: off cooldown, its owner not muted and able to pay its cost - in
+	 * health for one that pays mana costs with it, Huskar's Blood Magic (`IsManaEnough`).
+	 */
 	public get IsReady(): boolean
 	public get CanBeUsable(): boolean
 	public get SaleRemainingTime(): number
@@ -53,13 +57,13 @@ declare class Item extends Ability {
 	public get CurrentCharges(): number
 	public set CurrentCharges(newVal: number)
 	public get CanMoveInBackpack(): boolean
-	public DisassembleItem(queue?: boolean): void | undefined
-	public MoveItem(slot: DOTAScriptInventorySlot): void | undefined
-	public DropAtFountain(): void | undefined
-	public EjectFromStash(): void | undefined
-	public SellItem(): void | undefined
-	public ItemLock(): void | undefined
-	public ItemUnlock(): void | undefined
+	public DisassembleItem(queue?: boolean): ExecuteOrder | undefined
+	public MoveItem(slot: DOTAScriptInventorySlot): ExecuteOrder | undefined
+	public DropAtFountain(): ExecuteOrder | undefined
+	public EjectFromStash(): ExecuteOrder | undefined
+	public SellItem(): ExecuteOrder | undefined
+	public ItemLock(): ExecuteOrder | undefined
+	public ItemUnlock(): ExecuteOrder | undefined
 	/**
 	 * TODO: need improve
 	 * Owner.CanBeCastedWhileChanneling, IsImmediateCasting
@@ -67,5 +71,7 @@ declare class Item extends Ability {
 	 * Owner.CanBeCastedWhileSilenced
 	 */
 	public CanBeCasted(bonusMana?: number): boolean
+	/** A silence keeps no item from being cast: a mute does (`CanBeCastedAt`). */
+	protected get CanBeCastedWhileSilenced(): boolean
 	public CanBeCastedAt(time: number): boolean
 }

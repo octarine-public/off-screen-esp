@@ -5,4 +5,5 @@ declare class modifier_item_kaya_and_sange extends Modifier {
 	protected GetSlowResistanceUnique(): [number, boolean]
 	protected GetSpellAmplifyPercentageUnique(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

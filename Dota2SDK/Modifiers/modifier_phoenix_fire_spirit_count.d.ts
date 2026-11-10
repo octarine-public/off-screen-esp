@@ -3,4 +3,5 @@ declare class modifier_phoenix_fire_spirit_count extends Modifier implements IBu
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

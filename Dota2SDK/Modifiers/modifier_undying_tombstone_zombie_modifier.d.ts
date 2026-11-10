@@ -1,3 +1,5 @@
 // AUTO-GENERATED - do not edit.
-declare class modifier_undying_tombstone_zombie_modifier extends Modifier {
+declare class modifier_undying_tombstone_zombie_modifier extends AttackCountModifier {
+	protected get RangedHeroHit(): number
+	public get IsPurgable(): boolean
 }

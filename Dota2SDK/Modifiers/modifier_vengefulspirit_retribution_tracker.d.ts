@@ -7,4 +7,5 @@ declare class modifier_vengefulspirit_retribution_tracker extends Modifier imple
 	public GetTexturePath(): string
 	protected GetIncomingDamagePercentage(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

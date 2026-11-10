@@ -7,4 +7,5 @@ declare class modifier_visage_silent_as_the_grave extends Modifier implements IB
 	protected GetPreAttackBonusDamagePercentage(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

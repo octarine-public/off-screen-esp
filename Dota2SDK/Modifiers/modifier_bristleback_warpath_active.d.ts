@@ -8,4 +8,5 @@ declare class modifier_bristleback_warpath_active extends Modifier implements ID
 	public PostDataUpdate(): void
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

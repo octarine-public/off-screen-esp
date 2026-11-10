@@ -82,9 +82,26 @@ declare namespace MenuSDK {
 		Always = 3
 	}
 	class OverlayPanel {
+		/**
+		 * Whether the hint saying a right-click opens the panel's row in the menu comes out under the
+		 * panel once the cursor rests on it with the menu open. A panel the player works on all the
+		 * time - one whose clicks and drags are its own - turns it off: the hint would come out every
+		 * time the cursor stopped on it. The right-click still opens the row either way.
+		 *
+		 * @example
+		 * const panel = new OverlayPanel(menu, "combo-builder")
+		 * panel.SetupHint = false
+		 */
+		public SetupHint: boolean
 		/** @param life when the panel stands; see {@link EPanelLife}. */
 		constructor(menu: IOverlayMenu, key?: string, life?: EPanelLife)
 		public get Scale(): number
+		/**
+		 * Whether a panel is in the hand: while one is, the place it is carried to goes into its rows
+		 * as a slider drag's values do (`SetSliderDragging`) - no config written and the menu not
+		 * drawn again for every frame of the move, both once as it is put down.
+		 */
+		public static get InHand(): boolean
 		/** Whether the panel is in hand right now, being carried by the cursor. */
 		public get Dragging(): boolean
 		/**
@@ -111,6 +128,24 @@ declare namespace MenuSDK {
 		 * its title bar's height, so a drag inside the content never moves the window.
 		 */
 		public Draw(size: Vector2, content: (origin: Vector2) => void, dragHandleHeight?: number): void
+		/**
+		 * Stands the panel exactly as it was last drawn at `size`, for a caller whose content would
+		 * come out the same this frame: the panel is placed and registered as {@link OverlayPanel.Draw}
+		 * does, and its surface keeps the last frame's elements instead of being drawn again. Answers
+		 * `false`, holding nothing, whenever the frame has to be drawn - the panel may not stand, is
+		 * covered, is in hand or was just put down, its hint is out, the hand is on it with the menu
+		 * open, the last frame laid out text the host had not measured yet, it would stand anywhere but
+		 * where the last frame was drawn, or the surface no longer shows the last frame, as after a
+		 * frame the panel was not drawn in - and the caller draws it instead. The menu open with the
+		 * cursor elsewhere holds as it does closed: nothing on the panel moves for the hand then, and a
+		 * caller whose frame differs with the menu open says so in what it compares.
+		 *
+		 * @example
+		 * if (!(unchanged && panel.Hold(size))) {
+		 * 	panel.Draw(size, origin => HudCard.Frame(new Rectangle(origin, origin.Add(size))))
+		 * }
+		 */
+		public Hold(size: Vector2): boolean
 		public MouseKeyDown(key?: VMouseKeys): boolean
 		public MouseKeyUp(): boolean
 		public Reset(): void

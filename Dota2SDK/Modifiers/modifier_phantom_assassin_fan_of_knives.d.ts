@@ -3,4 +3,5 @@ declare class modifier_phantom_assassin_fan_of_knives extends Modifier implement
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

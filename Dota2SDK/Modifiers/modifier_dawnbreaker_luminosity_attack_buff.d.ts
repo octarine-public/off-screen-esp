@@ -6,4 +6,5 @@ declare class modifier_dawnbreaker_luminosity_attack_buff extends Modifier imple
 	public IsBuff(): this is IBuff
 	protected GetCriticalStrikeBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

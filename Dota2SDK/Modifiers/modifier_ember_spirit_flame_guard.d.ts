@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_ember_spirit_flame_guard extends Modifier implements IShield, IBuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string

@@ -6,4 +6,6 @@ declare class modifier_juggernaut_bladeform extends Modifier implements IBuff {
 	public GetTexturePath(): string
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
+	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_item_mage_slayer extends Modifier {
 	protected GetPreAttackBonusDamage(_params?: IModifierParams): [number, boolean]
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

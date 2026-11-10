@@ -2,8 +2,8 @@
 /**
  * One region of the game's HUD, backed by the panels Panorama lays out for it.
  *
- * Every rectangle a section hands out is the game's own, measured this frame; a rectangle is
- * undefined while the panel behind it is gone or takes part in no layout.
+ * Every rectangle a section hands out is the game's own, measured at the last reading; a
+ * rectangle is undefined while the panel behind it is gone or takes part in no layout.
  */
 declare abstract class CHUDSection {
 	protected readonly hud: HUDPanel
@@ -21,6 +21,17 @@ declare abstract class CHUDSection {
 	 * reference never goes stale, and whatever a section asks about here is answered at once.
 	 */
 	public Refresh(): void
+	/**
+	 * Where the game paints a panel, in a rectangle the section owns.
+	 *
+	 * With the minimap on the right the game marks its HUD `HUDFlipped` and mirrors parts of it
+	 * with `transform: scaleX(-1)`, which layout never sees. `mirrors` lists the mirrored panels
+	 * around this one, innermost first: the rectangle is reflected about each one's centre in
+	 * turn. A panel's own mirroring leaves it where it is, so it never lists itself.
+	 */
+	protected Placed(panel: HUDPanel, mirrors: HUDPanel[]): Nullable<Rectangle>
+	/** Outlines where the game paints a panel, while it has the panel on screen. */
+	protected DrawPlaced(panel: HUDPanel, mirrors: HUDPanel[], color: Color): void
 	protected Draw(rect: Nullable<Rectangle>, color: Color): void
 	/**
 	 * Outlines a panel only while the game has it on screen.
@@ -46,4 +57,6 @@ declare abstract class CHUDSection {
 	 * allocation happens per frame. Undefined when none of them is.
 	 */
 	protected Union(target: Rectangle, panels: HUDPanel[]): Nullable<Rectangle>
+	/** {@link CHUDSection.Union} over rectangles the section already holds. */
+	protected UnionRects(target: Rectangle, rects: Nullable<Rectangle>[]): Nullable<Rectangle>
 }

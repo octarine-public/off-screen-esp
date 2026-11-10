@@ -8,4 +8,13 @@ declare class modifier_wind_waker extends Modifier implements IBuff, IShield, ID
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	public IsDisable(): this is IDisable
+	protected readonly DeclaredEvents: EModifierfunction[]
+	/** An enemy drops out of the cyclone hurt (`Ability.DamageOverTime`). */
+	public get IsDamageOverTime(): boolean
+	/**
+	 * The cyclone on an enemy, the game's as Eul's (`LiftMotion.CycloneSwing`): swung round the
+	 * spot the bearer was taken up at and set down there as the modifier ends. On the caster or an
+	 * ally the caster may carry the cyclone off: no motion is known then.
+	 */
+	public CreateMotion(): Nullable<Motion>
 }

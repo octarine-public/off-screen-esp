@@ -4,4 +4,5 @@ declare class modifier_ringmaster_wheel_mesmerize_pull extends Modifier implemen
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

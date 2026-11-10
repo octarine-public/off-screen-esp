@@ -4,4 +4,5 @@ declare class modifier_item_spark_of_courage extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

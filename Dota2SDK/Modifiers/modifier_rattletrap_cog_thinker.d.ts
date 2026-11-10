@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_rattletrap_cog_thinker extends Modifier {
+	public get IsPurgable(): boolean
 }

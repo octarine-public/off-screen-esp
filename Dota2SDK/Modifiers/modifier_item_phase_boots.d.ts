@@ -5,4 +5,5 @@ declare class modifier_item_phase_boots extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetMoveSpeedBonusUnique(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

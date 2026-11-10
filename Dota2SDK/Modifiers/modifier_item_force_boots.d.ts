@@ -4,4 +4,5 @@ declare class modifier_item_force_boots extends Modifier {
 	protected GetIgnoreMoveSpeedLimit(): [number, boolean]
 	protected GetMoveSpeedBonusUnique(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

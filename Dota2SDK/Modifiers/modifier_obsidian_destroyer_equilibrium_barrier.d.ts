@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_obsidian_destroyer_equilibrium_barrier extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -9,4 +10,5 @@ declare class modifier_obsidian_destroyer_equilibrium_barrier extends Modifier i
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected GetTotalConstantBlock(): [number, boolean]
+	public get IsPurgable(): boolean
 }

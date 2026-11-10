@@ -5,4 +5,5 @@ declare class modifier_chaos_knight_reality_rift_debuff extends Modifier impleme
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public IsDebuff(): this is IDebuff
 }

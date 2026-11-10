@@ -5,4 +5,5 @@ declare class modifier_medusa_fixed_movespeed extends Modifier {
 	public PostDataUpdate(): void
 	protected GetMoveSpeedAbsoluteMax(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

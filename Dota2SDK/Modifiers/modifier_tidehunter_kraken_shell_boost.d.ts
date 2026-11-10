@@ -6,4 +6,5 @@ declare class modifier_tidehunter_kraken_shell_boost extends Modifier implements
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

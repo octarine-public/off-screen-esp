@@ -114,7 +114,7 @@ declare class PredictionDebug {
 	public Stats(source?: number): Record<string, IPredictionSampleStats>
 	/** The newest pairs, newest first. */
 	public Dump(count?: number): IPredictionSample[]
-	/** Drops all telemetry and pending probes. */
+	/** Drops all telemetry, the pending probes of movements, attacks and casts, and the last cast. */
 	public Reset(): void
 	/**
 	 * Predicts one cast through the ability itself and returns the result as plain data, keeping

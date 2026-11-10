@@ -11,5 +11,10 @@ declare enum EThreatKind {
 	/** A particle that marks where the effect lands. */
 	Particle = 4,
 	/** A modifier the cast put on a unit, the effect around it. */
-	Modifier = 5
+	Modifier = 5,
+	/**
+	 * A swing of an attack at a unit that carries an ability (`Ability.RidesSwing`): Walrus Punch,
+	 * an orb on autocast - landing as the swing lands, or as its projectile flies on from there.
+	 */
+	Attack = 6
 }

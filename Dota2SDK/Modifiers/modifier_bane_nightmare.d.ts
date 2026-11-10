@@ -7,4 +7,6 @@ declare class modifier_bane_nightmare extends Modifier implements IDebuff, IDisa
 	public IsDisable(): this is IDisable
 	protected GetFixedDayVision(): [number, boolean]
 	protected GetFixedNightVision(): [number, boolean]
+	protected GetMoveSpeedAbsolute(): [number, boolean]
+	protected UpdateSpecialValues(): void
 }

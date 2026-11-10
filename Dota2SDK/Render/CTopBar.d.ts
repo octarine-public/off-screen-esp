@@ -58,25 +58,25 @@ declare class CTopBarPlayer {
 	public get RespawnTimer(): Nullable<Rectangle>
 	public get TPIndicator(): Nullable<Rectangle>
 	/**
-	 * The teleport icon as it is painted, which is smaller than the box it sits in.
+	 * The teleport button as it is painted, which is smaller than the box it sits in.
 	 *
-	 * `dota_hud_top_bar.css` shrinks it with `#TopBarTPIcon { ui-scale: 80% }`, and a
-	 * `ui-scale` is a transform about the panel's centre that layout knows nothing of — the
-	 * indicator measures 51x51 while the icon is drawn at 40.8x40.8 inside it.
+	 * `dota_hud_top_bar.css` gives `#TopBarTPIcon` a `ui-scale: 80%`, so the 48px button
+	 * inside it is laid out at 38.4x38.4 at 1080p, centred in the 51x51 indicator.
 	 */
 	public get TPIcon(): Nullable<Rectangle>
 	public get UltReadyIndicator(): Nullable<Rectangle>
 	public get Salute(): Nullable<Rectangle>
 	/**
 	 * Where the game paints this part of the slot: measured when it can be, and taken from
-	 * the stylesheet when the game lays nothing out to measure.
+	 * the stylesheet when the game lays nothing out to measure at the current resolution.
 	 */
 	public Rect(kind: PlayerRect): Nullable<Rectangle>
 	/**
 	 * Where the game paints this part of the slot, which for the health and mana bars is
 	 * below their layout box — see {@link CTopBarPlayer.BarPaintOffset}. Undefined while the
 	 * game keeps the panel out of layout, which it does for anything it has no reason to draw
-	 * yet and for anything belonging to a team there is no vision of.
+	 * yet and for anything belonging to a team there is no vision of, and while the layout it
+	 * holds is left over from another resolution — see {@link CTopBarPlayer.AtSlotScale}.
 	 */
 	public Measured(kind: PlayerRect): Nullable<Rectangle>
 	/**

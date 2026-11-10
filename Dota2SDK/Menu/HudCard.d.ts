@@ -145,6 +145,11 @@ declare namespace MenuSDK {
 		public Center(x: number, centerY: number, boxWidth: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): void
 		public Right(rightX: number, centerY: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): number
 	}
+	/**
+	 * A card's text. It is measured in the face, weight and size of the theme the card is laid out
+	 * against ({@link setHudScale}, {@link setHudWorldScale}), which is the theme its surface draws
+	 * it in, so a box sized by `Width` before `SetActiveSurface` holds the run drawn into it.
+	 */
 	const HudText: CHudText
 	/**
 	 * One line of a card that is read by travelling it when it does not fit, as the menu's own labels
@@ -193,6 +198,15 @@ declare namespace MenuSDK {
 		 * HudCard.Plate(x, y, w, h, h * 0.34, HudColors.glass, 150)
 		 */
 		public Plate(x: number, y: number, w: number, h: number, radius: number, color: Color, alpha?: number): void
+		/**
+		 * The shadow under a tile lifted into the hand, `lift` of the way, as the menu's image selector
+		 * drops one (`0 6dp 14dp #00000040`): dropped 6 dp, its blur laid as rounded plates from inside
+		 * the tile's edge to past it, all of it as deep as the tile is lifted. `rect` and `corner` are px.
+		 *
+		 * @example
+		 * HudCard.LiftShadow({ x, y, w: side, h: side }, side * 0.2, lift)
+		 */
+		public LiftShadow(rect: Readonly<ScreenRect>, corner: number, lift: number): void
 		/**
 		 * The dress a badge wears without its label: a plate washed `tint` deep in `color` and rimmed
 		 * `edge` deep in it by a hairline, for a chip whose contents the caller lays out itself - a
@@ -283,10 +297,19 @@ declare namespace MenuSDK {
 		 * {@link Canvas.Image} does, and holds the image back until the host has measured the
 		 * source, which is one frame at most.
 		 *
+		 * `source` draws only that rectangle of the artwork, in the file's own pixels
+		 * (`HostImageSize`), the way a HUD shows the middle of a picture its frame cuts the edges off;
+		 * like `"cover"` it holds the image back until the host has measured the source.
+		 *
 		 * @example
 		 * HudCard.Image(unit.TexturePath(), pos, size, Color.White, hudAlpha(), radius, 0, "cover")
 		 */
-		public Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number, fit?: "cover" | "stretch"): void
+		public Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number, fit?: "cover" | "stretch", source?: {
+			readonly x: number
+			readonly y: number
+			readonly w: number
+			readonly h: number
+		}): void
 		/** A filled disc: the chip a glyph or a portrait is set on. */
 		public Disc(centerX: number, centerY: number, radius: number, color: Color, alpha?: number): void
 		/**

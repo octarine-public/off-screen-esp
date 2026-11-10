@@ -9,6 +9,7 @@ declare class modifier_item_aeon_disk_buff extends Modifier implements IBuff, IS
 	protected GetNoDamagePure(): [number, boolean]
 	protected GetNoDamageMagical(): [number, boolean]
 	protected GetNoDamagePhysical(): [number, boolean]
+	protected GetTotalDamageOutgoingPercentage(): [number, boolean]
 	protected GetStatusResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

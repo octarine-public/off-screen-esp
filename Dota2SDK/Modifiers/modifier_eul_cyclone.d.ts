@@ -8,4 +8,13 @@ declare class modifier_eul_cyclone extends Modifier implements IBuff, IShield, I
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	public IsDisable(): this is IDisable
+	protected readonly DeclaredEvents: EModifierfunction[]
+	/** An enemy drops out of the cyclone hurt (`Ability.DamageOverTime`). */
+	public get IsDamageOverTime(): boolean
+	/**
+	 * The cyclone, the game's as Tornado's (`LiftMotion.CycloneSwing`): swung round the spot the
+	 * bearer was taken up at and set down there as the modifier ends - so what lands after it is
+	 * aimed at that spot, not where the swing has the bearer now.
+	 */
+	public CreateMotion(): Nullable<Motion>
 }

@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_pipe_barrier extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -9,4 +10,5 @@ declare class modifier_item_pipe_barrier extends Modifier implements IBuff, IShi
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	protected GetMagicalConstantBlock(): [number, boolean]
+	public get IsPurgable(): boolean
 }

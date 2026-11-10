@@ -1,6 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
-	type EntryKind = "node" | "toggle" | "slider" | "dropdown" | "multiSelect" | "keybind" | "button" | "color" | "text" | "list" | "images" | "presets" | "description"
+	type EntryKind = "node" | "toggle" | "slider" | "range" | "dropdown" | "multiSelect" | "keybind" | "button" | "color" | "text" | "list" | "images" | "presets" | "description"
 	interface MenuHintMedia {
 		kind: "image" | "gif" | "video"
 		src: string
@@ -27,6 +27,19 @@ declare namespace MenuSDK {
 	 * account wears. The two are written, read and switched apart, so an entry belongs to one.
 	 */
 	type EntryDocument = "config" | "theme"
+	/**
+	 * An icon button a script puts on a row's right, before the row's settings button and drawn as
+	 * it is: a lock, a pin. The row is drawn again whenever its list is handed over anew.
+	 */
+	interface RowAction {
+		/** The glyph, a `MenuIcons` path. */
+		readonly icon: string
+		/** What hovering it says; translated. */
+		readonly tooltip: string
+		/** Whether it shows as on: the glyph in the accent. */
+		readonly active: boolean
+		readonly run: () => void
+	}
 	interface EntryCommon {
 		readonly kind: EntryKind
 		readonly name: string
@@ -37,9 +50,14 @@ declare namespace MenuSDK {
 		iconPath: string
 		priority: number
 		visible: boolean
-		/** Runtime visibility in the hotkeys panel; false also excludes descendant binds. Defaults to true. */
+		/**
+		 * Runtime visibility in the hotkeys panel; false also excludes descendant binds - out of play
+		 * now: the bind dialog does not list them as taking a key. Defaults to true.
+		 */
 		hotkeysVisible?: boolean
 		searchHidden: boolean
+		/** Extra words the menu search matches besides the name, each also tried in its translations. */
+		searchKeywords?: readonly string[]
 		disabled: boolean
 		firstTime: boolean
 		saveConfig: boolean
@@ -48,6 +66,8 @@ declare namespace MenuSDK {
 		iconRound: number
 		markColorToken?: string
 		subSettings?: NodeEntry
+		/** Icon buttons a script put on the row's right, before its settings button. */
+		rowActions?: readonly RowAction[]
 		hostedBy?: Entry
 		/**
 		 * Entry this one is a stand-in for. When set, the row's context menu offers
@@ -55,8 +75,15 @@ declare namespace MenuSDK {
 		 * (the keybinds list) can jump to the setting they mirror.
 		 */
 		revealTarget?: Entry
+		/**
+		 * Values a row draws but keeps in entries of their own: resetting the row resets them too,
+		 * and the row wears the changed mark while any of them is changed.
+		 */
+		companions?: Entry[]
 	}
 	function IsEntryVisible(entry: EntryCommon): boolean
+	/** The settings of the tile `value` of `entry`: the node of its value in the row's tile settings, while it is shown. */
+	function TileSettingsOf(entry: ImagesEntry, value: string): Nullable<NodeEntry>
 	/**
 	 * Whether this entry's rows live in a floating window rather than on a page or in a popover:
 	 * some ancestor is a hosted node that is not a popover — the combination only a window's page
@@ -65,17 +92,26 @@ declare namespace MenuSDK {
 	 */
 	function IsWindowHosted(entry: EntryCommon): boolean
 	/**
+	 * Whether a row stands for this entry and keeps it off a row of its own: a node holding what a
+	 * {@link NodeEntry.sequences} row edits, taken over through `Node.Host`. Such an entry is drawn
+	 * nowhere else - no page, no row, no search hit - and keeps its place in the config.
+	 */
+	function IsRowHosted(entry: EntryCommon): boolean
+	/**
 	 * Whether this node is a page of its own, rather than a row of the one holding it. A node that
 	 * opens in a popover is a row wherever rows are listed and a page nowhere: the extra settings of
 	 * another row, or a settings row of its own.
 	 */
 	function IsPageNode(entry: Entry): entry is NodeEntry
+	/** Whether this node stands as a tile of the node holding it ({@link NodeEntry.tiles}). */
+	function IsTile(entry: Entry): entry is NodeEntry
 	/** The switch an entry wears on its own row: the one at the end of an image selector's title. */
 	function RowSwitchOf(entry: Entry): Nullable<ToggleEntry>
 	/**
 	 * What an entry stands for where it is shown away from its row — a hotkey, a timed rule, a
-	 * reveal: the row hosting it, or the card or page whose header switch it is, and the entry
-	 * itself otherwise. A header switch is usually called "State", which says nothing out there.
+	 * reveal: the row hosting it, the card or page whose header switch it is, the tile it is drawn
+	 * on, and the entry itself otherwise. A header switch is usually called "State" and a tile's
+	 * bind "Key", which say nothing out there.
 	 */
 	function ListedEntryOf(entry: Entry): Entry
 	/**
@@ -107,6 +143,54 @@ declare namespace MenuSDK {
 		description: string
 		enableText: string
 	}
+	/** A ready sequence a {@link SequenceSource} offers an empty tab: its name, and its steps. */
+	interface SequencePreset {
+		readonly label: string
+		/** Its steps in order, as image values an image selector takes. */
+		readonly values: readonly string[]
+	}
+	/**
+	 * What a {@link NodeEntry.sequences} row draws and edits: tabs of sequences of image steps - a
+	 * spell combo, a build order - one of them in use. The script keeps the sequences, in controls of
+	 * its own that save and reset as usual, and decides what a step may be and where; the row reads
+	 * them every time it draws and hands every edit back here, keeping nothing of them itself.
+	 */
+	interface SequenceSource {
+		/** One short label per tab - a letter, a number - each tab a sequence of its own. */
+		readonly Tabs: readonly string[]
+		/** The tab in use, which is the one the row shows. */
+		readonly Active: number
+		/** Puts tab `tab` in use: a click on it asks for that. */
+		Select(tab: number): void
+		/** Tab `tab`'s steps in order, as image values an image selector takes. */
+		Steps(tab: number): readonly string[]
+		/** What the plus offers to add to tab `tab`; nothing it could not take. */
+		Picks(tab: number): readonly string[]
+		/** Adds `value` to tab `tab`, where the script wants it - the end, as a rule. */
+		Add(tab: number, value: string): void
+		/** Moves step `from` of tab `tab` to where its step `to` stands, or leaves it if it may not. */
+		Move(tab: number, from: number, to: number): void
+		/** Takes step `step` of tab `tab` out. */
+		Remove(tab: number, step: number): void
+		/** Takes every step of tab `tab` out. */
+		Clear(tab: number): void
+		/** What tab `tab` is called where there is room: its tooltip. */
+		Title(tab: number): string
+		/** A line under the tabs saying what tab `tab` is; empty for none. */
+		Caption(tab: number): string
+		/** What step `step` of tab `tab` wears in its corner - its place, as a rule; empty for nothing. */
+		Badge(tab: number, step: number): string
+		/** Whether step `step` of tab `tab` wears a line under it: one set apart from the steps before it. */
+		Marked(tab: number, step: number): boolean
+		/** The sequences an empty tab `tab` offers in place of its steps; none for no offer. */
+		Presets(tab: number): readonly SequencePreset[]
+		/** Fills tab `tab` with preset `preset` of {@link Presets}. */
+		LoadPreset(tab: number, preset: number): void
+		/** The key bind drawn under tab `tab`'s steps as a row - the key that puts the tab in use - if any. */
+		Key(tab: number): Nullable<{
+			readonly entry: KeybindEntry
+		}>
+	}
 	interface NodeEntry extends EntryCommon {
 		readonly kind: "node"
 		readonly children: Entry[]
@@ -125,6 +209,8 @@ declare namespace MenuSDK {
 		pinnedName?: string
 		pinnedLabel?: string
 		subLabel?: string
+		/** Icon of this node's General entry and of the card holding its own rows; omitted keeps the home glyph. */
+		generalIcon?: string
 		searchPlaceholder?: string
 		/**
 		 * Whether this node opens in a popover instead of on the page: the extra settings of a row,
@@ -135,24 +221,53 @@ declare namespace MenuSDK {
 		popoverTitle?: string
 		/** Preferred settings-popover width in dp; omitted uses the compact default. */
 		popoverWidth?: number
+		/**
+		 * Whether this popover holds the settings of its host's tiles - a node each, named after the
+		 * tile's value, opened off the tile - rather than the settings of the row, opened off a button.
+		 */
+		byTile?: boolean
 		/** Colour pickers riding this node's settings row, which lose rows of their own. */
 		swatches?: ColorEntry[]
 		/** Optional status glyphs before the settings button, separate from the row's main icon. */
 		statusIconPaths?: readonly string[]
 		textColor?: Color
 		iconGrayScale?: boolean
+		/** Whether this node's row in a navigation list reads faded: its icon and name at half weight. */
+		muted?: boolean
 		tabbedChildren?: boolean
 		/**
 		 * Whether a top-level tab lays its child nodes out as section cards on its own page instead
 		 * of listing them as sub-pages in the navigation column.
 		 */
 		inlinePages?: boolean
+		/**
+		 * Whether this child of a top-level tab stands as a tab along the top of the tab's General
+		 * page instead of as a page in the navigation column.
+		 */
+		generalTab?: boolean
+		/**
+		 * Whether this page of a top-level tab stands in the navigation column right under the General
+		 * entry, as a row of its own like it, instead of in the list of the tab's pages.
+		 */
+		besideGeneral?: boolean
+		/**
+		 * Whether this node stands as one row of the card holding it - its name and header switch on
+		 * the title line, its child nodes as tiles under it - instead of as a page or a fold of rows.
+		 */
+		tiles?: boolean
+		/**
+		 * What this node edits when it stands as one row of the card holding it: tabs of sequences of
+		 * image steps the script keeps, the one in use shown, instead of a page or a fold of rows.
+		 */
+		sequences?: SequenceSource
 		headerControl?: ValueEntry
 		/** Toggle whose off state makes every card of this page read as inert. */
 		gate?: ToggleEntry
 		disabledNotice?: DisabledNotice
 		customPage?: () => React.ReactNode
 		backAction?: () => boolean
+		/** Whether the node's pages, and its children's, drop the top bar and give its height to the page. */
+		hideTopBar?: boolean
 	}
 	/** A button a note carries at its end, which a click anywhere on the note presses too. */
 	interface DescriptionAction {
@@ -160,11 +275,26 @@ declare namespace MenuSDK {
 		readonly label: string
 		readonly run: () => void
 	}
+	/**
+	 * Where the thing a note names stands: a short word at the note's end in the tone it reads as,
+	 * and, when there is more to say, a line under the note saying why.
+	 */
+	interface DescriptionStatus {
+		/** The word at the end, a localization key. */
+		readonly text: string
+		/** What it says about the thing. Muted where it is left out. */
+		readonly tone?: SliderNoteTone
+		/** The line under the note, a localization key; none for a status the word says whole. */
+		readonly detail?: string
+	}
+	/** Whether two statuses say the same thing, so a script setting one every pass redraws nothing. */
+	function SameDescriptionStatus(current: Nullable<DescriptionStatus>, next: Nullable<DescriptionStatus>): boolean
 	interface DescriptionEntry extends EntryCommon {
 		readonly kind: "description"
 		selected: boolean
 		header?: boolean
 		action?: DescriptionAction
+		status?: DescriptionStatus
 	}
 	/** How a hotkey drives its entry: apply on every press, or follow the key while it is held. */
 	type HotkeyMode = "toggle" | "hold"
@@ -296,6 +426,8 @@ declare namespace MenuSDK {
 		clampMin?: number
 		clampMax?: number
 		suffix?: string
+		/** Whether the rail rides the row beside the label instead of hanging below it. */
+		inline?: boolean
 		ticks?: number[] | true
 		note?: SliderNote
 		zones?: SliderZone[]
@@ -306,6 +438,25 @@ declare namespace MenuSDK {
 		logic: SliderLogic[]
 		listeners: ((entry: SliderEntry) => void)[]
 		finishListeners: ((entry: SliderEntry) => void)[]
+	}
+	/**
+	 * A span picked on one rail with two thumbs: every value from {@link low} to {@link high}, both
+	 * on a {@link step} of the declared range and the low end never past the high one.
+	 */
+	interface RangeEntry extends EntryCommon {
+		readonly kind: "range"
+		readonly defaultLow: number
+		readonly defaultHigh: number
+		readonly min: number
+		readonly max: number
+		/** The distance between two values the thumbs can stand on, counted from {@link min}. */
+		readonly step: number
+		/** How many decimals the step has, which every value is written with. */
+		readonly precision: number
+		low: number
+		high: number
+		suffix?: string
+		listeners: ((entry: RangeEntry) => void)[]
 	}
 	interface DropdownEntry extends EntryCommon {
 		readonly kind: "dropdown"
@@ -322,6 +473,13 @@ declare namespace MenuSDK {
 		 * reading down the names.
 		 */
 		icons?: string[]
+		/** How the options are offered; a list when unset. */
+		layout?: DropdownLayout
+		/**
+		 * A small icon riding the corner of each option's card, parallel to {@link values} and empty
+		 * where an option has none - what an option can do that its picture does not show.
+		 */
+		marks?: string[]
 		swatches?: OptionSwatches
 		/** Keys bound to this dropdown from its context menu, in creation order. */
 		hotkeys: DropdownHotkey[]
@@ -329,6 +487,11 @@ declare namespace MenuSDK {
 		logic: DropdownLogic[]
 		listeners: ((entry: DropdownEntry) => void)[]
 	}
+	/**
+	 * How a dropdown offers its options: `"list"` opens them in a popover from the row, `"cards"`
+	 * lays them out under the row as picture cards, each picked with one click.
+	 */
+	type DropdownLayout = "list" | "cards"
 	/**
 	 * Colour pickers riding an option's own row, keyed by the option's value for the same reason
 	 * the selection is: a renamed or reordered list must not move them onto a different item.
@@ -376,6 +539,13 @@ declare namespace MenuSDK {
 		claimed: boolean
 		allowLeftMouse: boolean
 		allowCombinations: boolean
+		/**
+		 * The mode the bind is declared with, which a reset returns to. Set, its row offers a
+		 * Hold/Toggle switch beside the key; undefined, the bind has no mode.
+		 */
+		defaultMode?: HotkeyMode
+		/** The mode the player picked; read while {@link defaultMode} is set. */
+		mode?: HotkeyMode
 		listeners: ((entry: KeybindEntry) => void)[]
 	}
 	/** Visual emphasis of an action button. */
@@ -480,6 +650,11 @@ declare namespace MenuSDK {
 		readonly cornerAccent?: string
 		/** Words the modal's search matches besides the label, such as what the value does. */
 		readonly keywords?: string
+		/**
+		 * Whether the tile starts chosen, and comes back chosen on a reset, in place of the picker's
+		 * state for new tiles.
+		 */
+		readonly enabled?: boolean
 	}
 	/** A titled run of values in the browse modal, such as one shop category. */
 	interface CatalogueSection {
@@ -502,10 +677,21 @@ declare namespace MenuSDK {
 		/** The state each tile was declared with, kept for resets and the changed mark. */
 		defaultEnabled: Map<string, boolean>
 		/**
+		 * The tiles in the order the config last brought them: a tile the script adds only later - an
+		 * ability the game reveals - goes back to its place among the others, and a save made before
+		 * then keeps it there.
+		 */
+		storedOrder: string[]
+		/**
 		 * What the row's own tiles are chosen from. A picker with a catalogue keeps the chosen tiles
 		 * in the row and hands the rest to a modal, so a hundred-value picker stays one row tall.
 		 */
 		catalogue: readonly CatalogueSection[]
+		/**
+		 * Values the grid leaves out for now. They keep their place in {@link values}, their state
+		 * and their config; only their tiles are not drawn.
+		 */
+		hidden?: ReadonlySet<string>
 		/**
 		 * The switch standing at the end of the row's title line, which runs what the tiles choose
 		 * for. It is hosted by the row and has none of its own.
@@ -552,7 +738,7 @@ declare namespace MenuSDK {
 		 */
 		copyListeners: ((from: PresetGroup, to: PresetGroup) => void)[]
 	}
-	type ValueEntry = ToggleEntry | SliderEntry | DropdownEntry | MultiSelectEntry | KeybindEntry | ButtonEntry | ColorEntry | TextEntry | ListEntry | ImagesEntry | PresetsEntry | DescriptionEntry
+	type ValueEntry = ToggleEntry | SliderEntry | RangeEntry | DropdownEntry | MultiSelectEntry | KeybindEntry | ButtonEntry | ColorEntry | TextEntry | ListEntry | ImagesEntry | PresetsEntry | DescriptionEntry
 	type Entry = NodeEntry | ValueEntry
 	/** Entries whose rows carry hotkeys and logic rules from the context menu. */
 	type DriverHolder = ToggleEntry | SliderEntry | DropdownEntry | MultiSelectEntry

@@ -5,6 +5,5 @@ declare const enum GridNavCellFlags {
 	MovementBlocker = 2,
 	Unused = 3,
 	InteractionBlocker = 4,
-	UnitBlocking = 5,
-	VisibleCell = 6
+	UnitBlocking = 5
 }

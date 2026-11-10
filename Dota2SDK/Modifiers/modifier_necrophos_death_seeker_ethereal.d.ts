@@ -1,4 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_necrophos_death_seeker_ethereal extends Modifier {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsGhost = true
+	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
+	protected GetMagicalResistanceDecrepifyUnique(): [number, boolean]
+	protected UpdateSpecialValues(): void
 }

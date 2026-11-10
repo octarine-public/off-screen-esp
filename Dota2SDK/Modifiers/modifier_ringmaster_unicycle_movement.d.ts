@@ -3,4 +3,5 @@ declare class modifier_ringmaster_unicycle_movement extends Modifier implements 
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

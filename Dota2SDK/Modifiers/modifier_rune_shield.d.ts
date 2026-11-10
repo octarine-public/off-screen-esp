@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_rune_shield extends Modifier implements IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly ShieldModifierName: string

@@ -9,4 +9,10 @@ declare class modifier_viper_nethertoxin extends Modifier implements IDebuff, IB
 	public IsBuff(): this is IBuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/**
+	 * Nethertoxin ticks on the unit by itself while it is on it - renewed while the unit
+	 * stays in the area: its ability's damage over time (`Ability.DamageOverTime`).
+	 */
+	protected readonly DeclaredEvents: EModifierfunction[]
+	public get IsPurgable(): boolean
 }

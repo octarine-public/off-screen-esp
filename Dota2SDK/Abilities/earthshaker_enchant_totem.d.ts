@@ -1,5 +1,7 @@
 // AUTO-GENERATED - do not edit.
 declare class earthshaker_enchant_totem extends Ability implements INuke {
+	/** The empowered strike stuns by Aftershock. */
+	protected get HoldingAbility(): Nullable<string>
 	public HasModifier: boolean
 	public get ScepterRadius(): number
 	public get DamageType(): DAMAGE_TYPES.DAMAGE_TYPE_PHYSICAL | DAMAGE_TYPES.DAMAGE_TYPE_MAGICAL

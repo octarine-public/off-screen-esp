@@ -4,4 +4,5 @@ declare class modifier_item_enhancement_nimble extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

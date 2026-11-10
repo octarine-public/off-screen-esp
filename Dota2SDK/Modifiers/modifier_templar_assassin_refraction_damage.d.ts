@@ -7,4 +7,5 @@ declare class modifier_templar_assassin_refraction_damage extends Modifier imple
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

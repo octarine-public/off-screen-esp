@@ -54,7 +54,10 @@ declare class CShop extends CHUDSection {
 	public get ClearQuickBuy1Row(): Nullable<Rectangle>
 	/** @deprecated the game lays out one button — read {@link CShop.ClearQuickBuy}. */
 	public get ClearQuickBuy2Rows(): Nullable<Rectangle>
-	/** Re-derives the stash rectangles, which carry a paint offset the section applies itself. */
+	/**
+	 * Re-derives every rectangle the section moves itself: where the game paints each panel, and
+	 * the stash's paint offset.
+	 */
 	public Refresh(): void
 	public DebugDraw(): void
 }

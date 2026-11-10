@@ -6,6 +6,7 @@ declare class modifier_muerta_gunslinger extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	public PostDataUpdate(): void
-	protected GetPreAttackBonusDamage(): [number, boolean]
+	protected GetBaseAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

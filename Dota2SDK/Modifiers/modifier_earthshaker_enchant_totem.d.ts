@@ -7,6 +7,6 @@ declare class modifier_earthshaker_enchant_totem extends Modifier implements IBu
 	public Remove(): boolean
 	protected AddModifier(): boolean
 	protected GetAttackRangeBonus(): [number, boolean]
-	protected GetPreAttackBonusDamagePercentage(): [number, boolean]
+	protected GetBaseDamageOutgoingPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

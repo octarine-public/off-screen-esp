@@ -4,4 +4,5 @@ declare class modifier_item_power_treads extends Modifier {
 	protected GetMoveSpeedBonusUnique(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

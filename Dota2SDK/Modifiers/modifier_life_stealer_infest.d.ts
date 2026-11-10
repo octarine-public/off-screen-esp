@@ -5,4 +5,5 @@ declare class modifier_life_stealer_infest extends Modifier implements IBuff, ID
 	public IsBuff(): this is IBuff
 	public IsDebuff(): this is IDebuff
 	public UnitPropertyChanged(changed?: boolean): boolean
+	public get IsPurgable(): boolean
 }

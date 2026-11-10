@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_skywrath_mage_shield_barrier extends Modifier implements IShield, IBuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -11,4 +12,5 @@ declare class modifier_skywrath_mage_shield_barrier extends Modifier implements 
 	protected GetMagicalConstantBlock(_params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
 	protected GetSpecialValue(specialName: string, abilityName: string, level?: number, optional?: ISpecialValueOptions): number
+	public get IsPurgable(): boolean
 }

@@ -3,4 +3,5 @@ declare class modifier_ember_spirit_fire_remnant_timer extends Modifier implemen
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

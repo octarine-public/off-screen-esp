@@ -2,5 +2,7 @@
 declare class modifier_item_enhancement_vast extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	protected GetAttackRangeBonus(): [number, boolean]
+	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

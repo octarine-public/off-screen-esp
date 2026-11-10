@@ -4,4 +4,5 @@ declare class modifier_tango_heal extends Modifier implements IBuff {
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
 	public GetTexturePath(): string
+	public get IsPurgable(): boolean
 }

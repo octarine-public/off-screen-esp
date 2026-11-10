@@ -3,4 +3,5 @@ declare class modifier_snapfire_gobble_up_belly_has_unit extends Modifier implem
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

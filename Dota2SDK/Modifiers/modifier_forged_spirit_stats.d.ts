@@ -5,4 +5,5 @@ declare class modifier_forged_spirit_stats extends Modifier {
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
 	protected GetSpecialValue(specialName: string, abilityName?: string, _level?: number): number
+	public get IsPurgable(): boolean
 }

@@ -5,4 +5,5 @@ declare class modifier_clinkz_burning_barrage extends Modifier implements IBuff,
 	public readonly ChannelModifierName: string
 	public IsBuff(): this is IBuff
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

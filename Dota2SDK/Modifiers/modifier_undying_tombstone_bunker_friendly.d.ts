@@ -3,4 +3,5 @@ declare class modifier_undying_tombstone_bunker_friendly extends Modifier implem
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

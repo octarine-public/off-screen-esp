@@ -3,4 +3,5 @@ declare class modifier_silencer_glaives_of_wisdom_debuff_counter extends Modifie
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_item_shivas_guard extends Modifier {
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetAOEBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -7,4 +7,5 @@ declare class modifier_lycan_summon_wolves_hightail extends Modifier implements 
 	protected GetMoveSpeedAbsoluteMin(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

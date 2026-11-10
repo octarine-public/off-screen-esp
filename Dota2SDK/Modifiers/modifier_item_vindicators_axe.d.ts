@@ -6,4 +6,5 @@ declare class modifier_item_vindicators_axe extends Modifier {
 	protected GetSlowResistanceStacking(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

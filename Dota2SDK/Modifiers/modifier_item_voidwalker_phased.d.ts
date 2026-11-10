@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_voidwalker_phased extends Modifier {
+	public get IsPurgable(): boolean
 }

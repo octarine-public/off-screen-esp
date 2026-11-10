@@ -11,4 +11,5 @@ declare class modifier_pangolier_rollup extends Modifier implements IBuff, IShie
 	protected GetDisableTurning(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

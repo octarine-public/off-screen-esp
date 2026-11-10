@@ -1,10 +1,10 @@
 // AUTO-GENERATED - do not edit.
 declare class item_clarity extends Item implements IManaRestore<Unit> {
-	public readonly RestoresAlly = true
-	public readonly RestoresSelf = true
-	public readonly InstantRestore = false
+	public get RestoresAlly(): boolean
+	public get RestoresSelf(): boolean
+	public get InstantRestore(): boolean
 	public readonly ManaRestoreModifierName = "modifier_clarity_potion"
 	public GetManaRestore(_target: Unit): number
-	public GetMaxDurationForLevel(level: number): number
+	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsManaRestore(): this is IManaRestore<Unit>
 }

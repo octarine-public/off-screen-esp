@@ -5,5 +5,6 @@ declare class modifier_kez_falcon_rush extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
+	protected GetSlowResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

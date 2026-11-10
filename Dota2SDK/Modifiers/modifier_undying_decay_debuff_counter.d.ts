@@ -3,4 +3,5 @@ declare class modifier_undying_decay_debuff_counter extends Modifier implements 
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
+	public get IsPurgable(): boolean
 }

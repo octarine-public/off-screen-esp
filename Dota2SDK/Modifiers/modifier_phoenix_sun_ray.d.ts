@@ -6,4 +6,5 @@ declare class modifier_phoenix_sun_ray extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetDisableTurning(): [number, boolean]
 	protected GetMoveSpeedLimit(): [number, boolean]
+	public get IsPurgable(): boolean
 }

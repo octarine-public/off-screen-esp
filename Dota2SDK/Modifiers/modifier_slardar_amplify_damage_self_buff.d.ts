@@ -6,4 +6,5 @@ declare class modifier_slardar_amplify_damage_self_buff extends Modifier impleme
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -3,4 +3,5 @@ declare class modifier_earth_spirit_geomagnetic_grip extends Modifier implements
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsStunDebuff(): boolean
 }

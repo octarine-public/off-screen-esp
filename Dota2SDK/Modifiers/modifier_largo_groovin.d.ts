@@ -9,4 +9,5 @@ declare class modifier_largo_groovin extends Modifier implements IBuff {
 	public GetBonusPhysicalArmor(): [number, boolean]
 	public GetManaCostReductionConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

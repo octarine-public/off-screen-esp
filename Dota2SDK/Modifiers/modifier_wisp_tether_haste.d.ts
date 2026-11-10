@@ -6,4 +6,5 @@ declare class modifier_wisp_tether_haste extends Modifier {
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

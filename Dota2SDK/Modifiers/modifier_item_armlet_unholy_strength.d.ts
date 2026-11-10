@@ -7,4 +7,5 @@ declare class modifier_item_armlet_unholy_strength extends Modifier implements I
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

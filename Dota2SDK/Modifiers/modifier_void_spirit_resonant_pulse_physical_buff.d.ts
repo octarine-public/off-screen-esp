@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_void_spirit_resonant_pulse_physical_buff extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string

@@ -3,4 +3,5 @@ declare class modifier_lich_sinister_gaze_self extends Modifier implements IChan
 	public readonly ChannelModifierName: string
 	public get ForceVisible(): boolean
 	public IsChannel(): this is IChannel
+	public get IsPurgable(): boolean
 }

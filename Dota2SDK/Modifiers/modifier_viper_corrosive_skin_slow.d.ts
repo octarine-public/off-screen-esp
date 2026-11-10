@@ -6,4 +6,6 @@ declare class modifier_viper_corrosive_skin_slow extends Modifier implements IDe
 	public IsDebuff(): this is IDebuff
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/** Corrosive Skin ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 }

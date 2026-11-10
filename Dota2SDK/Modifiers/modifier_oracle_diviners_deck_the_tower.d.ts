@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_oracle_diviners_deck_the_tower extends Modifier implements IBuff, IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly BuffModifierName: string
@@ -10,4 +11,5 @@ declare class modifier_oracle_diviners_deck_the_tower extends Modifier implement
 	public IsShield(): this is IShield
 	protected GetTotalConstantBlock(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

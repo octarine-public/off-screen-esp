@@ -23,7 +23,8 @@ declare namespace MenuSDK {
 	function SortEntries(parent: NodeEntry): void
 	/**
 	 * Registers the host's tables of icons and sort priorities for menu pages, keyed by the page's
-	 * path through the tree: `"Visual"` for a tab, `"Visual/Players"` for a page inside it. A page
+	 * path through the tree: `"Visual"` for a tab, `"Visual/Players"` for a page inside it. The icon
+	 * table also names controls the game adds without one, such as `"Main/Dota Plus"`. A page
 	 * carries the priority whenever it is created, so a list several scripts fill in separately
 	 * still holds the order the game asks for instead of falling back to the alphabet.
 	 *
@@ -41,6 +42,7 @@ declare namespace MenuSDK {
 	function CreateDescription(parent: NodeEntry, name: string, tooltip?: string, priority?: number, iconPath?: string, iconRound?: number): DescriptionEntry
 	function CreateToggle(parent: NodeEntry, name: string, defaultValue: boolean, tooltip?: string, priority?: number, iconPath?: string, iconRound?: number): ToggleEntry
 	function CreateSlider(parent: NodeEntry, name: string, defaultValue: number, min: number, max: number, precision: number, tooltip?: string, priority?: number): SliderEntry
+	function CreateRange(parent: NodeEntry, name: string, defaultLow: number, defaultHigh: number, min: number, max: number, step: number, tooltip?: string, priority?: number): RangeEntry
 	function CreateDropdown(parent: NodeEntry, name: string, values: string[], defaultValue: number, tooltip?: string, priority?: number): DropdownEntry
 	function CreateMultiSelect(parent: NodeEntry, name: string, values: string[], defaultValue?: string[], tooltip?: string, priority?: number): MultiSelectEntry
 	function CreateKeybind(parent: NodeEntry, name: string, defaultKey: string, tooltip?: string, priority?: number, defaultHotkeysHidden?: boolean): KeybindEntry
@@ -52,12 +54,27 @@ declare namespace MenuSDK {
 	/**
 	 * Hands the picker the catalogue its browse modal lists, and lays every value in it out as a tile
 	 * the row can carry, keeping whatever is already chosen. A value the catalogue no longer names
-	 * goes with it: the picker speaks for what the catalogue holds and nothing else.
+	 * leaves the row - the picker speaks for what the catalogue holds - but keeps the state the player
+	 * or the config gave it, for the catalogue that names it again, as a tile `AddImage` offers later
+	 * does: a catalogue handed over before the game brought its data, empty, wipes no choice.
+	 *
+	 * It may be handed over again at any time - a catalogue that grows as the game brings its data
+	 * after the config was applied: the tiles already laid out keep the order the player dragged them
+	 * into, and in a draggable or ordered row a tile laid out only now takes the place the config kept
+	 * for it, the end of the row if the config never had it. A tile the player and the config never
+	 * chose either way starts chosen as the catalogue declares it (`CatalogueValue.enabled`), as a
+	 * reset brings it back.
 	 */
 	function SetImageCatalogue(entry: ImagesEntry, sections: readonly CatalogueSection[]): void
 	/** Puts every tile back into the state and the slot it was declared with. */
 	function ResetImages(entry: ImagesEntry): void
 	function ImagePairs(entry: ImagesEntry): [string, boolean][]
+	/**
+	 * Adds tile `value` after the selector was built - an ability the game only now revealed: with the
+	 * state and, in a draggable or ordered row, the place the config kept for it; `enabled` and the
+	 * end of the row for a tile the config has never seen. A tile already there takes `enabled`.
+	 */
+	function AddImageValue(entry: ImagesEntry, value: string, enabled: boolean): void
 	function CreatePresets(parent: NodeEntry, name: string, baseName: string, tooltip?: string, priority?: number): PresetsEntry
 	/** Hands the selector the catalogue its value picker offers. Claimed values stay as they are. */
 	function SetPresetCatalogue(entry: PresetsEntry, sections: readonly CatalogueSection[]): void
@@ -141,9 +158,10 @@ declare namespace MenuSDK {
 	function SetEntryHotkeyVisibility(hotkey: EntryHotkey, visibility: HotkeyVisibility): void
 	/**
 	 * Walks every hotkey in the tree, in menu order — the on-screen panel and
-	 * hotkey listings are built from this.
+	 * hotkey listings are built from this. Only the entries a hotkey was put on are
+	 * visited, so a menu of thousands of rows costs what its handful of hotkeys do.
 	 */
-	function ForEachEntryHotkey(callback: (entry: DriverHolder, hotkey: EntryHotkey) => void, node?: NodeEntry): void
+	function ForEachEntryHotkey(callback: (entry: DriverHolder, hotkey: EntryHotkey) => void): void
 	/**
 	 * The value a driver holds its entry at, as text: empty for a toggle, the number
 	 * with the slider's precision and suffix, the option of a dropdown, or a
@@ -154,6 +172,11 @@ declare namespace MenuSDK {
 	 */
 	function DriverValueName(entry: DriverHolder, driver: EntryDriver, localize?: (name: string) => string): string
 	function SetSliderValue(entry: SliderEntry, value: number): void
+	/**
+	 * Sets the span `entry` picks, each end put on the nearest step of its range; ends given the
+	 * wrong way round are taken as the span between them.
+	 */
+	function SetRangeValue(entry: RangeEntry, low: number, high: number): void
 	function FinishSliderChange(entry: SliderEntry): void
 	function SetDropdownValue(entry: DropdownEntry, selectedID: number): void
 	function SetMultiSelectValue(entry: MultiSelectEntry, value: string, selected: boolean): void
@@ -187,6 +210,8 @@ declare namespace MenuSDK {
 	/** Saves whether this bind blocks game input, without changing an ongoing press. */
 	function SetKeybindClaimsKey(entry: KeybindEntry, value: boolean): void
 	function SetKeybindValue(entry: KeybindEntry, key: number): void
+	/** Puts a bind in `mode`: its value listeners hear it, as they hear a new key. */
+	function SetKeybindMode(entry: KeybindEntry, mode: HotkeyMode): void
 	/**
 	 * What a picker is showing right now: the colour it holds, or the live one it
 	 * {@link ColorEntry.follows} while nobody has touched it.
@@ -265,26 +290,12 @@ declare namespace MenuSDK {
 	 */
 	function MoveImage(entry: ImagesEntry, from: number, to: number): void
 	function TriggerButton(entry: ButtonEntry): void
-	interface SearchHit {
-		readonly entry: Entry
-		readonly segments: readonly string[]
-		readonly iconPath: string
-	}
-	/**
-	 * Entries whose name — or a translated alias `localize` returns for it — contains the query,
-	 * best match first. The query is also tried as if typed in the other keyboard layout and
-	 * transliterated to Latin, so `ghbwtk` finds «Прицел» and `аимбот` finds "Aimbot"; hits as typed
-	 * come first, then wrong-layout hits, then transliterated ones. Within a tier exact names beat
-	 * prefixes beat substrings, with ties going to the entry sitting higher in the tree and finally
-	 * to menu order. Entries flagged `searchHidden` are skipped together with their children.
-	 */
-	function SearchEntries(query: string, localize?: (name: string) => string[]): SearchHit[]
 	/** Puts an entry among the ones a key or the clock reaches; one already there stays where it is. */
 	function NoteBindHolder(entry: KeybindEntry | DriverHolder): void
 	/**
 	 * Walks the entries a key or the clock can reach, in the order they were put on one. What a
-	 * keybind row, a hotkey or a logic rule fires from; a listing walks the tree instead, for the
-	 * menu's own order.
+	 * keybind row, a hotkey or a logic rule fires from; a listing of hotkeys goes through
+	 * {@link ForEachEntryHotkey}, which puts them back in the menu's own order.
 	 */
 	function ForEachBindHolder(callback: (entry: KeybindEntry | DriverHolder) => void): void
 	/**
@@ -297,8 +308,17 @@ declare namespace MenuSDK {
 		readonly allowCombinations: boolean
 		readonly current: number
 		readonly entry?: KeybindEntry
+		/** The entry hotkey being rebound, so its own key does not count as taken. */
+		readonly hotkey?: EntryHotkey
 		readonly commit: (bind: number) => void
 	}
+	/**
+	 * The entries a press of this bind already reaches, the target itself aside: keybind rows on it
+	 * and the rows a hotkey on it drives, in the order a press reaches them. Only those a press
+	 * reaches now (`BindReachesNow`): the same key on the pages of other heroes takes nothing from
+	 * the one played. Empty for an unset bind.
+	 */
+	function BindConflicts(bind: number, target: CaptureTarget): Entry[]
 	/**
 	 * Starts a capture session for the target; the pending bind previews the
 	 * current assignment until input or SetPendingBind replaces it.
@@ -345,7 +365,16 @@ declare namespace MenuSDK {
 	 * not engaged.
 	 */
 	function ReleaseEntryDriver(entry: DriverHolder, driver: EntryDriver): void
-	function SetFocusedText(entry: Nullable<TextEntry>): void
+	/**
+	 * Marks `entry` as the text field holding focus, `field` the native input that holds it. Clearing
+	 * it leaves the native focus where it is; {@link DropTextFocus} takes that away too.
+	 */
+	function SetFocusedText(entry: Nullable<TextEntry>, field?: HTMLElement): void
+	/**
+	 * Clears the focused text field and blurs its native input: a native input left focused keeps
+	 * taking the keyboard from the game.
+	 */
+	function DropTextFocus(): void
 	function FocusedText(): Nullable<TextEntry>
 	/**
 	 * A detached text entry that stands for a raw `<input>` owned by no menu row. Hand it to

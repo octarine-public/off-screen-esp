@@ -12,4 +12,5 @@ declare class modifier_pangolier_gyroshell extends Modifier implements IBuff, IS
 	protected GetMoveSpeedLimit(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

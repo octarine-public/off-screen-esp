@@ -6,4 +6,5 @@ declare class modifier_huskar_life_break_charge extends Modifier implements IBuf
 	public GetTexturePath(): string
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
+	public get IsPurgable(): boolean
 }

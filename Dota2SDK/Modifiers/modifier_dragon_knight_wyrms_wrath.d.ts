@@ -4,4 +4,5 @@ declare class modifier_dragon_knight_wyrms_wrath extends Modifier {
 	protected GetAOEBounusConstant(): [number, boolean]
 	protected GetProcAttackBonusDamageMagical(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

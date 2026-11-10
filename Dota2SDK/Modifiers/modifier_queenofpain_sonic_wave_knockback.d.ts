@@ -4,4 +4,6 @@ declare class modifier_queenofpain_sonic_wave_knockback extends Modifier impleme
 	public get ForceVisible(): boolean
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
+	public get IsStunDebuff(): boolean
 }

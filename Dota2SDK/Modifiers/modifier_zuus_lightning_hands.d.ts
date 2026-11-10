@@ -7,4 +7,5 @@ declare class modifier_zuus_lightning_hands extends Modifier {
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected GetProcAttackBonusDamageMagical(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

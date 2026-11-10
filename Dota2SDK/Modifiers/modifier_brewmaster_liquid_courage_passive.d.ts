@@ -8,4 +8,5 @@ declare class modifier_brewmaster_liquid_courage_passive extends Modifier {
 	protected GetStatusResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
 	protected GetSpecialValue(specialName: string, abilityName: string, level?: number, optional?: ISpecialValueOptions): number
+	public get IsPurgable(): boolean
 }

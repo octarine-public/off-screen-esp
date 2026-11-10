@@ -4,4 +4,5 @@ declare class modifier_troll_warlord_melee extends Modifier {
 	protected GetBaseAttackTimeConstant(): [number, boolean]
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -5,4 +5,5 @@ declare class modifier_teleporting extends Modifier implements IChannel {
 	public get ForceVisible(): boolean
 	public IsChannel(): this is IChannel
 	public GetTexturePath(): string
+	public get IsPurgable(): boolean
 }

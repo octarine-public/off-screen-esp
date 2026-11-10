@@ -4,4 +4,5 @@ declare class modifier_item_mind_breaker extends Modifier {
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected GetPreAttackBonusDamageMagical(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

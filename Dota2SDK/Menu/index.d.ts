@@ -17,6 +17,32 @@ declare namespace MenuSDK {
 	 * takes the click.
 	 */
 	function OfferLockRelease(entry: Entry): void
+	/** Whether `entry` shows the glyph that opens its hint, or its tooltip at the side. */
+	function HasHintIcon(entry: Entry): boolean
+	/** The glyph that opens `entry`'s hint, or shows its tooltip, on hover. */
+	function HintIcon(props: {
+		entry: Entry
+	}): React.ReactElement
+	/**
+	 * The frame every control row stands in: icon, label, change mark, hover pill, tooltip and the
+	 * right-click menu of `entry`, with `children` laid out on the right. A host drawing a row of its
+	 * own kind keeps the look and the behaviour of the menu's rows through it.
+	 */
+	function ControlRow(props: {
+		entry: Entry
+		divider: boolean
+		nested?: boolean
+		iconTint?: StyleColor
+		contentStyle?: RmlStyle
+		rightStyle?: RmlStyle
+		hideLabel?: boolean
+		hoverHighlight?: boolean
+		retainHover?: boolean
+		onClick?: (event: Event) => void
+		onPress?: (event: Event) => void
+		below?: React.ReactNode
+		children?: React.ReactNode
+	}): React.ReactElement
 	/**
 	 * Folds its content in when the entry turns visible and out when it hides, keeping a hidden
 	 * entry mounted until the fold has run; `VisibleRows` is what lists such an entry meanwhile.

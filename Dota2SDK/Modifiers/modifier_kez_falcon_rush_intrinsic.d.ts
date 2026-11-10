@@ -5,4 +5,5 @@ declare class modifier_kez_falcon_rush_intrinsic extends Modifier {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public PostDataUpdate(): void
 	protected GetFixedAttackRate(): [number, boolean]
+	public get IsPurgable(): boolean
 }

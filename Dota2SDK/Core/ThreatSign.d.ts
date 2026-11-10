@@ -13,4 +13,6 @@ declare abstract class ThreatSign {
 	public Ended(_cancel: boolean): void
 	/** The particle behind the sign changed. */
 	public Changed(_particle: NetworkedParticle): void
+	/** The game let the particle behind the sign go: it plays out on its own, nothing more comes of it. */
+	public Released(): void
 }

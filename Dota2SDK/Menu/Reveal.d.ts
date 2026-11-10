@@ -7,7 +7,8 @@ declare namespace MenuSDK {
 	}
 	/**
 	 * A panel's entrance beside the preview it belongs to: it fades up out of the edge that faces the
-	 * preview, growing to its size as it settles the last few dp away from it. That is what says where
+	 * preview, growing to its size as it settles the last few dp away from it, its glass blur ramping
+	 * with the fade. That is what says where
 	 * it came from — the panel stands off at a distance, and a settings page that simply appears there
 	 * reads as a second window rather than as the element that was just clicked.
 	 *

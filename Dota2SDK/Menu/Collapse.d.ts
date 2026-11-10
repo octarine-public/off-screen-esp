@@ -14,6 +14,8 @@ declare namespace MenuSDK {
 		readonly enter?: boolean
 		/** Runs once the fold has finished, for hosts that unmount their body. */
 		readonly onFolded?: () => void
+		/** Runs once the element has finished opening, for hosts that measure what it holds. */
+		readonly onOpened?: () => void
 	}
 	/**
 	 * Folds an element between zero and its content height, fading the content in

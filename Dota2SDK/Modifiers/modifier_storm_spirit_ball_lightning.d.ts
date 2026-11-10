@@ -3,4 +3,5 @@ declare class modifier_storm_spirit_ball_lightning extends Modifier implements I
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

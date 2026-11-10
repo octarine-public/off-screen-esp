@@ -4,4 +4,5 @@ declare class modifier_faceless_void_timelock_freeze extends Modifier implements
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

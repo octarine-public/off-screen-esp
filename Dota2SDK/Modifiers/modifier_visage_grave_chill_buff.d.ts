@@ -7,4 +7,5 @@ declare class modifier_visage_grave_chill_buff extends Modifier implements IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

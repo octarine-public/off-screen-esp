@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_dagon extends Modifier {
+	public get IsPurgable(): boolean
 }

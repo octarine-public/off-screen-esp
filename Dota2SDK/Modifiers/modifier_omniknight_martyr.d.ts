@@ -8,4 +8,5 @@ declare class modifier_omniknight_martyr extends Modifier implements IBuff, IShi
 	public IsBuff(): this is IBuff
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

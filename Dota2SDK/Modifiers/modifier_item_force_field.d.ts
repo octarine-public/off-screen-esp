@@ -4,4 +4,5 @@ declare class modifier_item_force_field extends Modifier {
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

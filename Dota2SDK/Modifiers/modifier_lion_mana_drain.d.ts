@@ -8,4 +8,5 @@ declare class modifier_lion_mana_drain extends Modifier implements IDebuff, ICha
 	public IsChannel(): this is IChannel
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

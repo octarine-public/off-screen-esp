@@ -4,4 +4,5 @@ declare class modifier_mars_bulwark_active extends Modifier {
 	protected GetDisableTurning(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

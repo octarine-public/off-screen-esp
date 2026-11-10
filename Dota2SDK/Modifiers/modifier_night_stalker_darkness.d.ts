@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_night_stalker_darkness extends Modifier implements IBuff {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShouldDoFlyHeightVisual = true
@@ -7,4 +8,5 @@ declare class modifier_night_stalker_darkness extends Modifier implements IBuff 
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

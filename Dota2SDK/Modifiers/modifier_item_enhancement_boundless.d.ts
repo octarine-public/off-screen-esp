@@ -4,4 +4,5 @@ declare class modifier_item_enhancement_boundless extends Modifier {
 	protected GetCastRangeBonus(): [number, boolean]
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -4,4 +4,5 @@ declare class modifier_morphling_adaptive_strike extends Modifier implements IDe
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

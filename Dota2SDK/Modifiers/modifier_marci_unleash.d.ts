@@ -6,4 +6,5 @@ declare class modifier_marci_unleash extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

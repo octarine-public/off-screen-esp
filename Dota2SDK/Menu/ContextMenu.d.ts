@@ -32,6 +32,8 @@ declare namespace MenuSDK {
 		readonly trailing?: ContextMenuTrailing
 		/** Displays a switch with this state. Running the row keeps the menu open to show the change. */
 		readonly checked?: boolean
+		/** Text in a key-cap frame at the right edge of the row: the key a bind row stands for. */
+		readonly value?: string
 		readonly flyout?: (anchor: ScreenRect) => void
 		readonly hover?: boolean
 		readonly open?: boolean
@@ -62,6 +64,23 @@ declare namespace MenuSDK {
 	 * node without such a switch gets none.
 	 */
 	function HeaderDriverItems(node: NodeEntry): readonly ContextMenuItem[]
+	/**
+	 * The copy and paste rows a colour row's own menu carries, for a surface keeping one solid colour
+	 * of its own: the copy lands in the clipboard every colour row of the menu shares, and a paste
+	 * takes the first colour of whatever was copied there. Opened through {@link OpenContextMenuAt}.
+	 *
+	 * @example
+	 * onMouseDown={event => {
+	 * 	if (event.data.button === 1) {
+	 * 		OpenContextMenuAt(
+	 * 			() => ColorClipboardItems(() => tint, next => setTint(next)),
+	 * 			Number(event.data.screenX ?? 0),
+	 * 			Number(event.data.screenY ?? 0)
+	 * 		)
+	 * 	}
+	 * }}
+	 */
+	function ColorClipboardItems(color: () => Color, paste: (color: Color) => void): ContextMenuItem[]
 	/**
 	 * Opens the context menu at a screen position with rows of your own, so a
 	 * surface that is not an {@link Entry} gets the same panel and hit behaviour.

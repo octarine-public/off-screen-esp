@@ -3,4 +3,5 @@ declare class modifier_undying_decay_buff_counter extends Modifier implements IB
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

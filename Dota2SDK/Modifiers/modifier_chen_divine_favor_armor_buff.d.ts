@@ -6,4 +6,5 @@ declare class modifier_chen_divine_favor_armor_buff extends Modifier implements 
 	public IsBuff(): this is IBuff
 	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

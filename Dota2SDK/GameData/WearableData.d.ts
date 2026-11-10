@@ -9,11 +9,13 @@ declare namespace WearableData {
 	 * browser — has to raise them itself or show a body nobody recognises.
 	 *
 	 * They live in the econ file keyed by the ITEM and naming the heroes each belongs to, so the only
-	 * way to the handful of paths one hero wears is to read the lot. That is done once, lazily, and
-	 * what is kept is the few hundred paths rather than the file it was read out of.
+	 * way to the handful of paths one hero wears is to read the lot. That is done once per game build:
+	 * the few hundred paths are kept in the client's store under the build they were read from, and a
+	 * reload takes them from there instead of reading the file again.
 	 */
 	/**
 	 * The models a hero is dressed in by default, or nothing for a name the econ file does not equip.
+	 * Nothing as well for the moment after a reload while the stored set is on its way from the client.
 	 *
 	 * @example
 	 * for (const model of DefaultWearables("npc_dota_hero_juggernaut")) {

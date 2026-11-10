@@ -27,6 +27,13 @@ declare class Entity implements INativeEntity {
 	public ModelScale: number
 	public BecameDormantTime: number
 	public NotVisibleTime: number
+	/**
+	 * Game time the entity came into sight the last time it did: out of the fog, or into the game
+	 * seen. How long a player has had it in view is the time since.
+	 * @example
+	 * const inViewFor = GameState.RawGameTime - enemy.VisibleSince
+	 */
+	public VisibleSince: number
 	public RotationDifference: number
 	public PreviousRotationDifference: number
 	public HierarchyAttachName: number
@@ -61,8 +68,8 @@ declare class Entity implements INativeEntity {
 	 * @deprecated
 	 */
 	public readonly FogVisiblePosition: Vector3
-	public readonly PreviousNetworkedAngles_: number[]
-	public PositionHistoryIndex: number
+	/** The networked yaw the tick before, which the unit's turn is read against; none before its first tick. */
+	public PreviousNetworkedYaw: Nullable<number>
 	public readonly BoundingBox: AABB
 	public readonly SpawnPosition: Vector3
 	/** @private NOTE: this is internal field, use Name */
@@ -90,6 +97,19 @@ declare class Entity implements INativeEntity {
 	 * done with.
 	 */
 	public PositionsStale_: boolean
+	/**
+	 * Whether the unit stands in the view of this frame's camera, widened a little past the screen's
+	 * edges: a flag the core sets for the units it finds on screen before the frame's draw, so a
+	 * drawer skips a unit off screen without projecting it. Always false for anything but a unit;
+	 * always true while the core lists nothing (`Source2SDK.OnScreenListKnown`), so a drawer that
+	 * skips what is off screen draws everything there.
+	 * @example
+	 * if (!enemy.IsOnScreen) {
+	 * 	return
+	 * }
+	 */
+	public get IsOnScreen(): boolean
+	public set IsOnScreen(value: boolean)
 	/**
 	 * @deprecated use IsHideWorldHud
 	 */

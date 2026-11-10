@@ -151,6 +151,21 @@ declare interface WorldUtils {
 	 * @returns res: bool[count] at IOBuffer offset 0
 	 */
 	BatchCheckRayBox(): void
+	/**
+	 * Pass window_size: Vector2 at IOBuffer offset 0,
+	 *      camera_position: Vector3 at IOBuffer offset 2,
+	 *      camera_angles: QAngle at IOBuffer offset 5,
+	 *      camera_distance: float at IOBuffer offset 8,
+	 *      fov: float at IOBuffer offset 9,
+	 *      point_screen: Vector2 at IOBuffer offset 10,
+	 *      ray_screen: Vector2 at IOBuffer offset 12,
+	 *      count: float at IOBuffer offset 14,
+	 *      bboxes: Vector3[count * 2] at IOBuffer offset 15, where 0 is min, 1 is max
+	 *
+	 * @returns point: Vector3 at IOBuffer offset 0 (as ScreenToWorldFar of point_screen),
+	 *          hits: bool[count] from byte 12 (as BatchCheckRayBox of the ray through ray_screen)
+	 */
+	CursorUnder(): void
 }
 
 // Represents any Panorama panel
@@ -190,6 +205,8 @@ declare function PrepareUnitOrders(obj: {
 	Queue?: boolean
 	ShowEffects?: boolean
 	Flags?: number
+	CursorWrites?: number
+	HoldsCursor?: boolean
 }): void
 // flow deprecated
 declare function GetLatency(flow?: number): number
@@ -240,7 +257,12 @@ declare function SendMinimapPing(
 	directPing?: boolean,
 	target?: number
 ): void
-declare function WriteUserCmd(): void
+/**
+ * Queues `LatestUserCmd` for the next move message. `replaceNewest`: it takes the place of the newest
+ * command not sent yet instead of adding one, unless that one holds the cursor of an order still
+ * waiting for it; an older native adds it either way.
+ */
+declare function WriteUserCmd(replaceNewest?: boolean): void
 declare function IsShopOpen(): boolean
 declare function GetQueryUnit(): number
 /**
@@ -267,10 +289,51 @@ declare function GetEconItemHealthBarOffset(id: number): Nullable<number>
  */
 declare function ToggleBanHeroes(bannedHeroIds: number[] | false): void
 
+/**
+ * Lets the account use voice chat while its communication score is too low for it: the voice keys,
+ * the voice HUD and the party open mic stop treating it as restricted, and the party and coach voice
+ * of restricted players is played. The game server relays team voice without checking the score;
+ * the party and coach voice peers send straight is dropped by a receiver without the bypass.
+ * Off by default.
+ */
+declare function SetVoiceBanBypass(enabled: boolean): void
+
 declare function SetChangerEnabled(enabled: boolean): void
 declare function AddPrismaticGem(r: number, g: number, b: number): void
 declare function AddGreevil(quas: number, wex: number, exort: number, shadow: number, unusual: number): void
 declare function SetEmblemAttackEffectOverride(itemDefID: number): void
+/**
+ * Unlocks every style the changer's items earn with progress, as the GC unlocks an arcana's style
+ * once its strange counter reaches the unlock's value; the counters keep counting. Off by default.
+ */
+declare function SetChangerProgressUnlocked(unlocked: boolean): void
+/**
+ * Who the changer's items are shared with, among the Octarine users in the match who share theirs:
+ * bit 0 allies, bit 1 enemies; 0 shares with nobody. Shared only while the account's switch is on
+ * (SetChangerShareEnabled).
+ */
+declare function SetChangerShareSkins(audience: number): void
+/**
+ * Asks the server to turn the account's switch for sharing the changer's items on or off; it is
+ * kept with the account, off until the user or an admin turns it on. The server's answer comes as
+ * the native event ChangerShareEnabledChanged.
+ */
+declare function SetChangerShareEnabled(enabled: boolean): void
+/**
+ * The stats of a unit the changer dresses, buffs and slows included. The server times a run's
+ * playback by the move speed, and a run the changer swaps in moves the model at another pace;
+ * the hero script's activity modifiers (`jog`, `run`, `fast`, ...) are picked by the move speed,
+ * the attack speed as the game shows it (100 for no bonus) and the attack range. Without them the
+ * core picks none of those modifiers and a swapped-in run keeps the server's rate. `entityHandle`
+ * is the unit's `Handle`, so stats sent for an entity that has gone are not given to the next one
+ * at its index. A negative move speed forgets the unit's.
+ */
+declare function SetChangerUnitStats(
+	entityHandle: number,
+	moveSpeed: number,
+	attackSpeed: number,
+	attackRange: number
+): void
 
 /**
  * FileSystem API for file redirection and override management
@@ -585,4 +648,82 @@ declare namespace FogOfWar {
 
 	/** How visible the tile under the point is, from 0 in fog to 1 in full vision; the game treats above 0.2 as seen. */
 	function GetVisibilityDegree(position: Vector3): number
+
+	interface Overlay {
+		/** Hides the overlay on the world and the minimap */
+		hidden?: boolean
+		/** Multiplies how bright the overlaid area stays, 1 keeps the map's and 0 is fully dark */
+		brightness?: number
+		/** 0xAABBGGRR, takes the hue and keeps how strong the map's colour is */
+		color?: number
+	}
+
+	/**
+	 * The dark overlay over what the team cannot see. Only the look changes, units in fog stay
+	 * hidden. Anything left out keeps the map's value, called with nothing it goes back to the map's.
+	 * @example
+	 * FogOfWar.SetOverlay({ hidden: true })
+	 * FogOfWar.SetOverlay({ brightness: 1.5, color: Color.Aqua.toUint32() })
+	 */
+	function SetOverlay(overlay?: Overlay): void
+}
+
+/** The world's distance fog */
+declare namespace Fog {
+	interface Override {
+		/** False turns the fog off */
+		enabled?: boolean
+		/** 0xAABBGGRR */
+		color?: number
+		start?: number
+		end?: number
+		/** 0 to 1 */
+		maxDensity?: number
+		/** How fast the fog thickens between start and end */
+		exponent?: number
+		/** Multiplies the map's fog brightness */
+		brightness?: number
+		/** Multiplies start and end, above 1 pushes the fog further away */
+		distance?: number
+		/** Multiplies the max density, capped at 1 */
+		density?: number
+		/** 0xAABBGGRR, makes the fog two-tone: color looking along direction, this one looking away */
+		secondColor?: number
+		/** Yaw in degrees the first color faces in two-tone fog, 0 by default */
+		direction?: number
+	}
+
+	/**
+	 * Overrides the map's fog, anything left out keeps the map's value. Called with nothing it goes
+	 * back to the map's fog. Distances only apply when end is past start.
+	 * @example
+	 * Fog.SetOverride({ enabled: false })
+	 * Fog.SetOverride({ color: 0xFF402010, start: 1500, end: 4000 })
+	 * Fog.SetOverride({ color: Color.Orange.toUint32(), secondColor: Color.Aqua.toUint32(), direction: 45 })
+	 */
+	function SetOverride(fog?: Override): void
+}
+
+/** The world's sun, ambient and specular light */
+declare namespace Lighting {
+	interface Override {
+		/** 0xAABBGGRR */
+		sunColor?: number
+		/** Multiplies the map's sun brightness */
+		sunBrightness?: number
+		/** 0xAABBGGRR, the sky and the ground bounce light */
+		ambientColor?: number
+		/** Multiplies the map's ambient brightness */
+		ambientBrightness?: number
+		/** Multiplies the map's specular highlights */
+		specularBrightness?: number
+	}
+
+	/**
+	 * Overrides the map's light, anything left out keeps the map's value. Called with nothing it
+	 * goes back to the map's light.
+	 * @example
+	 * Lighting.SetOverride({ sunColor: Color.Orange.toUint32(), sunBrightness: 1.5 })
+	 */
+	function SetOverride(lighting?: Override): void
 }

@@ -10,4 +10,5 @@ declare class modifier_lina_flame_cloak extends Modifier implements IBuff, IShie
 	protected GetSpellAmplifyPercentage(): [number, boolean]
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

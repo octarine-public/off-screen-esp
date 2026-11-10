@@ -6,4 +6,5 @@ declare class modifier_doom_bringer_scorched_earth_effect extends Modifier imple
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

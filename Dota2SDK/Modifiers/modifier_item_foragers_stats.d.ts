@@ -6,4 +6,5 @@ declare class modifier_item_foragers_stats extends Modifier implements IBuff {
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

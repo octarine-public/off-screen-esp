@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_keeper_of_the_light_mana_magnifier extends Modifier {
+	public get IsPurgable(): boolean
 }

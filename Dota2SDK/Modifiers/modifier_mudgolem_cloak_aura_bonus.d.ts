@@ -6,4 +6,5 @@ declare class modifier_mudgolem_cloak_aura_bonus extends Modifier implements IBu
 	public IsBuff(): this is IBuff
 	protected GetMagicalResistanceBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

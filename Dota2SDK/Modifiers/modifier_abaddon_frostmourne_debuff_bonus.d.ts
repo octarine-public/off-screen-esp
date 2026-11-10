@@ -6,4 +6,6 @@ declare class modifier_abaddon_frostmourne_debuff_bonus extends Modifier impleme
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	/** The Frostmourne curse ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
+	protected readonly DeclaredEvents: EModifierfunction[]
 }

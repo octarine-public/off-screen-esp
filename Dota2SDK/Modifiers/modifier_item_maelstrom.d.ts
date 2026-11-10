@@ -4,4 +4,5 @@ declare class modifier_item_maelstrom extends Modifier {
 	protected GetPreAttackBonusDamage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

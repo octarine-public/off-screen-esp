@@ -7,7 +7,8 @@ declare class modifier_item_mask_of_madness_berserk extends Modifier implements 
 	public IsBuff(): this is IBuff
 	public IsDisable(): this is IDisable
 	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected GetMoveSpeedBonusConstant(): [number, boolean]
+	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
+	protected GetSlowResistanceStacking(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

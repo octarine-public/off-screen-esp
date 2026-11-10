@@ -1,4 +1,0 @@
-// AUTO-GENERATED - do not edit.
-declare class item_ancient_perseverance extends Item {
-	public GetBaseDamageForLevel(level: number): number
-}

@@ -4,4 +4,5 @@ declare class modifier_item_grove_bow extends Modifier {
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

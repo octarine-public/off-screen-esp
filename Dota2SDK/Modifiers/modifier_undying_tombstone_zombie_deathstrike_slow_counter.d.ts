@@ -6,4 +6,5 @@ declare class modifier_undying_tombstone_zombie_deathstrike_slow_counter extends
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

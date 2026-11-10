@@ -122,7 +122,9 @@ declare namespace MenuSDK {
 	function MenuFontStyle(style: "normal" | "italic", scope?: EThemeScope): "normal" | "italic"
 	/**
 	 * The family `scope` draws `language` in: the language's own face where one is shipped, the
-	 * family selected for the scope otherwise.
+	 * family selected for the scope otherwise. A language drawn in another face than the one before
+	 * it moves {@link FontEpoch}, as a family selected does: the HUD writes its face onto every
+	 * element again.
 	 */
 	function FamilyForLanguage(language: string, scope?: EThemeScope): string
 }

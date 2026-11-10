@@ -8,4 +8,5 @@ declare class modifier_kez_shodo_sai_parry extends Modifier implements IBuff, IS
 	public IsShield(): this is IShield
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

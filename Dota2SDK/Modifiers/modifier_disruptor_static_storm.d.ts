@@ -4,4 +4,5 @@ declare class modifier_disruptor_static_storm extends Modifier implements IDebuf
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsPurgable(): boolean
 }

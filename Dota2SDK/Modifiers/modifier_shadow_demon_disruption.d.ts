@@ -8,4 +8,5 @@ declare class modifier_shadow_demon_disruption extends Modifier implements IBuff
 	public IsBuff(): this is IBuff
 	public IsDisable(): this is IDisable
 	public IsShield(): this is IShield
+	public get IsPurgable(): boolean
 }

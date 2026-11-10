@@ -1,9 +1,12 @@
 // AUTO-GENERATED - do not edit.
 declare class item_magic_stick extends Item implements IManaRestore<Unit>, IHealthRestore<Unit> {
-	public RestoresAlly: boolean
-	public readonly RestoresSelf = true
-	public readonly InstantRestore = true
-	public get RestorePerCharge(): number
+	public get RestoresAlly(): boolean
+	public get RestoresSelf(): boolean
+	public get InstantRestore(): boolean
+	/** Health one charge restores. */
+	public get HealthRestorePerCharge(): number
+	/** Mana one charge restores. */
+	public get ManaRestorePerCharge(): number
 	public CanBeCasted(bonusMana?: number): boolean
 	public GetManaRestore(_target: Unit): number
 	public GetHealthRestore(_target: Unit): number

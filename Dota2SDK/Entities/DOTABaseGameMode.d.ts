@@ -1,6 +1,7 @@
 // AUTO-GENERATED - do not edit.
 declare class DOTABaseGameMode extends Entity {
 	public readonly StrengthHP: number
+	public readonly StrengthHPRegen: number
 	public readonly HUDVisibilityBits: bigint
 	public readonly AttackSpeedMax: number
 	public readonly AttackSpeedMin: number

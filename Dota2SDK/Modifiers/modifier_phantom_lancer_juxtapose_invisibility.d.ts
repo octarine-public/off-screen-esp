@@ -5,6 +5,6 @@ declare class modifier_phantom_lancer_juxtapose_invisibility extends Modifier im
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected GetSpecialValue(specialName: string, abilityName: string, level?: number): number
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

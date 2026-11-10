@@ -7,4 +7,5 @@ declare class modifier_ancient_apparition_death_rime extends Modifier implements
 	public GetTexturePath(): string
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

@@ -5,4 +5,5 @@ declare class modifier_luna_lucent_beam_damage_buff_counter extends Modifier imp
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetPreAttackBonusDamage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

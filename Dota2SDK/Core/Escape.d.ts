@@ -16,13 +16,23 @@ declare class Escape {
 	public readonly Impact: number
 	/** Seconds the turn and the walk to the spot take, as the search that found the spot counts them, so the spot is still found when the walk is due. */
 	public readonly Travel: number
+	/**
+	 * The unit a blink's cast goes at to take the unit there (`Ability.MovesOnto`): Phantom
+	 * Strike at a creep; none for one cast at a point or at nothing, or for a walk.
+	 */
+	public readonly Target?: Unit | undefined
 	constructor(
 	/** The spot to walk to. */
 	Position: Vector3, 
 	/** Game time the earliest of the threats lands. */
 	Impact: number, 
 	/** Seconds the turn and the walk to the spot take, as the search that found the spot counts them, so the spot is still found when the walk is due. */
-	Travel: number)
+	Travel: number, 
+	/**
+	 * The unit a blink's cast goes at to take the unit there (`Ability.MovesOnto`): Phantom
+	 * Strike at a creep; none for one cast at a point or at nothing, or for a walk.
+	 */
+	Target?: Unit | undefined)
 	/** Game time the walk has to start to arrive before the impact, with the order's own lag counted. */
 	public get Deadline(): number
 	/** Whether the walk has to start now: waiting one more tick would not get there in time. */

@@ -5,4 +5,5 @@ declare class modifier_courier_shield extends Modifier implements IShield {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsShield(): this is IShield
 	protected GetAvoidDamage(): [number, boolean]
+	public get IsPurgable(): boolean
 }

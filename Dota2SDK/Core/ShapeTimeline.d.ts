@@ -39,8 +39,9 @@ declare class StaticShapeTimeline implements IShapeTimeline {
 /**
  * A capsule whose front runs from `Start` along the axis at `Speed`: a hook, an arrow, a wave.
  * `ShapeAt` returns the stretch already travelled, so a target is covered once the front has
- * passed it; `ActiveAt` returns the head alone. `Passes` is false for a head that keeps
- * harming whatever is under it as it rolls, a meteor. `Flat` is true for a front as wide as
+ * passed it; `ActiveAt` returns the head alone - the whole path for one without a `Speed`,
+ * which lands whole at `Start`: a fissure, an earth splitter. `Passes` is false for a head
+ * that keeps harming whatever is under it as it rolls, a meteor. `Flat` is true for a front as wide as
  * the path that hits when it passes, a wave: the head is then the line across the path at
  * the front, as thick as one tick of travel, and what it sweeps is a rectangle with no round
  * ends, so nothing behind where the wave started counts as covered.

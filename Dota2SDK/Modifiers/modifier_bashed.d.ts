@@ -4,4 +4,5 @@ declare class modifier_bashed extends Modifier implements IDebuff, IDisable {
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
+	public get IsStunDebuff(): boolean
 }

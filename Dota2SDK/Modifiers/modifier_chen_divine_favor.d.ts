@@ -5,5 +5,6 @@ declare class modifier_chen_divine_favor extends Modifier implements IBuff {
 	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	protected GetHealthRegenConstant(): [number, boolean]
+	protected GetPhysicalArmorBonus(): [number, boolean]
 	protected UpdateSpecialValues(): void
 }

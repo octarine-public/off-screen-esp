@@ -13,4 +13,5 @@ declare class modifier_item_hurricane_pike_active_alternate extends Modifier imp
 	 * history there is none to read and the caster gets no motion.
 	 */
 	public CreateMotion(): Nullable<Motion>
+	public get IsPurgable(): boolean
 }

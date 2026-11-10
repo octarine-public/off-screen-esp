@@ -4,4 +4,5 @@ declare class modifier_omniknight_hammer_of_purity extends Modifier {
 	protected GetAttackRangeBonus(): [number, boolean]
 	protected GetPreAttackBonusDamagePure(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

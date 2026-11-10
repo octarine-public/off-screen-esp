@@ -6,5 +6,4 @@ declare class modifier_spirit_breaker_bull_rush extends Modifier implements IBuf
 	public IsBuff(): this is IBuff
 	protected GetIgnoreMoveSpeedLimit(): [number, boolean]
 	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

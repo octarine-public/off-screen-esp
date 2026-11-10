@@ -9,4 +9,5 @@ declare class modifier_chen_hand_of_god_invuln extends Modifier implements IBuff
 	protected GetAbsoluteNoDamagePure(): [number, boolean]
 	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

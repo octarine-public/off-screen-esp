@@ -6,4 +6,5 @@ declare class modifier_item_moon_shard extends Modifier {
 	protected GetAttackSpeedBonusConstant(): [number, boolean]
 	protected GetBonusNightVisionUnique(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

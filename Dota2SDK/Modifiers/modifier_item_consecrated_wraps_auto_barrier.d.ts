@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_consecrated_wraps_auto_barrier extends Modifier implements IShield {
+	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly HasVisualShield = true
 	public readonly ShieldModifierName: string

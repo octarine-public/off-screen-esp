@@ -3,4 +3,5 @@ declare class modifier_visage_summonfamiliars_timer extends Modifier implements 
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

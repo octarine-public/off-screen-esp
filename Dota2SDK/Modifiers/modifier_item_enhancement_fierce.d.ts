@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_enhancement_fierce extends Modifier {
+	public get IsPurgable(): boolean
 }

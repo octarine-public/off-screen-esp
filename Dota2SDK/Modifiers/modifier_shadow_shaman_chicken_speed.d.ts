@@ -6,4 +6,5 @@ declare class modifier_shadow_shaman_chicken_speed extends Modifier implements I
 	public IsBuff(): this is IBuff
 	public GetMoveSpeedBonusPercentage(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

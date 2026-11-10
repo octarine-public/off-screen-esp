@@ -6,4 +6,5 @@ declare class modifier_tidehunter_dead_in_the_water extends Modifier implements 
 	public IsDebuff(): this is IDebuff
 	protected GetMoveSpeedLimit(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }

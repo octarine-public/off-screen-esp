@@ -3,4 +3,5 @@ declare class modifier_omniknight_purification_recast extends Modifier implement
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
+	public get IsPurgable(): boolean
 }

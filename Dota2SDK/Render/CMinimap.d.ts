@@ -32,7 +32,7 @@ declare class CMinimap extends CHUDSection {
 	public get Roshan(): Nullable<Rectangle>
 	/** The Tormentor timer icon. */
 	public get Miniboss(): Nullable<Rectangle>
-	/** Re-derives the union rectangle the section owns. */
+	/** Re-derives every rectangle, each one moved to where the game paints it. */
 	public Refresh(): void
 	public DebugDraw(): void
 }

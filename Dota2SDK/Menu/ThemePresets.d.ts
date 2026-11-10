@@ -16,9 +16,9 @@ declare namespace MenuSDK {
 		 */
 		Border: string
 		/**
-		 * Color of the inert controls - switch tracks, slider rails, scrollbars and the dividers
-		 * beside them. Omitted means they follow {@link IThemeSeeds.Border}, which is what every
-		 * theme saved before this seed existed expects.
+		 * Color of the inert controls - switch tracks, slider rails and the dividers beside them.
+		 * Omitted means they follow {@link IThemeSeeds.Border}, which is what every theme saved
+		 * before this seed existed expects.
 		 */
 		Controls?: string
 		GlassBlur: number
@@ -102,6 +102,19 @@ declare namespace MenuSDK {
 	 * CarryThemeLogo(worn.menu, menu)
 	 */
 	function CarryThemeLogo(from: IThemeSnapshot, to: IThemeSnapshot): void
+	/** How far the side pieces of a two-colored logo are faded from its arrow, 0..1. */
+	const LogoSecondFade = 0.4
+	/**
+	 * Dresses a theme that carries no logo choice in the one its accent calls for: the original
+	 * artwork on the brand accent, whose colors it already wears, and on any other accent the arrow
+	 * in the accent over side pieces faded from it, so the brand violet never sits on a theme of
+	 * another color.
+	 *
+	 * @example
+	 * const menu = { ...preset.theme }
+	 * FitThemeLogo(menu)
+	 */
+	function FitThemeLogo(theme: IThemeSnapshot): void
 	/** A copy of a snapshot that shares nothing with it, for a store that keeps its own. */
 	function CloneThemeSnapshot(snapshot: IThemeSnapshot): IThemeSnapshot
 	function seedsEqual(a: IThemeSeeds, b: IThemeSeeds): boolean
@@ -112,8 +125,9 @@ declare namespace MenuSDK {
 	function snapshotsEqual(a: IThemeSnapshot, b: IThemeSnapshot): boolean
 	/**
 	 * A ready-made look: the menu's colors, accent, metrics and typeface, and what its glow lights
-	 * with. It is put on whole - only the user's logo choice and the surfaces that wear a theme of
-	 * their own are kept - so a preset is a finished design rather than a background to repaint.
+	 * with. It is put on whole, the logo fitted to its accent by {@link FitThemeLogo} - only the
+	 * surfaces that wear a theme of their own are kept - so a preset is a finished design rather
+	 * than a background to repaint.
 	 * The objects are shared: clone a theme before keeping it.
 	 *
 	 * @example

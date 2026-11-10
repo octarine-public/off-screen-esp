@@ -1,3 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_skeleton_king_bone_guard_summon_thinker extends Modifier {
+	public get IsPurgable(): boolean
 }

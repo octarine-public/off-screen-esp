@@ -4,4 +4,5 @@ declare class modifier_windrunner_tailwind_intrinsic extends Modifier {
 	protected GetMoveSpeedLimit(): [number, boolean]
 	protected GetMoveSpeedMaxOverride(): [number, boolean]
 	protected UpdateSpecialValues(): void
+	public get IsPurgable(): boolean
 }
