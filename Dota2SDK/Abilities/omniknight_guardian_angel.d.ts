@@ -13,7 +13,6 @@ declare class omniknight_guardian_angel extends Ability implements IBuff, IShiel
 	 * hero of ours past 700 out of the save's count (20 October 2026, data).
 	 */
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** Its guarded unit takes no physical damage. */
 	public GuardsDamageOf(type: DAMAGE_TYPES): boolean
 	public get AppliesUnitState(): bigint

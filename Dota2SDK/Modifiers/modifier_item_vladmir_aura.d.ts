@@ -2,9 +2,5 @@
 declare class modifier_item_vladmir_aura extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
-	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected GetBaseDamageOutgoingPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

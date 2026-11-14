@@ -1,9 +1,13 @@
 // AUTO-GENERATED - do not edit.
 /** Quaternion (x, y, z, w) for representing and composing 3D rotations. */
 declare class Quaternion {
+	/** The vector part's x: `axis.x * sin(angle / 2)` for a rotation about a unit axis. */
 	public x: number
+	/** The vector part's y: `axis.y * sin(angle / 2)` for a rotation about a unit axis. */
 	public y: number
+	/** The vector part's z: `axis.z * sin(angle / 2)` for a rotation about a unit axis. */
 	public z: number
+	/** The scalar part: `cos(angle / 2)` for a rotation, and 1 for the identity. */
 	public w: number
 	/**
 	 * Builds a pure quaternion from a Vector3, setting w to 0.
@@ -34,7 +38,15 @@ declare class Quaternion {
 	 * @example
 	 * new Quaternion() // identity (0, 0, 0, 1)
 	 */
-	constructor(x?: number, y?: number, z?: number, w?: number)
+	constructor(
+	/** The vector part's x: `axis.x * sin(angle / 2)` for a rotation about a unit axis. */
+	x?: number, 
+	/** The vector part's y: `axis.y * sin(angle / 2)` for a rotation about a unit axis. */
+	y?: number, 
+	/** The vector part's z: `axis.z * sin(angle / 2)` for a rotation about a unit axis. */
+	z?: number, 
+	/** The scalar part: `cos(angle / 2)` for a rotation, and 1 for the identity. */
+	w?: number)
 	/**
 	 * Squared magnitude (x^2 + y^2 + z^2 + w^2). Cheaper than Length.
 	 * @example

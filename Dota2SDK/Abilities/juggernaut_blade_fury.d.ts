@@ -6,8 +6,6 @@ declare class juggernaut_blade_fury extends Ability implements INuke {
 	 * what it hits.
 	 */
 	public IsNuke(): this is INuke
-	/** Juggernaut spins, immune to debuffs, for `duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/**
 	 * The spin strikes the enemies within `blade_fury_radius` of Juggernaut while it lasts

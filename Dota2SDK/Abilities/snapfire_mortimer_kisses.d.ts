@@ -19,12 +19,6 @@ declare class snapfire_mortimer_kisses extends Ability {
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
 	/**
-	 * The pools of firespit the globs leave: `burn_damage` a second over each `burn_interval` from
-	 * the first glob to the last pool's end (`burn_ground_duration`) and `burn_linger_duration`
-	 * after a unit leaves them - the pools burn a unit once at a time.
-	 */
-	protected BesideOverTime(out: DamageTicks, level: number): boolean
-	/**
 	 * Each glob is lobbed to the point it was aimed at and burns around it there: a circle, not a
 	 * line. Read as a line, its flight ended a radius (275) and the target's hull short of the
 	 * point - the impact expected 0.23 s before it comes (20 October 2026, demo: from 1260 the first

@@ -9,5 +9,4 @@ declare class modifier_spirit_breaker_nether_strike_vision extends Modifier {
 	 * none for a bash of any other kind.
 	 */
 	public static FromOf(target: Unit, caster: Unit, at: number): Nullable<Vector3>
-	protected OnAdded(): void
 }

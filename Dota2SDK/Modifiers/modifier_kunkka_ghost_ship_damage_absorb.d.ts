@@ -15,11 +15,8 @@ declare class modifier_kunkka_ghost_ship_damage_absorb extends Modifier implemen
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected GetIncomingDamagePercentage(): [number, boolean]
 	public get IsPurgable(): boolean
 	/** Whether any bearer is watched: a rum on it now, or one whose hangover has not come yet. */
 	public static get Watching(): boolean
@@ -30,5 +27,4 @@ declare class modifier_kunkka_ghost_ship_damage_absorb extends Modifier implemen
 	 * handed, or with no rum noted.
 	 */
 	public static TakeHeld(index: number): number
-	protected OnAdded(): void
 }

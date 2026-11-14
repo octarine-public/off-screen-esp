@@ -20,6 +20,4 @@ declare class Roshan extends Unit {
 	public get MoveSpeed(): number
 	public get RingRadius(): number
 	public get Position(): Vector3
-	protected get UnitHealthBarSize(): Vector2
-	protected get UnitHealthBarPositionCorrection(): Vector2
 }

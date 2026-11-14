@@ -11,5 +11,4 @@ declare class item_lotus_orb extends Item {
 	public get ReflectsTargetedSpells(): boolean
 	/** Its shell is a buff: no status resistance shortens it. */
 	public get IsAffectedByStatusResistance(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

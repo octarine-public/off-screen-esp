@@ -6,6 +6,4 @@ declare class ringmaster_funhouse_mirror extends Ability {
 	public get AppliesUnitState(): bigint
 	/** The invulnerability is Ringmaster's own. */
 	public get StatesOnCaster(): boolean
-	/** He is invulnerable `invuln_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

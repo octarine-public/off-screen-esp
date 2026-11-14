@@ -20,7 +20,6 @@ declare class Hero extends Unit {
 	public FocusFireActive: boolean
 	/** @internal (changed by CFocusFireChanged) */
 	public FocusFireTargetIndex_: number
-	protected readonly ReplicatingOtherHeroModel_: number
 	/** @deprecated use HeroFacetKey */
 	public get HeroFacetID(): number
 	public get BaseMoveSpeed(): number
@@ -31,7 +30,5 @@ declare class Hero extends Unit {
 	public get IsIllusion(): boolean
 	public get IsMyHero(): boolean
 	public get MaxRespawnDuration(): number
-	protected get UnitHealthBarSize(): Vector2
-	protected get UnitHealthBarPositionCorrection(): Vector2
 	public get HeroFacet(): string
 }

@@ -3,6 +3,4 @@ declare class modifier_item_essence_distiller_damage extends Modifier implements
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
-	/** The soul ticks on the unit by itself (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 }

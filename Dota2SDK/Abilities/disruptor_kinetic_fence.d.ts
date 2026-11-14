@@ -7,6 +7,5 @@
 declare class disruptor_kinetic_fence extends Ability {
 	/** How long the wall is, end to end. */
 	public get Length(): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 }

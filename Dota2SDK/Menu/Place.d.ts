@@ -8,9 +8,13 @@ declare namespace MenuSDK {
 	}
 	/** Where the card is on screen and how much of it it takes, in pixels. */
 	interface PlaceRect {
+		/** The card's left edge. */
 		readonly left: number
+		/** The card's top edge. */
 		readonly top: number
+		/** The card's width. */
 		readonly width: number
+		/** The card's height. */
 		readonly height: number
 	}
 	/**
@@ -20,13 +24,11 @@ declare namespace MenuSDK {
 	 */
 	const CardGap = 6
 	/**
-	 * Where the card's corner goes this frame, in screen pixels. Every panel of one preview lays out
-	 * from this one answer, so the stage covers the card's middle band wherever the card is standing.
-	 *
-	 * A carried card is under the hand. A docked one takes the side it was left on — or the other one
-	 * when that side has no room for it — and rides the window's top edge. A detached one stands at
-	 * its own share of the screen. All three are clamped onto the screen: neither a window dragged
-	 * across it nor a resolution the card was never placed at can put it out of reach.
+	 * Where the preview card stands this frame, in screen px, for a card `width` by `height` px at
+	 * `ratio` px per dp. A carried card follows the hand, a docked one stands level with the top of
+	 * `window` beside its side (the other side when that one has no room), and a detached one at its
+	 * saved share of the screen. Each is kept 8 dp inside the screen. Every call returns the same
+	 * object.
 	 */
 	function PlaceCard(window: WindowState, ratio: number, width: number, height: number): Readonly<PlaceRect>
 	/**

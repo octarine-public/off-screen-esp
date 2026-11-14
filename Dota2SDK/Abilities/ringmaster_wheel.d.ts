@@ -22,7 +22,6 @@ declare class ringmaster_wheel extends Ability {
 	 * 1027 its debuff came 0.83 s after the cast, 0.86 s the whole way).
 	 */
 	public get SkillShotType(): ESkillShotType
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/**
 	 * The wheel's aura where it stops, while it stands (`trap_duration`): `aura_damage` a second

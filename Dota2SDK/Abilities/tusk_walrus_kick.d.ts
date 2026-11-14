@@ -11,5 +11,4 @@ declare class tusk_walrus_kick extends Ability implements INuke {
 	public get PushLength(): number
 	/** Its target flies stunned for `air_time`. */
 	public get HitUnitState(): bigint
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

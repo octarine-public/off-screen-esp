@@ -82,18 +82,26 @@ declare namespace MenuSDK {
 		readonly listZ?: number
 	}
 	/**
-	 * The colour picker's palette on a surface of your own: the square, the hue ramp, the alpha ramp
-	 * when asked for, the typed value with its format and the saved colours, editing one solid
-	 * colour. The picker a colour row opens is this palette under its title and mode tabs; a
-	 * feature drawing it inline or in a popover of its own puts its own rows over and under it
-	 * through `header` and `footer`. It lays out {@link ColorPickerPaletteWidth} wide and
-	 * {@link ColorPickerPaletteHeight} tall besides those, and the arrow keys walk the square's point
+	 * The colour picker's palette for a surface of your own: the square, the hue ramp, the alpha
+	 * ramp with `alpha`, the typed value and the saved colours, editing one solid colour. `header`
+	 * and `footer` add rows over and under it. It lays out {@link ColorPickerPaletteWidth} wide and
+	 * {@link ColorPickerPaletteHeight} tall besides them; the arrow keys move the square's point
 	 * while the cursor is over it.
 	 *
 	 * @example
-	 * <ColorPickerPalette color={tint} onChange={next => setTint(next)} footer={<GlowSlider />} />
+	 * <MenuSDK.ColorPickerPalette
+	 * 	color={tint}
+	 * 	onChange={next => setTint(next)}
+	 * 	footer={<GlowSlider />}
+	 * />
 	 */
 	function ColorPickerPalette(props: IColorPickerPaletteProps): React.ReactElement
+	/**
+	 * Opens the colour picker of the stored colour entry `entry`, replacing one already open.
+	 * `anchor` is in dp, as `MenuSDK.ElementRect` measures an element: the picker opens under it,
+	 * or beside the settings panel of a row's gear button while one is open and there is room.
+	 */
 	function OpenColorPicker(entry: ColorEntry, anchor: ScreenRect): void
+	/** Closes the colour picker. Its edits apply as they are made, so closing keeps them. */
 	function CloseColorPicker(): void
 }

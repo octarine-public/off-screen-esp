@@ -1,17 +1,11 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * Style fragment for a flat rounded fill rendered by the analytic SDF pipeline:
-	 * the radius (and optional border) live in the shader decorator string and the
-	 * element keeps border-radius 0, so RmlUi hands the decorator a plain quad and
-	 * the shader owns the edge — per-pixel coverage AA. Colors
-	 * must be #rrggbb[aa] hex. The decorator embeds the color, so palette-reactive
-	 * fills must re-apply this fragment on render (palette changes invalidate).
-	 *
-	 * The element must not carry a class whose stylesheet rule sets or transitions
-	 * background-color: a class-change transition starts from the inline transparent
-	 * value, overwrites it every frame, and removes the inline property on
-	 * completion, leaving the rule's opaque border-radius-0 quad behind the shader.
+	 * A style that fills the element with a rounded rectangle a shader draws, antialiased per pixel:
+	 * `radius` dp on the theme's corner scale, with a `borderW` dp border in `borderColor` when that
+	 * is above 0. Colors are `#rrggbb` or `#rrggbbaa`. The color is baked into the style, so a fill
+	 * taken from the palette has to be built again on every render. The element must carry no class
+	 * whose rule sets or transitions `background-color`, which leaves a square fill behind the shape.
 	 */
 	function SdfRounded(radius: number, fill: string, borderW?: number, borderColor?: string): RmlStyle
 	/**
@@ -20,17 +14,13 @@ declare namespace MenuSDK {
 	 */
 	function ControlCornerRadius(radius: number): number
 	/**
-	 * {@link SdfRounded} for a control: a switch track and its knob, a slider's rail, fill and thumb,
-	 * a color swatch, the bar marking the selected row. It is rounded at `radius` on the theme's
-	 * corner scale like any fill, and fully round while the theme keeps its controls round.
-	 *
-	 * A round control touches its quad's edge, and a quad scaled by a transform lands on fractions
-	 * of a pixel the rasterizer cuts differently across and down - so a control that grows through
-	 * a transform passes `inset`, the pixels the quad stands out around the shape, or it flattens
-	 * into an oval as it grows.
+	 * {@link SdfRounded} for a control such as a switch, a slider or a color swatch: rounded at
+	 * `radius` on the theme's corner scale, or fully round while the theme keeps its controls round.
+	 * A control that grows through a transform passes `inset`, the pixels its quad stands out around
+	 * the shape; without it the shape flattens into an oval as it grows.
 	 *
 	 * @example
-	 * <div style={{ width: 28, height: 18, ...SdfControl(9, Theme.AccentHex) }} />
+	 * <div style={{ width: 28, height: 18, ...MenuSDK.SdfControl(9, MenuSDK.Theme.AccentHex) }} />
 	 */
 	function SdfControl(radius: number, fill: string, inset?: number): RmlStyle
 	/** {@link SdfControl} with a live theme palette color, resolved at call time. */
@@ -51,24 +41,16 @@ declare namespace MenuSDK {
 	 */
 	const SdfGlowHost: RmlStyle
 	/**
-	 * The layer a surface glows through: one quad carrying nothing but the theme's glow, so what the
-	 * surface is filled and rimmed with is left exactly as it was. `undefined` while the theme asks
-	 * for no glow, and a surface drops the element rather than drawing an empty one.
-	 *
-	 * The quad is stretched around the surface it stands in, far enough for the halo and the room its
-	 * antialiasing needs, and the shape it carves is inset by exactly as much - so the halo falls on
-	 * the surface's own edge. It stands under everything the surface holds and takes no input: it
-	 * reaches past the surface on every side, and a panel that swallowed clicks a halo's width around
-	 * itself would be bigger than it looks.
-	 *
-	 * The surface carries {@link SdfGlowHost} and must not clip its children, which would keep the
-	 * halo inside its box. A surface that does clip lights itself instead: a quad of its own placed
-	 * that far outside it, carved by {@link SdfShape} with the same glow.
+	 * The style of an element that draws `glow` around the surface holding it and nothing else, or
+	 * `undefined` while `glow`, the theme's by default, has no size. The element reaches past the
+	 * surface far enough for the halo, stands under the surface's content and takes no input. The
+	 * surface carries {@link SdfGlowHost} and must not clip its children; one that clips draws its
+	 * halo on a quad of its own with {@link SdfShape} instead.
 	 *
 	 * @example
-	 * const glow = SdfGlowLayer(PanelRadius)
+	 * const glow = MenuSDK.SdfGlowLayer(PanelRadius)
 	 * return (
-	 * 	<div style={{ ...SdfGlowHost, ...card }}>
+	 * 	<div style={{ ...MenuSDK.SdfGlowHost, ...card }}>
 	 * 		{glow !== undefined && <div style={glow} />}
 	 * 		{children}
 	 * 	</div>
@@ -78,14 +60,11 @@ declare namespace MenuSDK {
 	/** What the surface under the halo is painted, for a theme that lights it in its own color. */
 	fill?: string): Nullable<RmlStyle>
 	/**
-	 * A wedge of the same shape: `percent` of a whole turn, opening at `from` degrees and running
-	 * clockwise, with twelve o'clock as zero. What falls outside the wedge is not drawn at all, so
-	 * this is the fragment a dial or a cooldown drains through — a shape that empties by the turn
-	 * rather than by the edge, which no amount of resizing can express.
-	 *
-	 * The turn is cut by the shader as two half-planes through the middle of the quad, so the cut
-	 * carries the same per-pixel coverage the shape's own edge does and stays smooth wherever it
-	 * lands. A full hundred draws the shape whole.
+	 * A wedge of the rounded shape for a dial or a cooldown to drain through: `percent` of a full
+	 * turn, opening at `from` degrees with twelve o'clock as 0 and running clockwise; the rest is not
+	 * drawn, and 100 draws the whole shape. The cut is antialiased like the shape's edge, `radius` is
+	 * absolute rather than on the theme's corner scale, and `inset` grows the quad as in
+	 * {@link SdfShape}.
 	 */
 	function SdfSweep(radius: number, fill: string, percent: number, from?: number, inset?: number): RmlStyle
 	/**

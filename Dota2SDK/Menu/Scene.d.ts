@@ -1,16 +1,16 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * The room a stage is lit by, and how its image is graded.
-	 *
-	 * A physically-based material answers mostly to the light around it rather than to the lamps on
-	 * it: a weapon under two directionals and no room at all comes out black, however bright they
-	 * are. A subject wearing a flat material of its own — a cham — needs none of this.
+	 * The room a stage is lit by, and how its image is graded. A physically based material takes
+	 * most of its light from the room around it rather than from the lamps: under lamps and no room
+	 * a weapon comes out black. A subject in a flat material of its own, such as a cham, needs none.
 	 */
 	interface IPreviewRoom {
 		/** The cubemap, and which room out of it when the file holds an array of them. */
 		readonly environment: string
+		/** A multiplier on the room's light, 1 leaving the cubemap at its own levels. */
 		readonly exposure?: number
+		/** Which room to take out of {@link environment} when the file holds an array of them. */
 		readonly probe?: number
 		/** How much of the room stands in for irradiance on the diffuse. */
 		readonly ambient?: number
@@ -57,13 +57,10 @@ declare namespace MenuSDK {
 		 */
 		readonly parent?: string
 		/**
-		 * Wear it on the parent's skeleton rather than hang it off one bone: every bone the two share
-		 * by name is driven by the parent's, and the model needs neither a bone nor an animation of
-		 * its own.
-		 *
-		 * What a garment is. A Dota hero is a bare body and a set of default items — hair, armour, a
-		 * weapon — each skinned to his skeleton and carrying none of his animations, and each of them
-		 * hung off a bone instead would stand in its bind pose while the body under it moved.
+		 * Wear it on the parent's skeleton instead of hanging it off one bone: every bone the two
+		 * share by name follows the parent's, so the model needs no bone or animation of its own. This
+		 * is how a garment skinned to a hero's skeleton, such as his hair, moves with him. Its bounds
+		 * count toward the subject's framing, and a host that cannot merge bones leaves it off.
 		 */
 		readonly merge?: boolean
 		/** Where it stands, when it hangs off nothing. */
@@ -83,9 +80,9 @@ declare namespace MenuSDK {
 		/** One material over every submesh of it, as a `.vmat` path or as inline KV3. */
 		readonly material?: string
 		/**
-		 * Submeshes whose own material names any of these keep it. A finish is composited against a
-		 * surface, so the parts that have none — a sticker, a lens — must be left alone or the
-		 * renderer refuses them and the model comes up in stock materials.
+		 * With {@link material}, the submeshes whose own material name contains any of these
+		 * lower-case words keep their own: the parts a finish must not cover, such as a sticker or a
+		 * lens.
 		 */
 		readonly keep?: readonly string[]
 		/**
@@ -118,35 +115,28 @@ declare namespace MenuSDK {
 		 */
 		readonly span?: "height" | "widest"
 		/**
-		 * Fit the subject into a box of the stage instead of standing it at a share of the stage's
-		 * height: what is given is the room kept CLEAR on each side, as fractions of the stage, and the
-		 * subject is made as large as it fits in what is left — measured as it is posed, so a subject
-		 * turned, tipped over or wider than it is tall is sized by what it actually covers.
-		 *
-		 * This is what a page wants whenever it has furniture of its own: the room over a health bar is
-		 * a property of the CARD and the same on every stage, while the size that leaves is a property
-		 * of the subject and different for a hero, a courier and Roshan. Naming the room says the first
-		 * and lets the stage work out the second.
-		 *
-		 * It replaces {@link CPreviewScene.SetFill} and {@link lift}, which say the same thing the
-		 * other way round, and {@link span}, which is a guess at the shape this measures.
+		 * Sizes the subject to the stage instead of standing it at a share of the stage's height: the
+		 * room kept clear on each side is given, and the subject is made as large as fits in the rest,
+		 * measured as it is posed. What it carries counts up to 1.35 times the body's own half extent.
+		 * It replaces {@link CPreviewScene.SetFill}, {@link lift}, {@link span}, {@link slide} and
+		 * {@link center}.
 		 */
 		readonly fit?: IPreviewFit
 	}
 	/** The room a fitted stage keeps clear around its subject, in fractions of the stage. */
 	interface IPreviewFit {
+		/** Kept clear above the subject, as a share of the stage's height; 0 when left out. */
 		readonly top?: number
+		/** Kept clear below the subject, as a share of the stage's height; 0 when left out. */
 		readonly bottom?: number
 		/** Kept clear on BOTH sides, so the subject stays centred across the stage. */
 		readonly sides?: number
 	}
 	/**
-	 * The 3d stage behind a preview page: one GFX scene showing whichever model it is given,
-	 * published to RmlUi through its scene texture slot. The scene knows nothing of what the model
-	 * stands for — its owner names it — and only renders while the page keeps it active.
-	 *
-	 * On a host without the GFX scene manager the scene never becomes ready, so a preview built on
-	 * it simply never appears.
+	 * The 3D stage behind a preview page: one GFX scene showing the model it is given, published to
+	 * RmlUi as the texture {@link CPreviewScene.TextureId} names. It renders only while the page
+	 * keeps it active, and lets go of its scene and models 5 s after that ends. On a host without the
+	 * GFX scene manager it never becomes ready, so a preview built on it never appears.
 	 */
 	class CPreviewScene {
 		/** The vg texture slot to embed as `octarine://scene/<id>`, once a model is loaded and rendering. */
@@ -203,14 +193,8 @@ declare namespace MenuSDK {
 		 */
 		public AddModel(id: string, spec: Readonly<IPreviewModel>): void
 		/**
-		 * Takes a model off the stage. It is taken down rather than destroyed — the scene owns every
-		 * instance it makes for as long as it lives — so a page cycling through models pays for the
-		 * ones standing at once, not for every one it has shown.
-		 *
-		 * The entry is kept aside under its id rather than dropped, because the instance is IN it: a
-		 * page that puts a model back under an id it has used before stands it on the instance that id
-		 * already has. Dropped, every cycle would leave one more instance in the scene, still parented
-		 * to whatever it was wearing and still drawn.
+		 * Takes the model added under `id` off the stage. Its instance is kept under that id, so a
+		 * model added under the same id again reuses it instead of adding an instance to the scene.
 		 */
 		public RemoveModel(id: string): void
 		/**
@@ -266,14 +250,10 @@ declare namespace MenuSDK {
 		 */
 		public SetOverrideParam(name: string, value: number[]): void
 		/**
-		 * Projects the eight corners of the model's bounds into stage pixels, `x, y` pairs in the
-		 * base-then-top order the wireframe edges expect: each ring walks its square rather than
-		 * crossing it, so consecutive indices are an edge and not a diagonal.
-		 *
-		 * The corners are turned by the angles the model stands at before they are projected: roll
-		 * about its forward, then pitch about its left, then yaw about its up, the order a source
-		 * transform composes them in. A stage that poses its subject would otherwise be handed the
-		 * box of one standing straight, which wraps nothing once the model is tipped over. False until a model is shown.
+		 * Projects the eight corners of the model's bounds, turned into the pose it stands in, onto a
+		 * `width` by `height` px stage: `x, y` pairs into `out`, the four base corners first and then
+		 * the four top ones, each ring in order around its square so consecutive corners share an
+		 * edge. False until a model is shown.
 		 */
 		public ProjectCorners(width: number, height: number, out: Float64Array): boolean
 		/**
@@ -307,16 +287,10 @@ declare namespace MenuSDK {
 		 */
 		public SetModelAngles(pitch: number, yaw: number, roll?: number): void
 		/**
-		 * Where the model's ART sits relative to the subject's own middle, in its units.
-		 *
-		 * A correction, not a move. Some models are not drawn centred on the origin they stand at,
-		 * and one holding something across its chest looks further off than it is; this slides the
-		 * drawing back over the place the subject actually occupies.
-		 *
-		 * So it moves the model and NOTHING else. What is projected — the box a page draws, the room
-		 * it reserves around it — describes where the subject IS, and shifting that with the art
-		 * would move the frame right along with the body and correct nothing at all. The skeleton is
-		 * the one exception: bones are the drawing, so they travel with it.
+		 * Shifts where the model is drawn by `x, y, z` in its own units, for art that is not centred
+		 * on the origin it stands at. The framing and what {@link ProjectCorners} and
+		 * {@link ProjectPoint} answer stay on the subject; only the drawing and the bones
+		 * {@link ProjectLink} projects move with it.
 		 */
 		public SetModelOffset(x: number, y: number, z: number): void
 		/**

@@ -19,5 +19,4 @@ declare class antimage_counterspell extends Ability {
 	 * const back = antimage.Threats.some(threat => counterspell.SendsBack(threat))
 	 */
 	public SendsBack(threat: Threat): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

@@ -5,8 +5,6 @@ declare class invoker_ice_wall extends invoker_spell_extends {
 	 * `GlacierStrategy`.
 	 */
 	public get PredictionStrategy(): IPredictionStrategy
-	/** The wall stands by Quas. */
-	protected get DurationLevel(): number
 	/** How far ahead of Invoker, across his facing, the middle of the wall rises. */
 	public get PlaceDistance(): number
 	/** The wall's length from end to end, a talent or Aghanim's counted. */
@@ -24,7 +22,6 @@ declare class invoker_ice_wall extends invoker_spell_extends {
 	public get GlacierDelay(): number
 	/** How fast the glacier grows from its point along its line, in units a second. */
 	public get GlacierSpeed(): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseCastRangeForLevel(level: number): number
 	/**
 	 * The wall burns the enemies along it while it stands (`duration` by Quas): `damage_per_second`

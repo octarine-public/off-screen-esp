@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** The icons the menu ships, by name, as the asset paths an `iconPath` takes. */
 	const MenuIcons: {
 		readonly Activity: "menu/ui/activity.svg"
 		readonly Anchor: "menu/ui/anchor.svg"
@@ -166,5 +167,6 @@ declare namespace MenuSDK {
 		readonly IconSettings: "menu/icons/settings.svg"
 		readonly IconTools: "menu/icons/tools.svg"
 	}
+	/** Any one of the {@link MenuIcons} paths. */
 	type MenuIconPath = (typeof MenuIcons)[keyof typeof MenuIcons]
 }

@@ -2,25 +2,23 @@
 declare namespace MenuSDK {
 	/** The pair `useHover` drives its state from, ready to spread onto an element. */
 	interface HoverHandlers {
+		/** Turns the state on and runs the hook's `enter` when the cursor comes onto the element. */
 		readonly onMouseOver: (event: Event) => void
+		/** Turns the state off and runs the hook's `leave` when the cursor leaves the element. */
 		readonly onMouseOut: (event: Event) => void
 	}
 	/**
-	 * Hover state of a single element, as `[hovered, handlers]`.
-	 *
-	 * RmlUi dispatches `mouseover` and `mouseout` on every element that enters or leaves the
-	 * hover chain and lets both bubble. A box that has children therefore sees a child's
-	 * `mouseout` when the cursor only walks from that child onto the box itself, and a plain
-	 * handler drops the state while the cursor is still well inside. These handlers answer to
-	 * the element's own events alone — the enter/leave pair the state actually wants — and
-	 * keep one identity for the life of the component, so a re-render never rebinds them.
+	 * Hover state of one element, as `[hovered, handlers]` with the handlers spread onto it. They
+	 * answer to the element's own `mouseover` and `mouseout` alone, so a child's events, which bubble
+	 * up as the cursor walks between the child and the element, never drop the state. They keep one
+	 * identity for the life of the component, so a re-render never rebinds them.
 	 *
 	 * @example
-	 * const [hovered, hover] = useHover(
-	 * 	() => SetHoverTooltip(button, "More"),
-	 * 	() => ClearHoverTooltip(button)
+	 * const [hovered, hover] = MenuSDK.useHover(
+	 * 	() => MenuSDK.SetHoverTooltip(button, "More"),
+	 * 	() => MenuSDK.ClearHoverTooltip(button)
 	 * )
-	 * return <div ref={RefTo(button)} {...hover} style={{ opacity: hovered ? 1 : 0 }} />
+	 * return <div ref={MenuSDK.RefTo(button)} {...hover} style={{ opacity: hovered ? 1 : 0 }} />
 	 */
 	function useHover(enter?: () => void, leave?: () => void): [boolean, HoverHandlers]
 }

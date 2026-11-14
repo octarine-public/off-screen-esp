@@ -8,8 +8,6 @@
 declare class necrolyte_ghost_shroud extends Ability implements IShield {
 	public readonly ShieldModifierName = "modifier_necrolyte_ghost_shroud_active"
 	public IsShield(): this is IShield
-	/** Necrophos stays ethereal for `duration`. */
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/** Its ethereal form takes no physical damage. */
 	public GuardsDamageOf(type: DAMAGE_TYPES): boolean

@@ -16,5 +16,6 @@ declare namespace MenuSDK {
 	 * away and fading it back in on every notch.
 	 */
 	function ShowChipTooltip(anchor: HTMLElement, text: string, placement: ChipPlacement, caption?: string, elevation?: "flat" | "raised", icon?: string): void
+	/** Hides the chip tooltip; given `anchor`, only while the chip stands beside that anchor. */
 	function HideChipTooltip(anchor?: object): void
 }

@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class snapfire_firesnap_cookie extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get ProjectileAttachment(): string
 	public get CookieSpeed(): number
 	public get JumpRange(): number

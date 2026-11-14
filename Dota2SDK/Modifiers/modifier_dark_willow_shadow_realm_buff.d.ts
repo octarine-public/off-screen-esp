@@ -2,7 +2,6 @@
 declare class modifier_dark_willow_shadow_realm_buff extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	/**
 	 * Seconds until an attack from the realm hits for its full `damage`: the damage grows with the
@@ -14,8 +13,5 @@ declare class modifier_dark_willow_shadow_realm_buff extends Modifier implements
 	 * Scepter, whose attacks keep it on - each for the damage grown by then (server.dll, 7.41f).
 	 */
 	public get EndsOnAttack(): boolean
-	protected GetAttackRangeBonus(): [number, boolean]
-	protected GetPreAttackBonusDamageMagical(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

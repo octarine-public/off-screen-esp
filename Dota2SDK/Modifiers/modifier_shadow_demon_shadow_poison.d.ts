@@ -9,7 +9,6 @@ declare class modifier_shadow_demon_shadow_poison extends Modifier implements ID
 	public get DoublingStacks(): number
 	public get RawBonusDamage(): number
 	public IsDebuff(): this is IDebuff
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** The poison deals its stacks' deferred damage as it ends (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**
@@ -17,6 +16,5 @@ declare class modifier_shadow_demon_shadow_poison extends Modifier implements ID
 	 * share a further hit would add, which its ability's `TickBonus` puts on each tick.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

@@ -20,7 +20,6 @@ declare class skywrath_mage_mystic_flare extends Ability {
 	 * отзыв пользователя: «рандом каст руинит с ультой аганимной»).
 	 */
 	public get KeepsCastPoint(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/**
 	 * The flare deals its damage only as it ticks: each `damage_interval` of `duration`, the first a
 	 * tick after it lands, the last as it ends, a share of `damage` split among the enemy heroes in

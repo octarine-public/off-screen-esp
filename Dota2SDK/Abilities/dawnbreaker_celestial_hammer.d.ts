@@ -15,12 +15,6 @@ declare class dawnbreaker_celestial_hammer extends Ability {
 	 * fire trail beside it (`BesideOverTime`).
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	/**
-	 * The fire trail the hammer leaves on its way back, from when it passes a unit where it fell
-	 * (`BackAfter`): `burn_damage` a second each `burn_interval` from the first moment, for
-	 * `flare_debuff_duration`, and the second its debuff lingers after - the last as that ends.
-	 */
-	protected BesideOverTime(out: DamageTicks, level: number): boolean
 	/** Not while she spins in Starbreaker: the game drops the cast. */
 	public get CanBeUsable(): boolean
 	/**

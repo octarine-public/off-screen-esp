@@ -1,4 +1,5 @@
 // AUTO-GENERATED - do not edit.
+/** Everything dota2-sdk publishes, under one name. What is not also a global is reached only here. */
 declare const Dota2SDK: {
 	readonly Dota2SdkSurfaceHash: string
 	readonly ABILITY_TYPES: typeof ABILITY_TYPES
@@ -18,14 +19,52 @@ declare const Dota2SDK: {
 	readonly Building: typeof Building
 	readonly CCameraBounds: typeof CCameraBounds
 	readonly CChamsOverrides: typeof CChamsOverrides
+	/**
+	 * The core's chams: materials built from KV3 text, styles that lay those materials over a mesh, and
+	 * the style an entity and what it owns are drawn in. An entity is named by its `CustomNativeID`.
+	 * A chams page draws with this; a feature that only highlights a unit asks the page through
+	 * `ChamsSDK.Override`. Use the `ChamsStylesSDK` instance.
+	 * @example
+	 * const flat = ChamsStylesSDK.CreateMaterial("materials/octarine/flat.vmat", kv3)
+	 * ChamsStylesSDK.SetStyle(1, [flat], [])
+	 * ChamsStylesSDK.SetEntityStyle(unit.CustomNativeID, 1, Color.Red.toUint32())
+	 */
+	readonly CChamsStyles: {
+		new (): CChamsStyles
+		readonly prototype: CChamsStyles
+	}
+	/**
+	 * The core's changer: the switches of its inventory changer, the items it makes on request and
+	 * the model the map's trees are drawn with. Every call can be made anywhere: the core carries it
+	 * to the game's main thread. Use the `ChangerSDK` instance.
+	 * @example
+	 * ChangerSDK.SetEnabled(true)
+	 * ChangerSDK.AddPrismaticGem(255, 0, 128)
+	 */
+	readonly CChanger: {
+		new (): CChanger
+		readonly prototype: CChanger
+	}
+	readonly CCustomGameEvents: typeof CCustomGameEvents
 	readonly CCustomHeroPickRules: typeof CCustomHeroPickRules
 	readonly CDotaSafeMode: typeof CDotaSafeMode
+	readonly CFileSystem: typeof CFileSystem
 	readonly CGameManager: typeof CGameManager
 	readonly CGameRules: typeof CGameRules
 	readonly CHumanizer: typeof CHumanizer
-	readonly CNotificationsSDK: typeof CNotificationsSDK
+	readonly CNotificationsSDK: {
+		new (): CNotificationsSDK
+		readonly prototype: CNotificationsSDK
+	}
 	readonly COrderPolicy: typeof COrderPolicy
-	readonly CPanelTree: typeof CPanelTree
+	/**
+	 * Owns the panel cache: the window roots, the interned CSS class symbols, and the two epochs
+	 * that decide when a cached lookup and a cached measurement have gone stale.
+	 */
+	readonly CPanelTree: {
+		new (): CPanelTree
+		readonly prototype: CPanelTree
+	}
 	readonly CPlayerResource: typeof CPlayerResource
 	readonly CTargetReaction: typeof CTargetReaction
 	readonly CTurboHeroPickRules: typeof CTurboHeroPickRules
@@ -34,6 +73,8 @@ declare const Dota2SDK: {
 	readonly CastPredictor: typeof CastPredictor
 	readonly CastTimeline: typeof CastTimeline
 	readonly ChamsSDK: typeof ChamsSDK
+	readonly ChamsStylesSDK: typeof ChamsStylesSDK
+	readonly ChangerSDK: typeof ChangerSDK
 	readonly CollisionFlag: typeof CollisionFlag
 	readonly CollisionTeam: typeof CollisionTeam
 	readonly CollisionTypes: typeof CollisionTypes
@@ -42,6 +83,7 @@ declare const Dota2SDK: {
 	readonly CourierState: typeof CourierState
 	readonly Creep: typeof Creep
 	readonly CreepPathCorner: typeof CreepPathCorner
+	readonly CustomGameEventsSDK: typeof CustomGameEventsSDK
 	readonly CustomHeroPickRules: Nullable<CCustomHeroPickRules>
 	readonly CustomNetTables: typeof CustomNetTables
 	readonly DAMAGE_TYPES: typeof DAMAGE_TYPES
@@ -69,7 +111,68 @@ declare const Dota2SDK: {
 	readonly DOTA_UNIT_TARGET_TEAM: typeof DOTA_UNIT_TARGET_TEAM
 	readonly DOTA_UNIT_TARGET_TYPE: typeof DOTA_UNIT_TARGET_TYPE
 	readonly DamageHits: typeof DamageHits
-	readonly DamageTicks: typeof DamageTicks
+	/**
+	 * The ticks of the damage over time an ability lays on an enemy (`Ability.DamageOverTime`): one
+	 * every `Interval` seconds, the first `Delay` seconds after it lands, until `Duration` seconds
+	 * after - a tick due right as it ends too while `AtEnd` - each `Flat` damage plus `OfHealth` of
+	 * the unit's health then and `OfMaxHealth` of its maximum, before what the unit takes of it, no
+	 * more than `Count` of them when it is given (Dismember's `ticks`); and `Final` damage as it ends -
+	 * Phantom's Embrace popping. A tick rising with the time since the first - Nethertoxin - reaches
+	 * `FlatMax` `RampTime` seconds after it. One dealt only `WhileInArea` - Rot, Macropyre, Pulse
+	 * Nova - reaches a unit while it stays inside and `Linger` seconds after it walks out or the area
+	 * ends - the time the debuff an aura leaves on it lasts. One `StatusResisted` lasts shorter by the
+	 * target's status resistance - Viper Strike, Doom; Poison Touch does not - with fewer ticks, or
+	 * with every tick closer together when it `KeepsTicks` (Doom). A tick of one dealt `PerStack` -
+	 * Poison Attack, Burning Spear - is as many times itself as the modifier has stacks; one whose
+	 * renewal does not move its ticks keeps their time (`PhaseKept`: Poison Attack, Corrosive Skin) -
+	 * the modifier's time renewed, theirs not known once it runs. One `PerFrame` strikes on the
+	 * first frame once `Interval` has passed since its last - Rot thinks every frame - so a
+	 * frame later at most each time, and no tick of it is due at a known time once it runs. A cast
+	 * laying two of them - Firestorm's waves and the burn each lays - fills the second in the rule
+	 * `Beside` the first. One dealt only `WhileMoving` - Rupture - strikes a unit only as it walks:
+	 * `OfMoveSpeed` of its speed a tick, none at the lowest roll, the unit free to stand. One whose
+	 * ticks land at `Random` - Freezing Field's explosions - strikes with each by its chance at the
+	 * unit (`Ability.TickChance`): only a sure one at the lowest roll, its share of each at the
+	 * average, each that may at the highest. One laid `After` some seconds - a Crystal Clone
+	 * shattering, the Frostbite of a Scepter's Freezing Field - counts its `Delay` and `Duration` from
+	 * then, the target's status resistance cutting the `Duration` alone. A tick of one that grows -
+	 * Sun Ray - is itself and `Growth` of itself for each second since the ticks began. One bursting
+	 * every `BurstEvery` seconds after it is laid - Maledict - deals with each burst, before the tick
+	 * due with it, `OfLost` of the health the unit lost since: from its health as it was laid
+	 * (`HealthLaid`; its health as the ticks begin when it is not known), less what it regenerates
+	 * meanwhile; none while it has more. One whose ticks each deal their own - Croak of Genius's echo,
+	 * its shares running out - has them one by one from the first in `Amounts`, none past them. One
+	 * taking its damage off the unit's health as it is - Prophet's Pendulum's held damage - is a
+	 * `Removal`: no resistance or amplification, each tick rounded up as the game takes it, and on the
+	 * unit that holds it too, an ally of the ability's owner, none it may be rid of; one setting the
+	 * unit's health - the rum's hangover - `SetsHealth` too: each tick as it is, and never below 1
+	 * health, so it never kills. A tick of a `Volley` of hits landing together - the Serpent Wards' -
+	 * is as many blows, each taken, blocked and rounded up on its own.
+	 *
+	 * What is not known of a tick - when it lands, whether the unit walks out or dispels it - the roll
+	 * a reader asks for settles (docs/damage-over-time.md in aio): the lowest
+	 * (`ATTACK_DAMAGE_STRENGTH.DAMAGE_MIN`) counts what surely lands - a tick by the frame after it is
+	 * due, a tick by frames at its longest, none the unit may yet be rid of (`KeptUntil`); the average
+	 * counts every tick when it is due; the highest, every tick as soon as it may land. The ability
+	 * fills it in place, from nothing (`Reset`); its cast's forecast (`Ability.DamageUntil`) and the
+	 * modifier it lays (`Modifier.DamageUntil`) read it.
+	 * @example
+	 * const ticks = new DamageTicks()
+	 * if (frostbite.DamageOverTime(ticks, frostbite.Level)) {
+	 * 	const now = GameState.RawGameTime
+	 * 	const dealt = ticks.Deal(frostbite, enemy, now, now + ticks.Duration, -Infinity, now + 1)
+	 * }
+	 */
+	readonly DamageTicks: {
+		new (): DamageTicks
+		readonly prototype: DamageTicks
+		/**
+		 * How many of the ticks due every `interval` from game time `first` on are in by game time
+		 * `time`: each lands on the first server tick it is due by (`LandsAt`), so those due by then,
+		 * or within `dealtWithin` after it.
+		 */
+		DueBy(first: number, interval: number, time: number): number
+	}
 	readonly DataTeamPlayer: typeof DataTeamPlayer
 	readonly DeathProphetExorcismSpirit: typeof DeathProphetExorcismSpirit
 	readonly DotaMap: typeof DotaMap
@@ -115,6 +218,7 @@ declare const Dota2SDK: {
 	readonly ExecuteOrder: typeof ExecuteOrder
 	readonly FakeUnit: typeof FakeUnit
 	readonly FakeUnits: typeof FakeUnits
+	readonly FileSystemSDK: typeof FileSystemSDK
 	readonly Filler: typeof Filler
 	readonly Flow: typeof Flow
 	readonly FogController: typeof FogController
@@ -128,11 +232,13 @@ declare const Dota2SDK: {
 	readonly GameRules: typeof GameRules
 	readonly GameSleeper: typeof GameSleeper
 	readonly GameState: typeof GameState
-	readonly GetPositionHeight: (loc: Vector2 | Vector3) => number
+	readonly GatheringModifier: typeof GatheringModifier
+	GetPositionHeight(loc: Vector2 | Vector3): number
 	readonly GridNav: typeof GridNav
 	readonly GridNavCellFlags: typeof GridNavCellFlags
 	readonly HUDPanel: typeof HUDPanel
 	readonly HallOfFame: typeof HallOfFame
+	readonly HeightMap: typeof HeightMap
 	readonly Hero: typeof Hero
 	readonly HitChance: typeof HitChance
 	readonly Humanizer: typeof Humanizer
@@ -145,6 +251,7 @@ declare const Dota2SDK: {
 	readonly Input: typeof InputManager
 	readonly InputEventSDK: typeof InputEventSDK
 	readonly InputManager: typeof InputManager
+	readonly InvokerOrbInstance: typeof InvokerOrbInstance
 	readonly Item: typeof Item
 	readonly LaneCreepSpawner: typeof LaneCreepSpawner
 	readonly LaneSelection: typeof LaneSelection
@@ -206,8 +313,10 @@ declare const Dota2SDK: {
 	readonly PredictionSDK: typeof PredictionSDK
 	readonly PredictionTelemetry: typeof PredictionTelemetry
 	readonly PredictionTuning: typeof PredictionTuning
+	readonly Projectile: typeof Projectile
 	readonly ProjectileManager: typeof ProjectileManager
-	readonly ProjectileParticle: (...paths: string[]) => (constructor: Constructor<IThreatAbility>) => void
+	/** Declares the particles the class's projectile flies as, so a projectile the game announces is matched to it. */
+	ProjectileParticle(...paths: string[]): (constructor: Constructor<IThreatAbility>) => void
 	readonly QuickBuySlot: typeof QuickBuySlot
 	readonly RagdollManager: typeof RagdollManager
 	readonly ReachableRegion: typeof ReachableRegion
@@ -227,7 +336,13 @@ declare const Dota2SDK: {
 	readonly SPELL_DISPELLABLE_TYPES: typeof SPELL_DISPELLABLE_TYPES
 	readonly SPELL_IMMUNITY_TYPES: typeof SPELL_IMMUNITY_TYPES
 	readonly SampledShapeTimeline: typeof SampledShapeTimeline
-	readonly SetMenuScale: (value: number) => void
+	/**
+	 * Scales menu layout and fonts. Folded into the native dp ratio, so the menu rasterizes at the
+	 * effective size rather than being resampled.
+	 * @example
+	 * SetMenuScale(1.25)
+	 */
+	SetMenuScale(value: number): void
 	readonly ShieldLedger: typeof ShieldLedger
 	readonly Shop: typeof Shop
 	readonly Shrine: typeof Shrine
@@ -247,12 +362,27 @@ declare const Dota2SDK: {
 	readonly TempTree: typeof TempTree
 	readonly Thinker: typeof Thinker
 	readonly Threat: typeof Threat
-	readonly ThreatModifier: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
-	readonly ThreatModifierEnd: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
-	readonly ThreatParticle: (path: string, roles?: IParticleRoles) => (constructor: Constructor<IThreatAbility>) => void
-	readonly ThreatSign: typeof ThreatSign
+	/** Declares the modifiers a cast of the class puts on the unit or thinker where its effect lands. */
+	ThreatModifier(...names: string[]): (constructor: Constructor<IThreatAbility>) => void
+	/**
+	 * Declares the modifiers a cast of the class puts on a unit it spawned, whose end is when its
+	 * effect lands: Supernova's egg bursts as `modifier_phoenix_sun` runs out.
+	 */
+	ThreatModifierEnd(...names: string[]): (constructor: Constructor<IThreatAbility>) => void
+	/** Declares the particle a cast of the class shows and the roles of its control points. */
+	ThreatParticle(path: string, roles?: IParticleRoles): (constructor: Constructor<IThreatAbility>) => void
+	/**
+	 * A sign of a cast that keeps following the game after its threat is in the store: the caster
+	 * turning before the effect goes off, a unit flying as the projectile, a particle getting its
+	 * control points. The store updates every sign each tick and lets go of one that has nothing
+	 * left to follow; a sign that learns its effect is off the table invalidates its threat.
+	 */
+	readonly ThreatSign: {
+		readonly prototype: ThreatSign
+	}
 	readonly ThreatStore: typeof ThreatStore
-	readonly ThreatUnit: (...names: string[]) => (constructor: Constructor<IThreatAbility>) => void
+	/** Declares the units a cast of the class spawns where its effect lands, such as a thinker. */
+	ThreatUnit(...names: string[]): (constructor: Constructor<IThreatAbility>) => void
 	readonly TickSleeper: typeof TickSleeper
 	readonly TonemapController2: typeof TonemapController2
 	readonly Tower: typeof Tower

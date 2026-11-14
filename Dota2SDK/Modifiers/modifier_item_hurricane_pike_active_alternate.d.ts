@@ -1,5 +1,10 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_hurricane_pike_active_alternate extends Modifier implements IBuff, IDisable, IDebuff {
+	/**
+	 * Seconds the push of a cast at an enemy takes, the caster's and the enemy's alike. The key
+	 * values name no duration for it: the game moves both for six ticks, a seventh at times.
+	 */
+	public static readonly EnemyPushTime = 0.2
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly DebuffModifierName: string

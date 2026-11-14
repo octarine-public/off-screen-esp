@@ -9,7 +9,6 @@ declare class jakiro_macropyre extends Ability {
 	 * first is not burnt at all.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/** The fire lies down its whole path at once: a line without a projectile. */
 	public get SkillShotType(): ESkillShotType

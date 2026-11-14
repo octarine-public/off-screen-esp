@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class primal_beast_pulverize extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * Where `unit`, taken up by `beast` at the game time `since`, is until `until`, the channel's

@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class dragon_knight_dragon_tail extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get ProjectileAttachment(): string
 	public GetBaseDamageForLevel(level: number): number
 	/**

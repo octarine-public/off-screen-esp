@@ -8,6 +8,5 @@ declare class invoker_cold_snap extends invoker_spell_extends implements INuke {
 	public get AbilityDamage(): number
 	public IsNuke(): this is INuke
 	public GetBaseDamageForLevel(level: number): number
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 }

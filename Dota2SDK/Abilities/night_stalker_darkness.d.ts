@@ -8,5 +8,4 @@ declare class night_stalker_darkness extends Ability implements IBuff {
 	 * begins. Waiting for his attack range, it went after Void by day (20 October 2026, demo).
 	 */
 	public get IsCombatBuff(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

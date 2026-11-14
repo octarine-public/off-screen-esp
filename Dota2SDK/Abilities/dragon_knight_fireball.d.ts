@@ -9,5 +9,4 @@ declare class dragon_knight_fireball extends Ability {
 	 * ends.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

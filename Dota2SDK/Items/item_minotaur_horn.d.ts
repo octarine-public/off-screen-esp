@@ -5,8 +5,6 @@
  * damage of a spell that does not pierce it while it stands.
  */
 declare class item_minotaur_horn extends Item implements IShield {
-	/** The immunity lasts `duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public readonly ShieldModifierName = "modifier_minotaur_horn_immune"
 	/** Its debuff immunity goes on its caster: a shield of the caster's side. */
 	public IsShield(): this is IShield

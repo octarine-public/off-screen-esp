@@ -1,11 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare class zuus_cloud extends Ability implements INuke {
-	/** The cloud strikes with Lightning Bolt: it holds for the bolt's ministun. */
-	protected get HoldingAbility(): Nullable<string>
 	public IsNuke(): this is INuke
 	public GetBaseCastRangeForLevel(_level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** The cloud lands nothing at once: its strikes are its ticks (`DamageOverTime`). */
 	public GetBaseDamageForLevel(_level: number): number
 	/**

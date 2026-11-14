@@ -11,6 +11,12 @@ declare namespace MenuSDK {
 	 * </RowSurface.Provider>
 	 */
 	const RowSurface: React.Context<StyleColor>
+	/**
+	 * The colour of the mark beside a control's name, `""` for none. A mark colour token set on the
+	 * control comes first. Otherwise a control saved to the config is marked "new" while its
+	 * `FirstTime` holds and `MenuFlags.DrawMarksNew` is on, and "changed" while it, or anything shown
+	 * with it, differs from its default and `MenuFlags.DrawMarksNonDefault` is on.
+	 */
 	function MarkColorOf(entry: Entry): string
 	/**
 	 * Answers a click on a locked control: a Safe mode lock offers to release it, any other lock
@@ -51,8 +57,22 @@ declare namespace MenuSDK {
 		entry: Entry
 		children?: React.ReactNode
 	}): React.ReactElement | null
+	/**
+	 * The entries of `children` that draw a row: the shown ones and a hidden one still folding away,
+	 * without `skip` and the entries that ride another row. Pass the node's own `children` array, so
+	 * an entry shown since the last call folds in.
+	 * @example
+	 * node.CustomPage = () =>
+	 * 	MenuSDK.VisibleRows(node.entry.children).map((row, i) => MenuSDK.RenderControl(row, i > 0))
+	 */
 	function VisibleRows(children: Entry[], skip?: Entry): Entry[]
+	/** Closes the settings panel opened from a row's gear button, if one is open. */
 	function CloseSubSettings(): void
+	/**
+	 * The row of a note or a section header. A header is its name on a heading line; a note is its
+	 * text in muted italics, with its status at the right and, when it has an action, a button that
+	 * a click anywhere on the row runs.
+	 */
 	function DescriptionRow(props: {
 		entry: DescriptionEntry
 		divider: boolean
@@ -68,23 +88,46 @@ declare namespace MenuSDK {
 		scope?: EThemeScope
 		style?: RmlStyle
 	}): React.ReactElement
+	/**
+	 * The switch of a switch control without its row, on while `entry` is on. It does not react to a
+	 * click; the host flips the value itself. Drawn in the muted accent while the control is locked
+	 * or a switch above it is off.
+	 */
 	function ToggleTrack(props: {
 		entry: ToggleEntry
 		style?: RmlStyle
 	}): React.ReactElement
+	/**
+	 * The row of a switch: its name and the switch, flipped by a click anywhere on the row. Paired
+	 * colour pickers show as swatches beside the switch while it is on.
+	 */
 	function ToggleRow(props: {
 		entry: ToggleEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of a slider: its name, the value field and the rail, with the slider's note under it.
+	 * A left-button press anywhere on the row moves the value to the pointer and drags it; a number
+	 * typed into the field is kept in range and rounded like any other set.
+	 */
 	function SliderRow(props: {
 		entry: SliderEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The rail of a slider control without its row, ticks and zones included. A left-button press
+	 * moves the value of `entry` to the pointer and drags it.
+	 */
 	function SliderTrack(props: {
 		entry: SliderEntry
 	}): React.ReactElement
+	/**
+	 * The row of a dropdown: its name and a chip with the selected option; a click on the row opens
+	 * the list of options. In the `"cards"` layout, with option icons set, the options stand under
+	 * the row as picture cards instead.
+	 */
 	function DropdownRow(props: {
 		entry: DropdownEntry
 		divider: boolean
@@ -98,31 +141,53 @@ declare namespace MenuSDK {
 	function PresetsHeader(props: {
 		entry: PresetsEntry
 	}): React.ReactElement
+	/**
+	 * The row of a preset selector: its name and a chip with the selected preset; a click on the row
+	 * opens or closes the presets panel.
+	 */
 	function PresetsRow(props: {
 		entry: PresetsEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of a multiselect: its name and a chip naming the ticked options, "None", "All", or the
+	 * first few and how many more; a click on the row opens the list to tick them in.
+	 */
 	function MultiSelectRow(props: {
 		entry: MultiSelectEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of a key bind: its name and a chip with the bound key, `···` while unbound; a click
+	 * opens the panel that takes a new key. A bind with a `defaultMode` also shows a Hold/Toggle
+	 * button beside the key that switches between the two.
+	 */
 	function KeybindRow(props: {
 		entry: KeybindEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of a button control: the button spans the row with the control's name and icon on it,
+	 * and a click runs its callbacks unless it is locked.
+	 */
 	function ButtonRow(props: {
 		entry: ButtonEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of a colour picker: its name and a swatch of its colour; a click on the row opens the
+	 * picker.
+	 */
 	function ColorSwatch(props: {
 		entry: ColorEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/** The row of a text control: its name and a text field 180 dp wide. */
 	function TextInputRow(props: {
 		entry: TextEntry
 		divider: boolean
@@ -138,17 +203,34 @@ declare namespace MenuSDK {
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement
+	/**
+	 * The row of an image selector: its name, and its images as tiles under it. A click turns a tile
+	 * on or off, and a draggable selector is reordered by dragging. One with a catalogue shows only
+	 * the chosen tiles, which a click drops, and a tile that opens the catalogue.
+	 */
 	function ImageSelectorRow(props: {
 		entry: ImagesEntry
 		divider: boolean
 		nested?: boolean
 	}): React.ReactElement | null
+	/**
+	 * The row the menu draws for `entry`, picked by its kind, folding in and out as the control is
+	 * shown and hidden. `divider` draws a line above it; `nested` sets the name in the lighter weight
+	 * of the rows inside a node.
+	 * @example
+	 * node.CustomPage = () => [size, glow].map((row, i) => MenuSDK.RenderControl(row.entry, i > 0))
+	 */
 	function RenderControl(entry: Entry, divider?: boolean, nested?: boolean): React.ReactNode
 }
 
 declare namespace MenuSDK {
 	/** The corner every plain surface is carved with, and the one its glow follows. */
 	const SurfaceRadius = 8
+	/**
+	 * The style of a {@link Surface} without glow: a column on the theme's card background with a
+	 * 1 dp panel border and {@link SurfaceRadius} corners. `elevation: "raised"` adds a drop shadow,
+	 * and the second argument is merged over the result.
+	 */
 	const surfaceStyle: StyledFactory<{
 		elevation: {
 			flat: {}
@@ -157,6 +239,11 @@ declare namespace MenuSDK {
 			}
 		}
 	}>
+	/**
+	 * The style of a {@link Row}: 32 dp tall with 10 dp side padding and its items centred
+	 * vertically. `state: "hovered"` fills it with the row hover colour, and `"disabled"` dims it to
+	 * 40% and lets the pointer through.
+	 */
 	const rowStyle: StyledFactory<{
 		state: {
 			normal: {}
@@ -169,6 +256,10 @@ declare namespace MenuSDK {
 			}
 		}
 	}>
+	/**
+	 * The style of {@link Text}: 13 dp in the theme's primary text colour, or its muted or accent
+	 * colour with `tone: "muted"` or `"accent"`.
+	 */
 	const textStyle: StyledFactory<{
 		tone: {
 			normal: {}
@@ -181,12 +272,11 @@ declare namespace MenuSDK {
 		}
 	}>
 	/**
-	 * The theme's glow as the element it is drawn through, for a surface that hosts one: nothing at
-	 * all while the theme asks for no glow. It goes first among the surface's children, and the
-	 * surface carries {@link SdfGlowHost}. `fill` is what the surface under the halo is painted, so
-	 * an adaptive theme lights it in its own color; without it the halo keeps the theme's one color.
-	 * It follows the glow on its own - a walking color moves it several times a second - so the
-	 * surface hosting it is never rendered for that.
+	 * The theme's glow around a surface, as an element placed first among the surface's children;
+	 * the surface carries {@link SdfGlowHost}. Nothing renders while the theme has no glow. `fill` is
+	 * the colour the surface is painted, for a theme that colours its halo after it; without it the
+	 * halo takes the glow's own colour. It re-renders by itself when the glow changes, so the surface
+	 * does not have to.
 	 *
 	 * @example
 	 * <div style={{ ...SdfGlowHost, ...card }}>
@@ -199,13 +289,10 @@ declare namespace MenuSDK {
 		fill?: string
 	}): React.ReactElement | null
 	/**
-	 * A card of the theme's own material. `glow` lights it with the theme's glow, which a surface
-	 * standing on its own wants and one in a list of them does not - the glow says "this is a thing
-	 * of its own", and a column of glowing cards says nothing at all.
-	 *
-	 * A lit card lays out as a block with its rows in a column of their own: the glow layer is an
-	 * absolutely placed quad, and a flex parent would seat it as a zero-height first row — the halo
-	 * then radiates from a line at the top instead of hugging the card.
+	 * A card in the theme's card background with a 1 dp panel border, {@link SurfaceRadius} corners
+	 * and its children in a column; `elevation: "raised"` adds a drop shadow. `glow` adds the theme's
+	 * glow, meant for a card standing alone rather than one of a list. A glowing card is a block with
+	 * the column inside it, so a `display` in `style` is overridden there.
 	 */
 	function Surface(props: {
 		elevation?: "flat" | "raised"
@@ -213,6 +300,10 @@ declare namespace MenuSDK {
 		style?: RmlStyle
 		children?: React.ReactNode
 	}): React.ReactElement
+	/**
+	 * A row styled by {@link rowStyle} in `state`, with `style` merged over it and the mouse handlers
+	 * passed to its element.
+	 */
 	function Row(props: {
 		state?: "normal" | "hovered" | "disabled"
 		style?: RmlStyle
@@ -221,6 +312,7 @@ declare namespace MenuSDK {
 		onMouseOut?: (event: Event) => void
 		children?: React.ReactNode
 	}): React.ReactElement
+	/** A block of text styled by {@link textStyle} in `tone`, with `style` merged over it. */
 	function Text(props: {
 		tone?: "normal" | "muted" | "accent"
 		style?: RmlStyle
@@ -243,18 +335,11 @@ declare namespace MenuSDK {
 		children?: React.ReactNode
 	}): React.ReactElement
 	/**
-	 * Single-line label whose overflow fades out through the text and, while `active`, scrolls the line
-	 * so the whole of it can be read where it stands: it waits at its head, travels far enough to bring
-	 * the tail in, waits there and comes back, for as long as the row asks. A line that fits is left
-	 * alone and costs nothing — the row it sits in is what says when to read, so a preset row scrolls
-	 * its own name under the cursor instead of standing a panel over it.
-	 *
-	 * The travel is one transform written by a tween, so nothing around the label lays out again while
-	 * it reads, and it is snapped to whole screen pixels — a line resting between two of them is what
-	 * makes glyphs shimmer as they move. The renderer dissolves the glyphs themselves into both edges,
-	 * over a stretch that grows with how far the line runs past each one, so the surface behind the
-	 * label shows through whatever it is painted at the moment, and the fades follow the travel: the
-	 * head's comes up as the line leaves, the tail's goes out as it arrives.
+	 * A one-line label whose overflow fades out through the glyphs at its clipped edges and, while
+	 * `active`, scrolls so the whole line can be read: it waits at the start, travels until the end
+	 * is in view, waits and travels back, until `active` goes false and it returns home. A line that
+	 * fits does not move. The travel is a transform snapped to whole pixels, so nothing around the
+	 * label lays out again while it moves.
 	 *
 	 * @example
 	 * <ScrollLabel active={hovered} style={{ flex: "0 1 auto" }}>
@@ -268,6 +353,11 @@ declare namespace MenuSDK {
 		style?: RmlStyle
 		children?: React.ReactNode
 	}): React.ReactElement
+	/**
+	 * The image at `path`, `size` dp square (16 by default) unless `width` or `height` say otherwise,
+	 * coloured by `tint`, with `round` dp corners. A raster image is resampled to its on-screen pixel
+	 * size where the host can do it; an empty `path` renders nothing.
+	 */
 	function Icon(props: {
 		path: string
 		size?: number
@@ -282,10 +372,9 @@ declare namespace MenuSDK {
 
 declare namespace MenuSDK {
 	/**
-	 * The world drawing surface for one script, created on first use and kept for the session.
-	 * Draw from a `Draw` listener with the immediate calls, or set up retained nodes once and
-	 * let them follow their anchors. On a host without an engine — the standalone menu — every
-	 * call is a quiet no-op.
+	 * The world drawing surface registered under `key`: the same layer on every call with that key
+	 * until it is destroyed. Draw with the immediate calls from a `Draw` listener, or set up retained
+	 * nodes once and let them follow their anchors. On a host without a game engine nothing is drawn.
 	 */
 	function CreateWorldLayer(key: string): IWorldLayer
 	/**

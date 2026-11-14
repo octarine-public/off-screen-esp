@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class lion_impale extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public get SkillshotRange(): number
 	public get IsConeShaped(): boolean

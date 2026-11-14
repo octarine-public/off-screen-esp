@@ -7,5 +7,4 @@ declare class oracle_rain_of_destiny extends Ability {
 	 * a unit walks out.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

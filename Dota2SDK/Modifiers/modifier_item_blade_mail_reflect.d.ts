@@ -3,8 +3,6 @@ declare class modifier_item_blade_mail_reflect extends Modifier implements IBuff
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string
-	/** The game acts on the hit in the item's passive; the active stands just while it returns. */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	/**
@@ -14,5 +12,10 @@ declare class modifier_item_blade_mail_reflect extends Modifier implements IBuff
 	 * its source.
 	 */
 	public DamageReturnedTo(source: Unit, raw: number, damageType: DAMAGE_TYPES): number
+	/**
+	 * What `source` takes of `returned` damage of `damageType` that Damage Return on `bearer` sends
+	 * back at it: through `source`'s resistances, the bearer its source.
+	 */
+	public static Through(bearer: Unit, source: Unit, returned: number, damageType: DAMAGE_TYPES): number
 	public get IsPurgable(): boolean
 }

@@ -9,7 +9,6 @@ declare class disruptor_static_storm extends Ability {
 	 * `k` times `PulseShare` over `pulses`, rising evenly; none after a unit walks out.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(_level: number): number
 	public get AppliesUnitState(): bigint
 }

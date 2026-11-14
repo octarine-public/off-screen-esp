@@ -23,13 +23,6 @@ declare class magnataur_skewer extends Ability implements INuke {
 	 */
 	public GetRawDamage(target: Unit): number
 	/**
-	 * A hit drags the unit with Magnus to where the charge ends: a pull, at most its range at its
-	 * pace - the unit's walk taken meanwhile.
-	 */
-	protected FillEffects(out: AbilityEffects): void
-	/** On `target` the same: the drag is no hold its status resistance shortens. */
-	protected FillEffectsOn(out: AbilityEffects, _target: Unit): void
-	/**
 	 * Where a charge from `from` cast at `toward` ends, into `out`: at `toward`, or `CastRange`
 	 * along the way to it, whichever is nearer.
 	 * @example

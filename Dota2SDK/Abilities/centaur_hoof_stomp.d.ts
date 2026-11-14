@@ -5,7 +5,6 @@
  * (`IsWindingUp`).
  */
 declare class centaur_hoof_stomp extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
 	/** The stomp lands once the windup is through. */

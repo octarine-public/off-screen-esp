@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class item_bloodthorn extends Item {
-	/** The silence lasts `silence_duration`: the data names no duration of its own. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * The target takes, as the silence ends, `silence_damage_percent` of all the damage it took
@@ -11,6 +9,4 @@ declare class item_bloodthorn extends Item {
 	public get IsAmplifier(): boolean
 	/** Cast first, any damage of `ability` lands harder: the silence gathers it. */
 	public Amplifies(ability: Ability): boolean
-	/** Built on Orchid Malevolence, its Soul Rend carries Soul Burn on: the two do not stack. */
-	protected CarriesOn(other: Ability): boolean
 }

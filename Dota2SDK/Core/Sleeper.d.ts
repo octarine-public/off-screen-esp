@@ -1,9 +1,6 @@
 // AUTO-GENERATED - do not edit.
 /** A per-key cooldown timer backed by the host's high-resolution clock (`hrtime`, in milliseconds). */
 declare class Sleeper {
-	protected readonly SleepDB: Map<unknown, number>
-	/** Current time source (host `hrtime`, ms); override in a subclass to drive the timer off a different clock. */
-	protected get TickCount(): number
 	/**
 	 * Sleeps `key` for `ms` milliseconds and returns the absolute wake time.
 	 * @example
@@ -40,12 +37,10 @@ declare class Sleeper {
 	 * sleeper.ResetKey("ability")
 	 */
 	public ResetKey(key: unknown): void
-	protected setTime(key: unknown, time: number): number
 }
 
 /** A per-key cooldown timer driven by game time instead of the host clock. */
 declare class GameSleeper extends Sleeper {
-	protected get TickCount(): number
 }
 /** A single-slot cooldown timer driven by game time. */
 declare class TickSleeper {

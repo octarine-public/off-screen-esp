@@ -9,7 +9,6 @@ declare class earth_spirit_geomagnetic_grip extends Ability {
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * The remnant within cast range whose pull, cast now, reaches `target` soonest (`PullHitTime`),

@@ -11,6 +11,5 @@ declare class warlock_shadow_word extends Ability implements IHealthRestore<Unit
 	 * instead (`GetHealthRestore`).
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsHealthRestore(): this is IHealthRestore<Unit>
 }

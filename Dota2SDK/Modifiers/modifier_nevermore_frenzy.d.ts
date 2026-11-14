@@ -2,10 +2,5 @@
 declare class modifier_nevermore_frenzy extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
-	protected GetCastTimePercentage(): [number, boolean]
-	protected GetAttackSpeedBonusConstant(): [number, boolean]
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

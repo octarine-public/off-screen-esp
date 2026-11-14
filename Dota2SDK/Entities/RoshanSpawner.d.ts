@@ -1,6 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare class RoshanSpawner extends Entity {
 	public static get InitialTime(): number
+	/** Seconds of game time between two of Roshan's upgrades. */
+	public static get UpgradeRate(): number
 	public static get TimeUntilNextMove(): number
 	/** Whether Roshan is walking from one pit to the other, the move told by the day turning to night or back. */
 	public IsMovingRoshan: boolean
@@ -17,8 +19,6 @@ declare class RoshanSpawner extends Entity {
 	public readonly RoshanVisualPrediction: Vector3
 	public readonly KillCount = 0
 	public readonly LastKillerTeam: Team
-	public TOPSpawner_: number
-	public BOTSpawner_: number
 	public readonly RoshanHandle: number
 	public get Roshan(): Nullable<Unit>
 	public get TOPLocation(): Vector3

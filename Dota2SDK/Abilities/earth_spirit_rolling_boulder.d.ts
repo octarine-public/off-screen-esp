@@ -6,7 +6,6 @@
  * to him meets him on its way (`RemnantOnWay`, `TimeTo`).
  */
 declare class earth_spirit_rolling_boulder extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetRawDamage(target: Unit): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number

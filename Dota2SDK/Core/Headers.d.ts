@@ -1,59 +1,32 @@
 // AUTO-GENERATED - do not edit.
+/** What a {@link Headers} is built from: another one, `[name, value]` pairs or a plain object. */
 type HeadersInit = Headers | [string, string][] | Record<string, string>
 /**
- * The header list of a request or a response, with the same case-insensitive lookup and the same
- * comma-joined multi-value reads the web platform's `Headers` has.
+ * HTTP headers of a request or a response. Names are case-insensitive and values are stored
+ * trimmed; several values under one name read back joined by `", "`.
  * @example
- * const headers = new Headers({ Authorization: "Bearer " + token })
+ * const headers = new SharedSDK.Headers({ Authorization: "Bearer " + token })
  * headers.append("Accept", "application/json")
  */
-declare class Headers {
-	/**
-	 * @param init another Headers, `[name, value]` pairs, or a plain object of them
-	 * @example
-	 * new Headers([["Accept", "application/json"]])
-	 */
-	constructor(init?: HeadersInit)
-	/**
-	 * Adds a value, keeping any already stored under that name.
-	 * @example
-	 * headers.append("Accept", "text/plain")
-	 */
-	public append(name: string, value: string): void
-	/**
-	 * Replaces every value stored under `name`.
-	 * @example
-	 * headers.set("Content-Type", "application/json")
-	 */
-	public set(name: string, value: string): void
-	/**
-	 * Drops every value stored under `name`.
-	 * @example
-	 * headers.delete("Cookie")
-	 */
-	public delete(name: string): void
-	/**
-	 * Every value stored under `name`, joined with `", "`, or `undefined` when there is none.
-	 * @example
-	 * const type = headers.get("content-type")
-	 */
-	public get(name: string): Nullable<string>
-	/**
-	 * True when at least one value is stored under `name`.
-	 * @example
-	 * if (headers.has("etag")) { ... }
-	 */
-	public has(name: string): boolean
-	/**
-	 * Visits every stored value in insertion order.
-	 * @example
-	 * headers.forEach((value, name) => console.log(name, value))
-	 */
-	public forEach(callback: (value: string, name: string, headers: Headers) => void): void
-	public entries(): IterableIterator<[string, string]>
-	public keys(): IterableIterator<string>
-	public values(): IterableIterator<string>
-	public [Symbol.iterator](): IterableIterator<[string, string]>
-	/** The pair list the host takes. */
-	public ToPairs_(): [string, string][]
+interface Headers {
+	/** Adds a value under `name`, keeping the ones already there. */
+	append(name: string, value: string): void
+	/** Stores `value` under `name` in place of what was there. */
+	set(name: string, value: string): void
+	/** Removes every value stored under `name`. */
+	delete(name: string): void
+	/** The values stored under `name` joined by `", "`, or `undefined` when there are none. */
+	get(name: string): Nullable<string>
+	/** Whether anything is stored under `name`. */
+	has(name: string): boolean
+	/** Calls `callback` for every stored value, in the order they were added. */
+	forEach(callback: (value: string, name: string, headers: Headers) => void): void
+	/** Every `[name, value]` pair, in the order they were added. Names are lower-case. */
+	entries(): IterableIterator<[string, string]>
+	/** The name of every stored value; a name holding several values repeats. */
+	keys(): IterableIterator<string>
+	/** Every stored value, in the order they were added. */
+	values(): IterableIterator<string>
+	/** Iterates the pairs {@link entries} returns. */
+	[Symbol.iterator](): IterableIterator<[string, string]>
 }

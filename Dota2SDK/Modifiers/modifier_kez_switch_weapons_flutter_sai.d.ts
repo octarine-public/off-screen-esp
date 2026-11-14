@@ -2,9 +2,6 @@
 declare class modifier_kez_switch_weapons_flutter_sai extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

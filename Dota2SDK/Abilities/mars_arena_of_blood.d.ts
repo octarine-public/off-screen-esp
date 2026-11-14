@@ -6,7 +6,6 @@
  */
 declare class mars_arena_of_blood extends Ability {
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 	/**
 	 * How near a warrior on the wall, beyond its hull, a unit carried by Spear of Mars is pinned:

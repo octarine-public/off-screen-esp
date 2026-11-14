@@ -8,7 +8,6 @@
  * struck the unit (`Binds`, `AnchorsNear`).
  */
 declare class windrunner_shackleshot extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get ShackleAngle(): number
 	public get ShackleDistance(): number
 	public GetBaseSpeedForLevel(level: number): number

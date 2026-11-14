@@ -11,6 +11,5 @@ declare class sniper_shrapnel extends Ability implements IDebuff {
 	 * 1 s (server.dll).
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 }

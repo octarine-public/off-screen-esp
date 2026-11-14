@@ -17,7 +17,6 @@ declare class templar_assassin_meld extends Ability implements INuke, IBuff {
 	public GetBaseSpeedForLevel(_level: number): number
 	public GetRawDamage(target: Unit): number
 	public GetDamage(target: Unit): number
-	protected MeetsSpellBlock(): boolean
 	/**
 	 * Her attack range, as Meld makes it: its `attack_range_bonus` (a talent's) is on only while it
 	 * lasts - she swings from there without a step, which would end it.

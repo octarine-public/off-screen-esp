@@ -25,6 +25,4 @@ declare class item_ethereal_blade extends Item implements INuke {
 	 * (`AmplificationOf`).
 	 */
 	public GetRawDamage(target: Unit): number
-	/** Its blast slows an enemy by `blast_movement_slow` percent for `duration`; an ally it only turns ethereal. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

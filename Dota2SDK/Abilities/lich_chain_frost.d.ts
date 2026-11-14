@@ -10,6 +10,4 @@ declare class lich_chain_frost extends Ability implements INuke {
 	 * timed 0.88 s instead of 0.71 s (20 October 2026).
 	 */
 	public GetBaseSpeedForLevel(level: number): number
-	/** Each unit it hits is slowed by `slow_movement_speed` percent for `slow_duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

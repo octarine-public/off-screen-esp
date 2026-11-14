@@ -41,17 +41,16 @@ interface IReachableSpot {
  * Path queries over the map grid: routes, reachable regions, times to reach and grid line of
  * sight. Units answer the same questions about themselves through `Unit.FindPath` and its kin.
  */
-declare class CPathfinder {
-	public readonly ObstacleManager: ObstacleManager
-	public readonly NavGrid: NavGrid
+interface CPathfinder {
+	readonly ObstacleManager: ObstacleManager
+	readonly NavGrid: NavGrid
 	/** The map's currents that speed a walker going their way, as the game showed them this match. */
-	public readonly PathSpeed: PathSpeedMap
-	constructor()
+	readonly PathSpeed: PathSpeedMap
 	/**
 	 * Milliseconds `FindPath` spent this game tick, for a caller to keep its searches within a
 	 * budget (`ICastTimelineOptions.searchBudget`).
 	 */
-	public get TickSearchTime(): number
+	get TickSearchTime(): number
 	/**
 	 * The cheapest walkable route from `from` to `to`, its corners as world points with terrain
 	 * height; `undefined` when the goal cannot be reached. A goal inside an obstacle is moved to
@@ -59,16 +58,16 @@ declare class CPathfinder {
 	 * @example
 	 * const path = PathfinderSDK.FindPath(hero.Position, target, { unit: hero })
 	 */
-	public FindPath(from: Vector3, to: Vector3, options?: IPathOptions): Nullable<Path>
+	FindPath(from: Vector3, to: Vector3, options?: IPathOptions): Nullable<Path>
 	/**
 	 * Every cell reachable from `from` within `time` seconds at `speed`, with arrival times; a cell
 	 * counts as reached when any point of it is in reach (`ReachableRegion.Budget`).
 	 * @example
 	 * const region = PathfinderSDK.Reachable(enemy.Position, 0.6, enemy.MoveSpeed, { unit: enemy })
 	 */
-	public Reachable(from: Vector3, time: number, speed: number, options?: IReachableOptions): ReachableRegion
+	Reachable(from: Vector3, time: number, speed: number, options?: IReachableOptions): ReachableRegion
 	/** Seconds of walking at `speed` along the route to `to`; `Infinity` without a route. */
-	public TimeToReach(from: Vector3, to: Vector3, speed: number, options?: IPathOptions): number
+	TimeToReach(from: Vector3, to: Vector3, speed: number, options?: IPathOptions): number
 	/**
 	 * Where a unit set down at `position` stands: there when the ground lets it, else the middle of
 	 * the nearest cell it can stand on within `options.maxDistance` - where the game puts a unit a
@@ -76,9 +75,9 @@ declare class CPathfinder {
 	 * @example
 	 * const lands = PathfinderSDK.Standable(leap.End, { unit: slark, maxDistance: 700 })
 	 */
-	public Standable(position: Vector3, options?: IPathOptions): Nullable<Vector3>
+	Standable(position: Vector3, options?: IPathOptions): Nullable<Vector3>
 	/** True when a unit can walk straight from `from` to `to` without touching an obstacle. */
-	public IsLineClear(from: Vector3, to: Vector3, options?: IPathOptions): boolean
+	IsLineClear(from: Vector3, to: Vector3, options?: IPathOptions): boolean
 	/**
 	 * The nearest cell centre by travel within the budget that satisfies `accept`, with the
 	 * seconds the walk there takes; the answer to "where is the closest safe spot". Spots
@@ -88,7 +87,6 @@ declare class CPathfinder {
 	 * @example
 	 * const spot = PathfinderSDK.NearestReachable(hero.Position, 0.5, hero.MoveSpeed, p => !danger.Contains(p), { unit: hero })
 	 */
-	public NearestReachable(from: Vector3, time: number, speed: number, accept: (position: Vector3) => boolean, options?: IReachableOptions): Nullable<IReachableSpot>
-	protected GameEnded(): void
+	NearestReachable(from: Vector3, time: number, speed: number, accept: (position: Vector3) => boolean, options?: IReachableOptions): Nullable<IReachableSpot>
 }
 declare const PathfinderSDK: CPathfinder

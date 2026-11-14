@@ -2,8 +2,5 @@
 declare class modifier_dragonknight_breathefire_reduction extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected GetDamageOutgoingPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

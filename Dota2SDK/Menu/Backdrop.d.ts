@@ -19,6 +19,10 @@ declare namespace MenuSDK {
 	 * part way through comes up at the light the others already stand in rather than at nothing.
 	 */
 	class CStageBackdrop {
+		/**
+		 * Adds a backdrop to the ones the daylight fade paints. Nothing removes it again, so one is
+		 * made per stage rather than per render.
+		 */
 		constructor()
 		/**
 		 * The stage element, as react hands it over. It is a bound property rather than a method, so

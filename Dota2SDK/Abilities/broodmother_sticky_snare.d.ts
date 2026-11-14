@@ -5,7 +5,6 @@
  * catches for `root_duration`.
  */
 declare class broodmother_sticky_snare extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public GetBaseActivationDelayForLevel(level: number): number
 	/** The strand catches what crosses it: half its length either side of where it is aimed. */

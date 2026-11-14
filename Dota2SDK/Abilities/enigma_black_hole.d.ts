@@ -12,7 +12,6 @@ declare class enigma_black_hole extends Ability {
 	 * on and moves 0.97 s on each time (server.dll, `CDOTA_Modifier_Enigma_BlackHole_Pull`).
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/**
 	 * How the hole `hole` - its thinker, at its middle - draws `unit` from the game time `since`:
 	 * round and in toward the middle (`SpiralMotion`), `pull_speed` a second closer and

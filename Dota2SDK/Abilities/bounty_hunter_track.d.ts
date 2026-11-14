@@ -21,5 +21,4 @@ declare class bounty_hunter_track extends Ability implements IDebuff {
 	 * after it, anyone's, lands harder by as much. Not on one tracked already - the track renews.
 	 */
 	public AmplificationOf(ability: Ability, target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

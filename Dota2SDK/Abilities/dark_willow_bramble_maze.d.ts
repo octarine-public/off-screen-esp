@@ -5,11 +5,8 @@
  * bramble in its middle: laid on a standing target, it roots nothing (20 October 2026, demo).
  */
 declare class dark_willow_bramble_maze extends Ability {
-	/** The maze stands `placement_duration`; a bramble roots for `latch_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get ActivationDelay(): number
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public GetBaseActivationDelayForLevel(level: number): number
 	/** How many brambles the maze lays: `placement_count`, as far as the game's table goes. */

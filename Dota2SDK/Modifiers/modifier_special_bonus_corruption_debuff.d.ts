@@ -2,9 +2,6 @@
 declare class modifier_special_bonus_corruption_debuff extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public GetTexturePath(): string
 	public IsDebuff(): this is IDebuff
-	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

@@ -2,12 +2,5 @@
 declare class modifier_viper_poison_attack_slow extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected GetMagicalResistanceBonus(): [number, boolean]
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected UpdateSpecialValues(): void
-	/** Poison Attack ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 }

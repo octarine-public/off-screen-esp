@@ -7,7 +7,6 @@
 declare class magnataur_reverse_polarity extends Ability implements INuke {
 	/** How far ahead of Magnus it sets what it pulls: the server's own, in none of its values. */
 	public static readonly PullAhead = 150
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number

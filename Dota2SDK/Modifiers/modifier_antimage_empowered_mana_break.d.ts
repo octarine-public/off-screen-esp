@@ -5,6 +5,5 @@ declare class modifier_antimage_empowered_mana_break extends Modifier implements
 	public CachedBonusManaBurn: number
 	public IsBuff(): this is IBuff
 	public GetTexturePath(): string
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

@@ -7,5 +7,4 @@ declare class enigma_midnight_pulse extends Ability {
 	 * after it lands, the last as it ends; none after a unit walks out.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

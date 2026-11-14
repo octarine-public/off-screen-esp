@@ -1,4 +1,9 @@
 // AUTO-GENERATED - do not edit.
+/**
+ * Windows virtual-key codes, named after the `VK_*` constants, with digits and letters as
+ * `KEY_0` and `KEY_A`. {@link KeyNames} holds a display name for each code, `"Unknown"` for
+ * the media, browser and other keys it does not name.
+ */
 declare enum VKeys {
 	LBUTTON = 1,
 	RBUTTON = 2,
@@ -173,6 +178,10 @@ declare enum VKeys {
 	PA1 = 253,
 	OEM_CLEAR = 254
 }
+/**
+ * The Windows `MK_*` key-state masks, used to name one mouse button. `MK_SHIFT` and `MK_CONTROL`
+ * belong to the same set and name no button.
+ */
 declare enum VMouseKeys {
 	MK_LBUTTON = 1,
 	MK_RBUTTON = 2,
@@ -182,6 +191,10 @@ declare enum VMouseKeys {
 	MK_XBUTTON1 = 32,
 	MK_XBUTTON2 = 64
 }
+/**
+ * Which of the two extra mouse buttons a `WM_XBUTTON*` window message is about: the high word
+ * of its `wParam`.
+ */
 declare enum VXMouseKeys {
 	XBUTTON1 = 1,
 	XBUTTON2 = 2

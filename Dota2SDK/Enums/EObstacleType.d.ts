@@ -1,5 +1,6 @@
 // AUTO-GENERATED - do not edit.
-declare const enum EObstacleType {
-	Line = 0,
-	Circle = 1
+type EObstacleType = EObstacleType.Line | EObstacleType.Circle
+declare namespace EObstacleType {
+	type Line = 0
+	type Circle = 1
 }

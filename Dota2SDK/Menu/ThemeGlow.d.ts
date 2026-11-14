@@ -37,8 +37,16 @@ declare namespace MenuSDK {
 		readonly size: number
 		/** How much of a color the halo keeps, 0 to 1. */
 		readonly strength: number
+		/**
+		 * Where the halo takes its color from. `Custom` and `Rainbow` light with {@link color}, or
+		 * with the accent while it is empty; `Accent` with the accent; `Adaptive` with the color of
+		 * each surface that gives one, and the accent elsewhere.
+		 */
 		readonly mode: EGlowColor
-		/** The color {@link EGlowColor.Custom} lights with; ignored by the other two. */
+		/**
+		 * The color `Custom` and `Rainbow` light with, the accent while it is empty; `Accent` and
+		 * `Adaptive` ignore it.
+		 */
 		readonly color: string
 	}
 	/** What a theme asks a surface to glow with. */
@@ -73,13 +81,16 @@ declare namespace MenuSDK {
 	 * the controls offer, and what a stored or shared theme is read into.
 	 */
 	const GlowStyleRange: {
+		/** Seconds one turn of the walking color takes, fastest and slowest. */
 		readonly speed: readonly [1, 30]
+		/** How far the walking color is from grey, least and most. */
 		readonly saturation: readonly [0.2, 1]
 	}
 	/** What the glow lights with, beyond the reach and strength the seeds carry. */
 	interface IThemeGlowStyle {
+		/** Where the halo takes its color from. */
 		mode: EGlowColor
-		/** The color {@link EGlowColor.Custom} lights with. */
+		/** The color {@link EGlowColor.Custom} lights with; the other modes do not read it. */
 		color: string
 		/** Seconds one turn of the walking color takes. */
 		speed: number
@@ -87,30 +98,19 @@ declare namespace MenuSDK {
 		saturation: number
 	}
 	/**
-	 * What a quad has to reach past the shape it carves for a halo `width` wide to fit outside it:
-	 * the halo itself and one more for the antialiased edge it falls away from. It is in whatever
-	 * unit the width was measured in - dp for a surface laid out by the menu, screen pixels for one
-	 * that measures its own - and nothing at all for a glow that is off.
+	 * How far a quad has to reach past the shape it carves for a halo `width` wide to fit outside
+	 * it: `width` and one more for the antialiased edge, or 0 when `width` is 0 or less. The result
+	 * is in the unit of `width`.
 	 *
 	 * @example
-	 * const width = Size(Theme.Glow.size)
-	 * const pad = GlowPad(width)
-	 * WritePx(element, "left", x - pad)
-	 * WriteStyle(element, "decorator", SdfShape(radius, fill, 0, "", pad, width, Theme.Glow.color).decorator)
+	 * const pad = MenuSDK.GlowPad(width)
+	 * const style = MenuSDK.SdfShape(radius, fill, 0, "", pad, width, MenuSDK.Theme.Glow.color)
 	 */
 	function GlowPad(width: number): number
 	/**
-	 * The halo a surface painted `fill` wears. An adaptive theme lights every surface in its own
-	 * color, so a green bar glows green and a warning glows red without either being told to; every
-	 * other theme hands out the one color it was given.
-	 *
-	 * The fill's own transparency is dropped and its lightness is floored at {@link GlowLightFloor}:
-	 * a glass card is barely there and nearly black, and a halo of either is no halo. The hue and the
-	 * saturation are the surface's own, so what comes out is still recognisably its color - a grey
-	 * card glows a light grey rather than an invented one.
-	 *
-	 * @example
-	 * const color = GlowColorOf(Theme.Glow, cssColor(HudColors.glass))
+	 * The halo color for a surface painted `fill`. A glow that is not {@link IThemeGlow.adaptive}
+	 * gives its own {@link IThemeGlow.color}; an adaptive one gives the hue and saturation of `fill`
+	 * at a lightness of at least {@link GlowLightFloor}, with the glow's strength as alpha.
 	 */
 	function GlowColorOf(glow: IThemeGlow, fill: string): string
 }

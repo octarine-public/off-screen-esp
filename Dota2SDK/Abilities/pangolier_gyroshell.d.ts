@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class pangolier_gyroshell extends Ability {
-	/** The shell rolls `duration`; a unit it rolls over is stunned for `stun_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * Whether its owner rolls now - in Rolling Thunder or in the Shard's Rollup: disarmed, he
@@ -22,5 +20,4 @@ declare class pangolier_gyroshell extends Ability {
 	public get HitRadius(): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

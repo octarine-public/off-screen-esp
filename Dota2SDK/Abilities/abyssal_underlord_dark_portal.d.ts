@@ -11,7 +11,6 @@
 declare class abyssal_underlord_dark_portal extends Ability {
 	/** Cast the way its caster stands: it turns to nothing (`Ability.RequiresFacing`). */
 	public get RequiresFacing(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/**
 	 * Magical: the fire of its talent, the only damage it deals, takes the target's magic
 	 * resistance; the data gives it no type.

@@ -14,5 +14,4 @@ declare class tusk_walrus_punch extends Ability implements INuke {
 	public get IsAttack(): boolean
 	/** Its target is thrown up, stunned, for `air_time`. */
 	public get HitUnitState(): bigint
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

@@ -12,8 +12,6 @@ declare class life_stealer_rage extends Ability implements IBuff {
 	 * (20 October 2026, demo).
 	 */
 	public get IsCombatBuff(): boolean
-	/** Lifestealer is immune to debuffs for `duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/** Its cast lays a basic dispel on Lifestealer. */
 	public get DispelsCaster(): SPELL_DISPELLABLE_TYPES

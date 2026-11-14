@@ -15,7 +15,6 @@ declare class phantom_assassin_blur extends Ability {
 	public get RevealedWithin(): number
 	/** Phantom Assassin fades `fade_duration` after the cast. */
 	public GetBaseActivationDelayForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** Blurred, Phantom Assassin is immune to attacks and no enemy can target her. */
 	public get AppliesUnitState(): bigint
 	/** The states are Phantom Assassin's own. */

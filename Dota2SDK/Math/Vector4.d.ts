@@ -1,9 +1,13 @@
 // AUTO-GENERATED - do not edit.
 /** Mutable 4D vector (x, y, z, w) with component-wise math, interpolation and quaternion transforms. */
 declare class Vector4 {
+	/** The x component: one of the three {@link Transform} rotates. */
 	public x: number
+	/** The y component: one of the three {@link Transform} rotates. */
 	public y: number
+	/** The z component: one of the three {@link Transform} rotates. */
 	public z: number
+	/** The w component, which {@link Transform} carries over unchanged. */
 	public w: number
 	/**
 	 * Builds a Vector4 from a protobuf `CMsgQuaternion`-shaped map (fields `x`, `y`, `z`, `w`). Missing
@@ -42,7 +46,15 @@ declare class Vector4 {
 	 * @example
 	 * const v = new Vector4(1, 2, 3, 4)
 	 */
-	constructor(x?: number, y?: number, z?: number, w?: number)
+	constructor(
+	/** The x component: one of the three {@link Transform} rotates. */
+	x?: number, 
+	/** The y component: one of the three {@link Transform} rotates. */
+	y?: number, 
+	/** The z component: one of the three {@link Transform} rotates. */
+	z?: number, 
+	/** The w component, which {@link Transform} carries over unchanged. */
+	w?: number)
 	/**
 	 * True when all components are finite (alias of {@link IsFinite}).
 	 * @example
@@ -290,10 +302,8 @@ declare class Vector4 {
 	 */
 	public Hermite(tan1: Vector4, val2: Vector4, tan2: Vector4, amt: number): Vector4
 	/**
-	 * Returns a NEW Vector4 at barycentric coordinates `(a1, a2)` over the triangle `this`, `v2`, `v3`:
-	 * `this + a1*(v2 - this) + a2*(v3 - this)`. `(0, 0)` yields `this`, `(1, 0)` yields `v2`, `(0, 1)` yields `v3`.
-	 * @example
-	 * a.Barycentric(b, c, 0, 0) // a
+	 * The point at barycentric coordinates `(a1, a2)` of the triangle `this`, `v2`, `v3`, as a
+	 * new vector: `(0, 0)` is `this`, `(1, 0)` is `v2` and `(0, 1)` is `v3`. Nothing is clamped.
 	 */
 	public Barycentric(v2: Vector4, v3: Vector4, a1: number, a2: number): Vector4
 	/**

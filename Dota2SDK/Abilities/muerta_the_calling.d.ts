@@ -9,5 +9,4 @@ declare class muerta_the_calling extends Ability {
 	 * only a unit on their ring.
 	 */
 	public GetDamage(_target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

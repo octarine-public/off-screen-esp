@@ -1,14 +1,20 @@
 // AUTO-GENERATED - do not edit.
 /** A line segment on the 2D plane; the axis of every shape that has one. */
 declare class Segment2D {
+	/** Where the segment begins: fraction 0 along it. The vector passed in, not a copy. */
 	public readonly Start: Vector2
+	/** Where the segment ends: fraction 1 along it. The vector passed in, not a copy. */
 	public readonly End: Vector2
 	/**
 	 * @example
 	 * const path = new Segment2D(caster.Position, castPosition)
 	 */
-	constructor(Start: Vector2, End: Vector2)
-	/** Length of the segment. */
+	constructor(
+	/** Where the segment begins: fraction 0 along it. The vector passed in, not a copy. */
+	Start: Vector2, 
+	/** Where the segment ends: fraction 1 along it. The vector passed in, not a copy. */
+	End: Vector2)
+	/** The distance from {@link Start} to {@link End}. */
 	public get Length(): number
 	/** Squared length of the segment. */
 	public get LengthSqr(): number

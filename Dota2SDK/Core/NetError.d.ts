@@ -1,27 +1,28 @@
 // AUTO-GENERATED - do not edit.
-/**
- * Why a request or a socket failed. Mirrors the `error_code` contract the client answers with, so
- * a script can tell "the policy said no" from "the server was down" without matching on text.
- */
-declare enum NetErrorCode {
-	None = 0,
+/** Why a request or a socket failed. */
+type NetErrorCode = NetErrorCode.None | NetErrorCode.Blocked | NetErrorCode.Invalid | NetErrorCode.Timeout | NetErrorCode.Transport | NetErrorCode.TooLarge | NetErrorCode.Throttled | NetErrorCode.Aborted | NetErrorCode.Unavailable
+declare namespace NetErrorCode {
+	/** No error. */
+	type None = 0
 	/**
-	 * The target is off limits: our own infrastructure, a private address, plaintext off this
-	 * machine, or one of the loopback ports the client binds for itself.
+	 * The target is not allowed: a private address, Octarine's own servers, an unencrypted
+	 * connection off this machine, or a port the client listens on.
 	 */
-	Blocked = 1,
-	/** The request itself was malformed — a bad url, an illegal header, an unsupported method. */
-	Invalid = 2,
-	Timeout = 3,
+	type Blocked = 1
+	/** The request was malformed: a bad URL, an illegal header or an unsupported method. */
+	type Invalid = 2
+	/** No answer within the time limit. */
+	type Timeout = 3
 	/** DNS, TCP, TLS or protocol failure. */
-	Transport = 4,
-	/** The body or the message was over the size cap. */
-	TooLarge = 5,
+	type Transport = 4
+	/** The response body or a socket message was over the size limit. */
+	type TooLarge = 5
 	/** Too many requests or sockets at once, or too many over time. */
-	Throttled = 6,
-	Aborted = 7,
-	/** The bridge is gone, which normally means the game is shutting down. */
-	Unavailable = 8
+	type Throttled = 6
+	/** Cancelled through an `AbortSignal`. */
+	type Aborted = 7
+	/** The client's network bridge is gone, normally because the game is shutting down. */
+	type Unavailable = 8
 }
 /**
  * The error `fetch` rejects with and a socket's `error` event carries.
@@ -32,7 +33,7 @@ declare enum NetErrorCode {
  *   if (e instanceof SharedSDK.NetError && e.code === SharedSDK.NetErrorCode.Blocked) { ... }
  * }
  */
-declare class NetError extends Error {
-	public readonly code: NetErrorCode
-	constructor(message: string, code: NetErrorCode)
+interface NetError extends Error {
+	/** Why it failed. */
+	readonly code: NetErrorCode
 }

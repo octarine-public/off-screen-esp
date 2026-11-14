@@ -29,6 +29,36 @@ declare class ExecuteOrder {
 	public static set DebugLog(on: boolean)
 	public static HoldOrders: number
 	public static HoldOrdersTarget: Nullable<Vector3 | Entity>
+	/**
+	 * The unit the humanizer's camera stays centred on while a script holds its orders
+	 * (`HoldOrders`), as the player's does with the key that centres it on their hero held down:
+	 * orders about the unit - the steps of a creep block - never wait for the camera to pan to
+	 * them. An order to a point that camera does not show still moves it, as any other order
+	 * does. None: the camera moves for each order's target.
+	 * @example
+	 * ExecuteOrder.HoldOrders++
+	 * ExecuteOrder.HoldOrdersCamera = hero
+	 */
+	public static HoldOrdersCamera: Nullable<Unit>
+	/**
+	 * Whether the script that holds its orders (`HoldOrders`) steers its unit by hand: walk after
+	 * walk a few ticks apart, as with the right button held and the cursor led ahead of the unit -
+	 * a creep block. The cursor then goes on to each walk's point with no reaction before it
+	 * (`cursorReactionMs`): the hand is already leading it.
+	 * @example
+	 * ExecuteOrder.HoldOrders++
+	 * ExecuteOrder.HoldOrdersSteer = true
+	 */
+	public static HoldOrdersSteer: boolean
+	/**
+	 * A unit the humanizer's cursor goes to and waits on while its queue holds no order, so an
+	 * order a script gives at it soon finds the cursor there - a last hit's creep. The cursor
+	 * reacts to a new one first (`cursorReactionMs`), and a script's walk at the player's cursor
+	 * (`AtCursor`) or the player's own click takes it back. None: the cursor waits as it would.
+	 * @example
+	 * ExecuteOrder.PreAim = inRange ? creep : undefined
+	 */
+	public static PreAim: Nullable<Entity>
 	public static cameraMinimapSpaces: number
 	/**
 	 * Speed, world units a second, the humanizer's camera pans at for an order, by the screen's edge
@@ -148,6 +178,15 @@ declare class ExecuteOrder {
 	 * @param issuer default: DOTA_ORDER_ISSUER_PASSED_UNIT_ONLY
 	 */
 	constructor(OrderType: dotaunitorder_t, Target: Nullable<Entity | number>, Position: Vector3 | undefined, Ability_: Nullable<Ability | number>, Issuers: Unit[], Queue?: boolean, ShowEffects?: boolean, IsPlayerInput?: boolean)
+	/**
+	 * The ability or item the order uses, given by itself or by its entity's index; undefined for
+	 * an order that names none, and for a purchase, which names its item by the item's id.
+	 * @example
+	 * if (order.Ability instanceof Item && order.Ability.Name === "item_blink") {
+	 * 	// a blink is being cast
+	 * }
+	 */
+	public get Ability(): Nullable<Ability>
 	/**
 	 * Seconds the humanizer will hold an order issued now - of `priority`, going `now` or not -
 	 * before it reaches the game: the cursor glides of the orders that go before it - and, with
@@ -569,5 +608,4 @@ declare class ExecuteOrder {
 	 * axes, as the cursor moves: a pixel up takes as long as a pixel across.
 	 */
 	public static GlideTime(from: Vector2, to: Vector2, queued: boolean): number
-	protected CanBeClickHeightMapPosition(): boolean
 }

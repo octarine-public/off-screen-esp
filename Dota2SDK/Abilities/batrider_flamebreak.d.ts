@@ -14,10 +14,6 @@ declare class batrider_flamebreak extends Ability implements INuke {
 	public get KnockbackDistance(): number
 	/** Seconds the throw lasts. */
 	public get KnockbackDuration(): number
-	/** A hit throws the unit for the knockback's seconds: its walk is taken meanwhile, nothing else. */
-	protected FillEffects(out: AbilityEffects): void
-	/** On `target`, the throw cut by its status resistance. */
-	protected FillEffectsOn(out: AbilityEffects, target: Unit): void
 	/**
 	 * The throw a cocktail Batrider at `from` bursts at `toward` at the game time `landsAt` gives
 	 * `target`: `KnockbackDistance` over `KnockbackDuration` from where it will be then, straight away

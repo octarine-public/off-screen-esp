@@ -2,7 +2,6 @@
 declare class modifier_alchemist_unstable_concoction extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	/**
 	 * The damage of the brew thrown now: `max_damage` brewed `brew_time` long, a share of it
 	 * before.
@@ -14,7 +13,5 @@ declare class modifier_alchemist_unstable_concoction extends Modifier implements
 	 */
 	public DamageAfter(seconds: number): number
 	public IsBuff(): this is IBuff
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

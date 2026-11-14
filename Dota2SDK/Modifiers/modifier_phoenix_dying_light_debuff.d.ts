@@ -4,6 +4,4 @@ declare class modifier_phoenix_dying_light_debuff extends Modifier implements ID
 	public readonly DebuffModifierName: string
 	public GetTexturePath(): string
 	public IsDebuff(): this is IDebuff
-	/** The aura burns the unit while it stays near: its ability's (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 }

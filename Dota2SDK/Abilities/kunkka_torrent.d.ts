@@ -12,7 +12,6 @@ declare class kunkka_torrent extends Ability {
 	 * }
 	 */
 	public EruptionNear(position: Vector3): number
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 	/** The share of `torrent_damage` that lands as the torrent erupts (`percent_instant`). */

@@ -1,13 +1,13 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * Lines and rings over the world. A connected run is uploaded to the capsule shader and unioned
-	 * inside one quad, a standalone line is a rotated shader-carved quad, and a ring is the sdf
-	 * circle's border. Everything a frame draws goes onto one pooled surface, the same one the HUD
-	 * cards use.
+	 * Lines, rings, areas, images and text over the world, drawn on one HUD surface. What the
+	 * canvas projects itself ({@link Polyline}, {@link Area}, {@link Ring}) is pinned to the world
+	 * and moves with the camera when the frame is presented; screen px a script projected itself
+	 * are pinned the same way under {@link Pin}.
 	 *
 	 * @example
-	 * const canvas = new WorldCanvas("trajectory")
+	 * const canvas = new MenuSDK.WorldCanvas("trajectory")
 	 * canvas.Polyline(trajectory, 2, Color.Aqua)
 	 */
 	class WorldCanvas {
@@ -16,13 +16,37 @@ declare namespace MenuSDK {
 		 * room for the edges the camera and the screen cut into it.
 		 */
 		public static readonly AreaSegments: number
+		/** `key` names the surface the canvas draws on, and two canvases under one key share it. */
 		constructor(key: string)
+		/** Wipes what the canvas shows, right away. */
 		public Clear(): void
+		/**
+		 * Pins what is drawn after it, until {@link Unpin}, to the world point `x, y, z`: screen px the
+		 * script projected from that point, or from things near it, keep up with the camera even on a
+		 * frame whose script pass ran late.
+		 * @example
+		 * if (canvas.Project(impact, at)) {
+		 * 	canvas.Pin(impact.x, impact.y, impact.z)
+		 * 	canvas.Dot(at[0], at[1], 3, Color.Red)
+		 * 	canvas.Unpin()
+		 * }
+		 */
+		public Pin(x: number, y: number, z: number): void
+		/**
+		 * {@link Pin} on `x, y, z` world units from the origin of the entity `handle` names: what is
+		 * drawn follows the entity too.
+		 * @example
+		 * canvas.PinEntity(hero.Handle, 0, 0, hero.BoundingBox.MaxZ - hero.Position.z)
+		 */
+		public PinEntity(handle: number, x?: number, y?: number, z?: number): void
+		/** Ends a {@link Pin}: what is drawn after it stands on the screen again. */
+		public Unpin(): void
 		/** A run between two points already in screen pixels. */
 		public Line(startX: number, startY: number, endX: number, endY: number, width: number, color: Color): void
 		/**
-		 * Connects the points that project on screen as seamless capsule-shader batches, splitting a
-		 * long run across native slots and falling back to individual strips when the pool is spent.
+		 * A line through `points`, `width` dp thick, broken wherever a point does not project. It is
+		 * drawn by the capsule shader, or as separate strips on a host without it or once the
+		 * frame's shader slots run out.
 		 */
 		public Polyline(points: Vector3[], width: number, color: Color): void
 		/**

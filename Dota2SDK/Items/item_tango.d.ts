@@ -4,7 +4,6 @@ declare class item_tango extends Item implements IHealthRestore<Unit> {
 	public get RestoresSelf(): boolean
 	public get InstantRestore(): boolean
 	public readonly HealthRestoreModifierName = "modifier_tango_heal"
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetHealthRestore(_target: Unit): number
 	public IsHealthRestore(): this is IHealthRestore<Unit>
 }

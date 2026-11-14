@@ -1,29 +1,57 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** A control {@link CSafeModeGroup.Register} can lock: any menu control. */
 	interface ILockable {
+		/** The stored entry of the control, as every menu handle carries it. */
 		readonly entry: Entry
+		/** Whether the control is disabled, by the script or by a Safe mode lock. */
 		IsDisabled: boolean
 	}
+	/**
+	 * A control {@link CSafeModeGroup.RegisterMin} and {@link CSafeModeGroup.RegisterMax} can clamp:
+	 * a `MenuSDK.Slider`.
+	 */
 	interface IClampable {
+		/** The stored entry of the control, as every menu handle carries it. */
 		readonly entry: Entry
+		/**
+		 * A lower bound inside the control's own range, or `undefined` for none. Setting one raises a
+		 * value under it to it.
+		 */
 		clampMin: Nullable<number>
+		/**
+		 * An upper bound inside the control's own range, or `undefined` for none. Setting one lowers a
+		 * value over it to it.
+		 */
 		clampMax: Nullable<number>
 	}
+	/** A switch {@link CSafeModeGroup.RegisterValue} can pin: a `MenuSDK.Toggle`. */
 	interface IHoldableValue {
+		/** The stored entry of the control, as every menu handle carries it. */
 		readonly entry: Entry
+		/**
+		 * The value the switch is pinned to, or `undefined` while it is free. Setting one applies it
+		 * at once, and every later change lands on it.
+		 */
 		HoldValue: Nullable<boolean>
 	}
+	/** A dropdown {@link CSafeModeGroup.RegisterOption} can pin: a `MenuSDK.Dropdown`. */
 	interface IHoldableOption {
+		/** The stored entry of the control, as every menu handle carries it. */
 		readonly entry: Entry
+		/**
+		 * Index of the option the dropdown is pinned to, or `undefined` while it is free. Setting one
+		 * selects it at once, and every later change lands on it.
+		 */
 		HoldOption: Nullable<number>
 	}
 	/** A control a part of Safe mode holds, as the Safe mode window lists it. */
 	interface ISafeModeFeature {
+		/** The stored entry of the control. */
 		readonly entry: Entry
 		/**
-		 * What gives the feature away or why the part holds it, shown under its name: the convars it
-		 * writes, say. Localized, so a localization key reads in the user's language and a key with no
-		 * translation - a convar name - reads as it is.
+		 * Shown under the control's name: what gives the feature away or why the part holds it, such
+		 * as the convars it writes. Localized; text with no translation shows as written.
 		 */
 		readonly detail: string
 	}
@@ -37,10 +65,10 @@ declare namespace MenuSDK {
 		readonly iconPath?: string
 	}
 	/**
-	 * One part of Safe mode, with a switch of its own. The switch is the machine's own, kept in the
-	 * client's store apart from every config: a config applied, switched to or taken from a share
-	 * code never moves it. While it is on, every control registered on the part is held - locked,
-	 * clamped, or pinned to its safe value - whatever a config, a hotkey or a rule tries to set it to.
+	 * One part of Safe mode, with a switch of its own. The switch is kept in the machine's local
+	 * storage apart from every config, so loading, switching or importing a config never moves it.
+	 * While it is on, each control registered on the part stays locked, clamped or pinned to its safe
+	 * value, whatever a config, a hotkey or a rule sets.
 	 */
 	class CSafeModeGroup {
 		/** The part's title, a localization key. */
@@ -49,7 +77,18 @@ declare namespace MenuSDK {
 		public readonly Description: string
 		/** Icon beside the title. */
 		public readonly IconPath: string
+		/**
+		 * A part stored under `storedKey` that follows `follows` until it is switched or its stored
+		 * state is read; without `follows` it starts on. {@link CSafeMode.AddGroup} builds one that the Safe mode window lists
+		 * and that restores its stored state on its own.
+		 */
 		constructor(options: ISafeModeGroupOptions, storedKey: string, follows?: CSafeModeGroup)
+		/**
+		 * Whether the part is on, holding its controls. Setting it holds or frees them at once, calls
+		 * the {@link OnChanged} listeners and stores the choice on the machine. A part from
+		 * {@link CSafeMode.AddGroup} follows Safe mode as a whole until it is switched or its stored
+		 * state is read.
+		 */
 		public get Enabled(): boolean
 		public set Enabled(value: boolean)
 		/** The controls this part holds, in the order they were registered. */
@@ -80,7 +119,7 @@ declare namespace MenuSDK {
 		public RegisterMin(slider: IClampable, safeMin: number, detail?: string): void
 		/**
 		 * Pins the switch to `safe` while the part is on: it takes that value at once, and every
-		 * set that follows - from a config, a hotkey, a rule or a click - lands on it too.
+		 * later set, whether from a config, a hotkey, a rule or a click, lands on it too.
 		 * @example
 		 * MenuSDK.SafeMode.RegisterValue(antiAim, false)
 		 */
@@ -101,11 +140,10 @@ declare namespace MenuSDK {
 	 * switch of its own: the Settings tab then opens the Safe mode window instead of carrying the
 	 * switch, and a part the user has not switched yet follows this one.
 	 */
-	class CSafeMode extends CSafeModeGroup {
-		constructor()
+	interface CSafeMode extends CSafeModeGroup {
 		/** The parts {@link AddGroup} split Safe mode into, in the order they were added. */
-		public get Groups(): readonly CSafeModeGroup[]
-		public Restore(): Promise<void>
+		get Groups(): readonly CSafeModeGroup[]
+		Restore(): Promise<void>
 		/**
 		 * Splits off a part of Safe mode with a switch of its own, kept under `id` in the machine's
 		 * store; until the user switches it, the part follows the whole of Safe mode. Split before
@@ -118,19 +156,32 @@ declare namespace MenuSDK {
 		 * })
 		 * convars.RegisterValue(disableFog, false, "fog_enable")
 		 */
-		public AddGroup(id: string, options: ISafeModeGroupOptions): CSafeModeGroup
-		public BindPanel(open: (focus: Nullable<CSafeModeGroup>) => void): void
+		AddGroup(id: string, options: ISafeModeGroupOptions): CSafeModeGroup
+		/**
+		 * Sets what {@link Open} calls to show the Safe mode window. The menu binds its own window once
+		 * Safe mode has parts; a later call replaces it.
+		 */
+		BindPanel(open: (focus: Nullable<CSafeModeGroup>) => void): void
 		/** Opens the Safe mode window of a split Safe mode, on `focus` when one is given. */
-		public Open(focus?: CSafeModeGroup): void
+		Open(focus?: CSafeModeGroup): void
 		/** The part holding `entry` directly or through its owning page or switch, while it is on. */
-		public HolderOf(entry: Entry): Nullable<CSafeModeGroup>
+		HolderOf(entry: Entry): Nullable<CSafeModeGroup>
 		/**
 		 * Answers a click on a row Safe mode holds. Split into parts, it opens the Safe mode window on
 		 * the part holding the row; whole, it asks to turn Safe mode off and runs `onDisabled` once
 		 * it is.
 		 */
-		public OfferRelease(entry: Entry, onDisabled?: () => void): void
-		public ConfirmDisable(onConfirm?: () => void, onCancel?: () => void): void
+		OfferRelease(entry: Entry, onDisabled?: () => void): void
+		/**
+		 * Asks the user to confirm turning Safe mode off, turns it off on yes and then runs
+		 * `onConfirm`; `onCancel` runs when they keep it on. Already off, it runs `onConfirm` without
+		 * asking.
+		 */
+		ConfirmDisable(onConfirm?: () => void, onCancel?: () => void): void
 	}
+	/**
+	 * The menu's Safe mode, on until the user turns it off. A game registers the controls it holds
+	 * here or on a part split off with {@link CSafeMode.AddGroup}.
+	 */
 	const SafeMode: CSafeMode
 }

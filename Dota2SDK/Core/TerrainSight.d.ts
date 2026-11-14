@@ -14,21 +14,12 @@
  * @example
  * const seen = VisionSDK.Terrain.Sees(ward.Position, hero.Position, ward.VisionRange, false)
  */
-declare class TerrainSight {
-	/**
-	 * The height of one terrain level of the fog: a cell's level is the height of its highest
-	 * corner in whole steps of it, so a ramp cell counts as the level its top edge reaches. The
-	 * game keeps it in no data the client reads - the terrain is built on these steps, a value
-	 * agreed with the project owner.
-	 */
-	public static readonly LevelHeight = 128
-	/** The class of the map's fog blockers: each blocks the cell it stands in. */
-	public static readonly BlockerClass = "ent_fow_blocker_node"
+interface TerrainSight {
 	/** Lets go of the map's levels and blockers; they are read again from the next map. */
-	public Clear(): void
+	Clear(): void
 	/**
 	 * Whether a viewer standing at `from` with vision `range` sees `to`; with `flying` vision
 	 * nothing but the range limits it. False off the map grid.
 	 */
-	public Sees(from: Vector2 | Vector3, to: Vector2 | Vector3, range: number, flying: boolean): boolean
+	Sees(from: Vector2 | Vector3, to: Vector2 | Vector3, range: number, flying: boolean): boolean
 }

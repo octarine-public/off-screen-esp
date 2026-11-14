@@ -1,57 +1,42 @@
 // AUTO-GENERATED - do not edit.
+/** Called when a signal aborts, with what it was aborted for. */
 type AbortListener = (reason: unknown) => void
 /**
- * The read side of an {@link AbortController}: what a caller passes to `fetch` so the request can
- * be cancelled after it has been handed over.
+ * Cancels a request that is already under way: pass it as `signal` to `fetch`, then abort it
+ * through the {@link AbortController} it came from.
  * @example
- * const controller = new AbortController()
- * const promise = SharedSDK.fetch(url, { signal: controller.signal })
+ * const controller = new SharedSDK.AbortController()
+ * const pending = SharedSDK.fetch(url, { signal: controller.signal })
  * controller.abort()
  */
-declare class AbortSignal {
+interface AbortSignal {
+	/** Whether the signal has aborted. */
+	aborted: boolean
+	/** What it was aborted for; `undefined` until it aborts. */
+	reason: unknown
 	/**
-	 * A signal that aborts itself after `ms`, for the common case where the only reason to cancel
-	 * is time.
-	 * @example
-	 * SharedSDK.fetch(url, { signal: AbortSignal.timeout(5000) })
-	 */
-	public static timeout(ms: number): AbortSignal
-	public aborted: boolean
-	public reason: unknown
-	/**
-	 * Registers a listener for the abort. A signal that has already aborted calls it at once, so a
-	 * late listener cannot miss the event.
+	 * Calls `listener` when the signal aborts, or at once if it already has.
 	 * @example
 	 * signal.addEventListener("abort", () => socket.close())
 	 */
-	public addEventListener(type: "abort", listener: AbortListener): void
-	/**
-	 * Removes a listener registered with {@link addEventListener}.
-	 * @example
-	 * signal.removeEventListener("abort", onAbort)
-	 */
-	public removeEventListener(type: "abort", listener: AbortListener): void
-	/**
-	 * Throws {@link reason} when the signal has already aborted, and does nothing otherwise.
-	 * @example
-	 * signal.throwIfAborted()
-	 */
-	public throwIfAborted(): void
-	/** Fires the signal. Owned by {@link AbortController}. */
-	public Abort_(reason: unknown): void
+	addEventListener(type: "abort", listener: AbortListener): void
+	/** Removes a listener added with {@link addEventListener}. */
+	removeEventListener(type: "abort", listener: AbortListener): void
+	/** Throws {@link reason} if the signal has aborted. */
+	throwIfAborted(): void
 }
 /**
- * Hands out one {@link AbortSignal} and the ability to fire it.
+ * Owns one {@link AbortSignal} and aborts it.
  * @example
- * const controller = new AbortController()
+ * const controller = new SharedSDK.AbortController()
  * setTimeout(() => controller.abort(), 1000)
  */
-declare class AbortController {
-	public readonly signal: AbortSignal
+interface AbortController {
+	/** The signal {@link abort} aborts. */
+	readonly signal: AbortSignal
 	/**
-	 * Aborts the signal. Aborting twice does nothing the second time.
-	 * @example
-	 * controller.abort("user cancelled")
+	 * Aborts {@link signal} for `reason`, or for an `Error` when none is given. Only the first
+	 * call has an effect.
 	 */
-	public abort(reason?: unknown): void
+	abort(reason?: unknown): void
 }

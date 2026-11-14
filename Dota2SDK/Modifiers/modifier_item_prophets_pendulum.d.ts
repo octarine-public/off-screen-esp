@@ -10,8 +10,6 @@
  * breaking first (Sharpshooter's bolt, Silver Edge's backstab) is whole (`HitsBeyond`).
  */
 declare class modifier_item_prophets_pendulum extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** What it holds back is taken off its bearer by itself (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/** A hit on its bearer leaves a share held back (`HitOverTime`). */
@@ -37,14 +35,7 @@ declare class modifier_item_prophets_pendulum extends Modifier {
 	public HitsBeyond(ability: Ability, target: Unit, hits: DamageHits): number
 	/** Notes `damage` the game reports the unit of index `index` taking. */
 	public static Hurt(index: number, damage: number): void
-	/**
-	 * Its share held back, none while its bearer is broken or of a hit breaking it first
-	 * (`IModifierParams.Breaks`).
-	 */
-	protected GetIncomingDamagePercentage(params?: IModifierParams): [number, boolean]
 	/** Notes since when each bearer is broken, as each frame comes; forgets those gone. */
 	public static Watch(): void
-	protected UpdateSpecialValues(): void
-	protected OnAdded(): void
 	public get IsPurgable(): boolean
 }

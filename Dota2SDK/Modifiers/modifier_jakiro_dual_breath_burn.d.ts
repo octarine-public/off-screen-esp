@@ -3,6 +3,4 @@ declare class modifier_jakiro_dual_breath_burn extends Modifier implements IDebu
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
-	/** The burn ticks on the unit by itself: its ability's (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 }

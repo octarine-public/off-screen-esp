@@ -60,44 +60,14 @@ declare class TeleportMotion extends Motion {
  * A push that keeps its speed, then slows evenly: `Speed` along the unit vector `Direction` until
  * `CruiseEnd`, then down to `EndSpeed` by the motion's end. Deafening Blast's knockback goes so.
  */
-declare class CoastingMotion extends Motion {
-	public readonly Start: Vector3
-	public readonly Direction: Vector3
-	public readonly Speed: number
-	public readonly CruiseEnd: number
-	public readonly EndSpeed: number
-	constructor(kind: EMotionKind, startTime: number, endTime: number, Start: Vector3, Direction: Vector3, Speed: number, CruiseEnd: number, EndSpeed: number)
-	/**
-	 * The push a modifier reveals at `seenAt`, the unit then at `position`: the start is where it
-	 * stands less the way the push has carried it by then, so a push seen late - the unit coming
-	 * into sight - still ends where it does.
-	 */
-	public static Observed(kind: EMotionKind, startTime: number, endTime: number, seenAt: number, position: Vector3, direction: Vector3, profile: {
-		readonly Speed: number
-		readonly CruiseEnd: number
-		readonly EndSpeed: number
-	}): CoastingMotion
-	public get EndPosition(): Vector3
+interface CoastingMotion extends Motion {
+	readonly Start: Vector3
+	readonly Direction: Vector3
+	readonly Speed: number
+	readonly CruiseEnd: number
+	readonly EndSpeed: number
+	get EndPosition(): Vector3
 	/** Units travelled from `Start` by the game time `time`. */
-	public DistanceAt(time: number): number
-	public PositionAt(time: number, out?: Vector3): Vector3
-}
-/** What a tow reads from the unit that leads it: where it is expected to go, a point a step. */
-interface ITowLeader {
-	PredictPath(duration: number, step: number): {
-		readonly Points: readonly Vector3[]
-	}
-}
-/** A ring of a spiral nearer its middle that draws at a pace of its own: see `SpiralMotion`. */
-interface ISpiralRing {
-	/** How near the middle the ring begins. */
-	readonly Radius: number
-	readonly PullSpeed: number
-	readonly TurnRate: number
-}
-/** How a lift swings its unit: see `LiftMotion`. */
-interface ILiftSwing {
-	readonly Radii: readonly number[]
-	readonly Rates: readonly number[]
-	readonly Ramp: number
+	DistanceAt(time: number): number
+	PositionAt(time: number, out?: Vector3): Vector3
 }

@@ -11,7 +11,6 @@ declare class void_spirit_resonant_pulse extends Ability implements INuke {
 	 * owner - the class looked at before any unit carries it - at its best.
 	 */
 	public get AppliesUnitState(): bigint
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	/**
 	 * Its barrier on Void Spirit takes `base_absorb_amount` - and `absorb_per_hero_hit` for each hero
 	 * the pulse hits, not weighed - of physical damage (INCOMING_PHYSICAL_DAMAGE_CONSTANT), of any

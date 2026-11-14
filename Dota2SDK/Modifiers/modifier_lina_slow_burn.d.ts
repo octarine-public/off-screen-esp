@@ -15,7 +15,6 @@
 declare class modifier_lina_slow_burn extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** It burns by itself once the hit laying it is known (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/** Its ticks: the share of the hit laying it, as it is (`DamageTicks.Removal`). */
@@ -29,6 +28,4 @@ declare class modifier_lina_slow_burn extends Modifier implements IDebuff {
 	 * left for it, for a tick.
 	 */
 	public static Hurt(victim: number, caster: number, inflictor: Ability, damage: number): void
-	protected UpdateSpecialValues(): void
-	protected OnAdded(): void
 }

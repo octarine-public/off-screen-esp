@@ -6,8 +6,6 @@
  * speed of Tusk alone).
  */
 declare class tusk_snowball extends Ability implements INuke {
-	/** The stun, with the allies rolled in; the data's alone off the prototype (`AppliedDurationOf`). */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public readonly Friendly: Unit[]
 	public IsNuke(): this is INuke

@@ -40,11 +40,6 @@ declare class Modifier {
 	public NetworkArmor: number
 	public NetworkDamage: number
 	public NetworkFadeTime: number
-	/**
-	 * Whether the network's fade time holds a value of this modifier's own - a path's speed, a
-	 * portal's damage cut, Double Edge's damage - and no fade into invisibility.
-	 */
-	protected readonly FadeTimeIsValue: boolean
 	public NetworkBonusMana: number
 	public NetworkBonusHealth: number
 	public NetworkAttackSpeed: number
@@ -74,16 +69,6 @@ declare class Modifier {
 	public ShouldDoFlyHeightVisual: boolean
 	public HasShard: boolean
 	public HasScepter: boolean
-	protected CanPostDataUpdate: boolean
-	protected DeclaredFunction: Nullable<ModifierMapFieldHandler>
-	/**
-	 * The game's events the modifier acts on, and its properties it gives no value of here, as
-	 * server.dll declares them, and what it does that the game declares nothing for - the custom
-	 * keys of `EModifierfunction`: damage, heals, ticks of its own over time. Its unit's
-	 * `UnitModifierManager.Declaring` finds it by them.
-	 */
-	protected DeclaredEvents: Nullable<readonly EModifierfunction[]>
-	protected CachedAbilityName: Nullable<string>
 	public get StackCount(): number
 	public get ForceVisible(): boolean
 	public get Duration(): number
@@ -152,22 +137,6 @@ declare class Modifier {
 	 * const freed = hero.Buffs.filter(buff => buff.DispelledBy(manta.DispelsCaster))
 	 */
 	public DispelledBy(dispel: SPELL_DISPELLABLE_TYPES): boolean
-	/**
-	 * `IsPurgable` as its ability's data says, for a class whose answer the server decides by code:
-	 * marked dispellable, `SPELL_DISPELLABLE_YES` or `SPELL_DISPELLABLE_YES_STRONG` - its ability
-	 * read off the game data when out of sight.
-	 */
-	protected get PurgableByData(): boolean
-	/**
-	 * `IsPurgeException` as its ability's data says, for a class whose answer the server decides by
-	 * code: marked dispellable - a strong dispel takes what any dispel does.
-	 */
-	protected get PurgeExceptionByData(): boolean
-	/**
-	 * `IsStunDebuff` as its ability's data says, for a class whose answer the server decides by
-	 * code: marked `SPELL_DISPELLABLE_YES_STRONG` - a basic dispel leaves it.
-	 */
-	protected get StunDebuffByData(): boolean
 	public get CanHitSpellImmuneEnemy(): boolean
 	public Update(force?: boolean): void
 	public GetTexturePath(): string
@@ -285,8 +254,6 @@ declare class Modifier {
 	 * crit a crit animation has shown already. Whether it carries one; none by default.
 	 */
 	public SwingProc(_target: Unit, _started: boolean, _out: ISwingProc): boolean
-	/** Writes a proc of `chance` and `multiplier` in percent and `damage` into `out`; whether it may come. */
-	protected static Proc(out: ISwingProc, chance: number, multiplier: number, damage: number): boolean
 	/**
 	 * The blows it deals `victim` within `horizon` seconds when something sets it off, added to
 	 * `out` (`Unit.TriggeredBlows`): Counter Helix's spins as the hits on Axe count down. None by
@@ -370,8 +337,6 @@ declare class Modifier {
 	public get HealPerSecond(): number
 	/** Health a second it heals `unit` standing around its parent with; none by default. */
 	public HealOf(_unit: Unit): number
-	/** Whether it heals the units around its parent (`HealOf`): one of `HealersAround`. */
-	protected get HealsAround(): boolean
 	/**
 	 * The damage its parent deals `unit` around it from now until the game time `time` at the roll
 	 * `strength` - the lowest by default - each tick through the unit's shields as the ones before
@@ -398,14 +363,6 @@ declare class Modifier {
 	 * default - as soon as it may (`DamageTicks.NextAt`); `Infinity` for none.
 	 */
 	public NextDamageAroundAt(unit: Unit, from?: number): number
-	/** Whether its parent keeps damaging the units around it (`DamageAround`): one of `DamagersAround`. */
-	protected get DamagesAround(): boolean
-	/**
-	 * Fills `out` with the ticks its parent deals `unit` (`DamageTicks`), laid from the moment it
-	 * came on, each reaching the unit `After` the seconds it flies; whether it deals the unit any.
-	 * None by default.
-	 */
-	protected AroundTicks(_unit: Unit, _out: DamageTicks): boolean
 	/**
 	 * Health regeneration a second it would give its parent with `health` of `maxHealth` and
 	 * `strength` - one whose regeneration its parent's health or strength sets: Berserker's
@@ -470,20 +427,4 @@ declare class Modifier {
 	public IsPassiveDisabled(source?: Unit): boolean
 	public IsSuppressCrit(source?: Unit): boolean
 	public TestSpecialValue(): void
-	protected HasMeleeAttacksBonuses(source?: Unit): boolean
-	/** What a modifier class notes the moment it comes on its bearer - where its caster stood; nothing by default. */
-	protected OnAdded(): void
-	/** What a modifier class lets go of the moment it comes off `parent`; nothing by default. */
-	protected OnRemoved(_parent: Unit): void
-	protected AddModifier(): boolean
-	/**
-	 * @param specialName name of the special
-	 * @param abilityName (e.g. "item_smoke_of_deceit", "item_moon_shard")
-	 * @param level optional (e.g. invoker_ghost_walk#WexLevel)
-	 * @return number
-	 */
-	protected GetSpecialValue(specialName: string, abilityName: string, level?: number, optional?: ISpecialValueOptions): number
-	protected UnitModifierChanged(): void
-	protected UpdateSpecialValues(): void
-	protected UnitPropertyChanged(_changed?: boolean): boolean
 }

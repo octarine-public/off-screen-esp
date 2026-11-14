@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class elder_titan_echo_stomp extends Ability {
-	/** The sleep lasts `sleep_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	/**
 	 * The stomp puts the units around to sleep - stunned, not nightmared, as the game sets it: Chaos
 	 * Knight was stunned and not nightmared through the whole sleep (20 October 2026, demo).

@@ -2,12 +2,7 @@
 declare class modifier_shredder_chakram_debuff extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected cachedSlow: number
-	protected cachedSlowHealthPct: number
-	protected readonly CanPostDataUpdate = true
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** The blade spins over the unit while it stays near (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**
@@ -16,6 +11,4 @@ declare class modifier_shredder_chakram_debuff extends Modifier implements IDebu
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
 	public PostDataUpdate(): void
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

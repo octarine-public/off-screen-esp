@@ -2,6 +2,7 @@
 declare namespace MenuSDK {
 	/** A quad the surface paints this frame. */
 	interface IHudRect {
+		/** Always `"rect"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "rect"
 		/** Uses an elliptical fill, preserving both radii on non-square boxes. */
 		ellipse?: boolean
@@ -13,17 +14,31 @@ declare namespace MenuSDK {
 		 * the wash a strip of art stands on, with its `radius` carved by the sdf mask. Not with `sdf`.
 		 */
 		fade?: number
+		/**
+		 * The colour an `ellipse` with a {@link fade} shades to at its rim, packed `0xRRGGBBAA`; clear
+		 * when omitted.
+		 */
 		edgeColor?: number
+		/** Left edge, in px. */
 		x: number
+		/** Top edge, in px. */
 		y: number
+		/** Width, in px, rounded to a whole pixel. */
 		w: number
+		/** Height, in px, rounded to a whole pixel. */
 		h: number
+		/** Fill colour, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
 		/** Corner radius in px; a card carries the menu's, a bar none. */
 		radius?: number
 		/** A backdrop filter, for the frosted card the menu's own panels use. */
 		blur?: string
+		/**
+		 * Width of the rim, in px, held between 1 and 2; 0 or omitted draws none. An `ellipse` has no
+		 * rim.
+		 */
 		borderWidth?: number
+		/** Rim colour, packed `0xRRGGBBAA`; clear when omitted. */
 		borderColor?: number
 		/**
 		 * Carve the shape with the sdf shader instead of a plain border radius. A radius rasterizes on
@@ -43,9 +58,14 @@ declare namespace MenuSDK {
 		 * {@link GlowPad} of room for it, and inside it while the width is negative. `sdf` only.
 		 */
 		glow?: number
+		/** Colour of the {@link glow} halo, packed `0xRRGGBBAA`; clear when omitted. */
 		glowColor?: number
 		/** Clockwise sector in percent, starting at twelve o’clock plus start degrees. */
 		sweep?: number
+		/**
+		 * Where the {@link sweep} sector begins, in degrees past twelve o'clock; 0 when omitted. Read
+		 * with `sdf` or `ellipse` only.
+		 */
 		start?: number
 	}
 	/**
@@ -56,19 +76,43 @@ declare namespace MenuSDK {
 	 * trusting a measured width.
 	 */
 	interface IHudText {
+		/** Always `"text"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "text"
 		/** Explicit line height and whitespace for multiline readouts. */
 		lineHeight?: number
+		/**
+		 * Keeps the text's spaces and line breaks and lets it run past the box; otherwise it stands on
+		 * one line, clipped to the box.
+		 */
 		preformatted?: boolean
+		/** Left edge of the box, in px. */
 		x: number
+		/** Top edge of the box, in px. */
 		y: number
+		/** Width of the box, in px, rounded to a whole pixel; {@link align} places the text in it. */
 		w: number
+		/**
+		 * Height of the box, in px, rounded to a whole pixel. It is also the line height while
+		 * {@link lineHeight} is unset, which centres one line in the box.
+		 */
 		h: number
+		/** Where the text stands across the box: on its left edge, its right edge or its centre. */
 		align: "left" | "right" | "center"
+		/**
+		 * What is drawn; an empty string draws nothing. A line break in it counts only when
+		 * {@link preformatted}.
+		 */
 		text: string
+		/** Font size, in px. */
 		size: number
+		/** Font weight on the CSS scale; the menu's font weight setting may raise it, never lower. */
 		weight: number
+		/** Glyph colour, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
+		/**
+		 * The rim under the glyphs that holds them against what stands behind: none, a black shadow
+		 * or a black outline. {@link effectOpacity} sets how dark it is.
+		 */
 		effect: EHudTextEffect
 		/**
 		 * The face the run is set in, defaulting to the one the surface itself carries. A reading
@@ -100,10 +144,11 @@ declare namespace MenuSDK {
 		/** How far the run is scrolled inside its box, in px, for a line read by travelling it. */
 		scroll?: number
 		/**
-		 * How far the glyphs dissolve into the box's left and right edges, in dp, for a line the box
-		 * cuts rather than one clipped to a prefix. Both default to 0, a hard edge.
+		 * How far the glyphs dissolve into the box's left edge, in dp, for a line the box cuts rather
+		 * than one clipped to a prefix. 0 when omitted, a hard edge.
 		 */
 		fadeHead?: number
+		/** How far the glyphs dissolve into the box's right edge, in dp, as {@link fadeHead} does. */
 		fadeTail?: number
 	}
 	/**
@@ -124,34 +169,44 @@ declare namespace MenuSDK {
 	/** Where a surface stands what it draws on the screen's pixel grid. */
 	const enum EHudPlacement {
 		/**
-		 * On whole pixels and at whole-pixel sizes: art is drawn texel for pixel, and a marker standing
-		 * on something the game itself draws on whole pixels - a health bar - moves in step with it.
+		 * Positions and sizes are rounded to whole pixels: art lands texel for pixel, and a marker on
+		 * something the game draws on whole pixels, such as a health bar, moves in step with it.
 		 */
 		Pixel = 0,
 		/**
-		 * At the fraction of a pixel it was asked for, through each element's transform, which RmlUi
-		 * does not round: an icon gliding across the minimap moves smoothly instead of a pixel at a
-		 * time.
-		 *
-		 * A sprite frame (an image with a source rectangle) is cut out of its sheet by the host at the
-		 * frame's own resolution and scaled to the exact size asked for by the same transform, so the
-		 * GPU takes one bilinear sample of the frame a pixel - the way the game draws its own minimap
-		 * icons, crisp at any size and position. Everything else keeps a whole-pixel size, centred on
-		 * the box that was asked for - and so does a sprite on a host without
-		 * `RegisterSizedImageRegion`.
+		 * Positions keep their fractions, so an icon gliding across the minimap moves smoothly rather
+		 * than a pixel at a time. Sizes stay whole pixels, centred on the box asked for, except a
+		 * sprite frame (an image with `sourceW` and `sourceH`): where the host can cut it out of its
+		 * sheet, it is cut at the frame's own resolution and scaled to the exact size asked for.
 		 */
 		Subpixel = 1
 	}
 	/** An image the surface paints this frame. */
 	interface IHudImage {
+		/** Always `"image"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "image"
 		/** Clips to an ellipse; square boxes use the ordinary rounded clip. */
 		circle?: boolean
+		/** Left edge, in px. */
 		x: number
+		/** Top edge, in px. */
 		y: number
+		/**
+		 * Width, in px, rounded to a whole pixel except for a sprite frame placed
+		 * {@link EHudPlacement.Subpixel}.
+		 */
 		w: number
+		/**
+		 * Height, in px, rounded to a whole pixel except for a sprite frame placed
+		 * {@link EHudPlacement.Subpixel}.
+		 */
 		h: number
+		/**
+		 * The art drawn: a file a package ships under `scripts_files/`, a resource of the game's own,
+		 * or a `://` source the host serves.
+		 */
 		path: string
+		/** Colour multiplied into the art, packed `0xRRGGBBAA`; opaque white leaves the art as is. */
 		color: number
 		/**
 		 * Corner radius in px, half the size for a round portrait. Carved by the sdf mask, so the
@@ -171,15 +226,24 @@ declare namespace MenuSDK {
 		 * so the two multiply and the corners keep their sdf edge.
 		 */
 		fade?: number
-		/** Sprite source rectangle in source pixels. */
+		/** Left edge of the part of the source drawn, in the source's own pixels. */
 		sourceX?: number
+		/** Top edge of the part of the source drawn, in source pixels. */
 		sourceY?: number
+		/**
+		 * Width of the part of the source drawn, in source pixels; the source's whole width when
+		 * omitted. Setting it holds the image back until the host has measured the source.
+		 */
 		sourceW?: number
+		/** Height of the part of the source drawn, in source pixels; its whole height when omitted. */
 		sourceH?: number
-		/** Screen clipping rectangle. */
+		/** Left edge of the rectangle the image is cut to, in px; no cut on the left when omitted. */
 		clipX?: number
+		/** Top edge of the rectangle the image is cut to, in px; no cut at the top when omitted. */
 		clipY?: number
+		/** Width of the rectangle the image is cut to, from {@link clipX}, else from {@link x}. */
 		clipW?: number
+		/** Height of the rectangle the image is cut to, from {@link clipY}, else from {@link y}. */
 		clipH?: number
 	}
 	/**
@@ -187,25 +251,40 @@ declare namespace MenuSDK {
 	 * API, so a line is geometry plus a shader that carves the rounded cap inside it.
 	 */
 	interface IHudStrip {
+		/** Always `"strip"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "strip"
+		/** Horizontal position of the start point, in px: the tip of the strip's first end. */
 		x: number
+		/** Vertical position of the start point, in px. */
 		y: number
+		/** Length from tip to tip, in px, the rounded ends included. */
 		length: number
+		/** Width across, in px; each end is a half circle of it. */
 		thickness: number
+		/** Turn about the start point, in degrees clockwise; 0 runs to the right. */
 		angle: number
+		/** Stroke colour, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
 	}
 	/** A ring, or a disc when `filled`, drawn by the sdf circle so it stays round at any size. */
 	interface IHudCircle {
+		/** Always `"circle"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "circle"
+		/** Horizontal position of the centre, in px. */
 		x: number
+		/** Vertical position of the centre, in px. */
 		y: number
+		/** Radius of the outer edge, in px; a ring's {@link thickness} lies inside it. */
 		radius: number
+		/** Width of the ring, in px; unused when {@link filled}. */
 		thickness: number
+		/** Colour of the disc or the ring, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
+		/** Draws a solid disc instead of a ring. */
 		filled: boolean
 		/** A halo on the same terms as {@link IHudRect.glow}; the quad carries its own room. */
 		glow?: number
+		/** Colour of the {@link glow} halo, packed `0xRRGGBBAA`; clear when omitted. */
 		glowColor?: number
 	}
 	/**
@@ -215,13 +294,21 @@ declare namespace MenuSDK {
 	 * their rounded caps overlap at every joint and a translucent one beads there.
 	 */
 	interface IHudArc {
+		/** Always `"arc"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "arc"
+		/** Horizontal position of the circle's centre, in px. */
 		x: number
+		/** Vertical position of the circle's centre, in px. */
 		y: number
+		/** Radius to the middle of the stroke, in px. */
 		radius: number
+		/** Width of the stroke, in px. */
 		thickness: number
+		/** Angle the arc begins at, in radians clockwise from three o'clock. */
 		start: number
+		/** How far the arc runs clockwise from {@link start}, in radians, up to a full turn. */
 		sweep: number
+		/** Stroke colour, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
 		/** The native capsule slot the geometry rides in, claimed by the emitter for this frame. */
 		slot: number
@@ -233,10 +320,13 @@ declare namespace MenuSDK {
 	 * but their rounded caps overlap at every joint and a translucent one beads there.
 	 */
 	interface IHudPath {
+		/** Always `"path"`: the tag a {@link HudCommand} is told apart by. */
 		readonly kind: "path"
 		/** The points the run passes through, as x, y pairs in screen px; two of them at least. */
 		points: readonly number[]
+		/** Width of the stroke, in px. */
 		thickness: number
+		/** Stroke colour, packed `0xRRGGBBAA` as {@link HudColor} builds it. */
 		color: number
 		/**
 		 * Paints the run's interior as well, the run read as a closed loop: this colour along the
@@ -249,6 +339,11 @@ declare namespace MenuSDK {
 		/** The native capsule slot the geometry rides in, claimed by the emitter for this frame. */
 		slot: number
 	}
+	/**
+	 * One draw call of a {@link CHudSurface}, told apart by its `kind`. Positions and sizes are in
+	 * screen px, or in px from the anchor point after {@link CHudSurface.Anchor}; colours are packed
+	 * `0xRRGGBBAA` numbers, as {@link HudColor} builds them.
+	 */
 	type HudCommand = IHudRect | IHudText | IHudImage | IHudStrip | IHudCircle | IHudArc | IHudPath
 	/**
 	 * A point HUD commands can be pinned to, placed by the core when the frame is presented; Source 2's
@@ -278,6 +373,11 @@ declare namespace MenuSDK {
 		 * the window's own motion; one on a HUD layer is bound by whoever owns it.
 		 */
 		public MenuBound: boolean
+		/**
+		 * A surface that takes its panel under `key` on `layer`. Only the surfaces
+		 * {@link HudSurfaceOf} hands out are closed with the host's frame; one built here is closed by
+		 * its owner, through {@link Close} or {@link Tick}.
+		 */
 		constructor(key: string, layer: EPanelLayer, placement?: EHudPlacement)
 		/**
 		 * The theme this surface's colours resolve against, which its layer decides: what is anchored
@@ -285,14 +385,9 @@ declare namespace MenuSDK {
 		 */
 		public get Scope(): EThemeScope
 		/**
-		 * How strongly the whole surface is drawn, 0 to 1.
-		 *
-		 * On a host with HUD lists it reaches everything the surface draws. Elsewhere it reaches
-		 * everything EXCEPT what carries an opacity of its own: RmlUi hands opacity down the tree rather
-		 * than compositing it, and a run of text carries one so its glyph and the effect baked beside
-		 * it fade together — so text stands at full strength while everything around it thins away.
-		 * Fading a card whose readings must go with it belongs in {@link SetHudAlphaScale}, which every
-		 * primitive multiplies into what it pushes.
+		 * Draws the whole surface at `value` of its strength, 0 to 1, rounded to hundredths, until the
+		 * next call. Where the host draws no HUD lists, text keeps its full strength; to fade it with
+		 * the rest, scale the alpha {@link hudAlpha} hands out through {@link SetHudAlphaScale}.
 		 */
 		public Fade(value: number): void
 		/**
@@ -306,17 +401,8 @@ declare namespace MenuSDK {
 		/** The fraction {@link CHudSurface.Backdrop} set; 1 while nothing did. */
 		public get BackdropScale(): number
 		/**
-		 * How far out of focus everything the surface draws stands, in screen pixels; 0 is sharp.
-		 *
-		 * Where {@link CHudSurface.Fade} reaches everything except what carries an opacity of its own,
-		 * this reaches all of it: every shape and every run of text is smeared where it stands, so a
-		 * countdown goes soft along with the card around it. It is what a card dissolving rather than
-		 * thinning away leaves on. A surface that never asks for one writes no filter anywhere, and
-		 * one that has asked keeps writing what it stands at, so nothing it draws later comes back
-		 * wearing a blur that has been taken off.
-		 *
-		 * @example
-		 * surface.Blur(hudH(3) * (1 - presence))
+		 * Blurs everything the surface draws, text included, by `value` screen px until the next call,
+		 * rounded to tenths and held between 0 and 16; 0 is sharp.
 		 */
 		public Blur(value: number): void
 		/** Places this world surface in the shared distance stack. */
@@ -334,21 +420,12 @@ declare namespace MenuSDK {
 		 */
 		public get Retained(): boolean
 		/**
-		 * Leaves what the surface shows exactly as the last frame wrote it, for a drawer whose frame
-		 * would come out the same: nothing is pushed, compared or written this frame. Answers whether
-		 * it did. A surface already drawn into this frame, one standing with no frame at all - never
-		 * drawn, or wiped since - or one with an image still waiting on its texture keeps nothing, and
-		 * its frame ends as it would have. Arcs and paths ride in capsule slots handed out afresh every
-		 * frame, so a kept frame claims its slots again, and keeps nothing when the frame's slots have
-		 * run out. Anything pushed after a hold in the same frame opens the frame as usual and drops
-		 * the hold.
-		 *
-		 * `shiftX` / `shiftY` stand the kept frame that many px off where it was drawn, the whole of it
-		 * at once, for a card placed from a world position by hand whose point moved on screen while
-		 * nothing on it changed. What stands on an anchor ({@link CHudSurface.Anchor}) needs no shift:
-		 * the core moves it. A frame that stood anything on an anchor the surface projected itself, on
-		 * a host without anchors, is not kept: it would stay where the camera left it.
-		 * The next frame drawn stands where its own commands put it again.
+		 * Leaves the surface showing what the last frame wrote, for a drawer whose frame would come out
+		 * the same, and returns whether it did. It keeps nothing after a push this frame, on a surface
+		 * showing no frame, while an image waits on its texture, on a host without anchors after a
+		 * frame drawn on an anchor, or when no capsule slots are left for the frame's arcs and paths.
+		 * `shiftX` and `shiftY` move the kept frame by that many whole px. A push after it drops the
+		 * hold.
 		 *
 		 * @example
 		 * if (unchanged && surface.Keep(anchor.x - drawnAt.x, anchor.y - drawnAt.y)) {
@@ -356,6 +433,10 @@ declare namespace MenuSDK {
 		 * }
 		 */
 		public Keep(shiftX?: number, shiftY?: number): boolean
+		/**
+		 * Starts an empty frame with no anchor set. {@link Push} opens a frame on its own; called
+		 * mid-frame, this throws away what the frame pushed so far.
+		 */
 		public Open(): void
 		/**
 		 * Pins the commands pushed after it, until the next call or the end of the frame, to `anchor`:
@@ -385,21 +466,31 @@ declare namespace MenuSDK {
 		 */
 		public AnchorWorld(x: number, y: number, z: number, screenX?: number, screenY?: number): void
 		/**
+		 * Pins the commands pushed after it, until the next call or the end of the frame, to the world
+		 * point `x, y, z`, or with a handle to `x, y, z` world units from the origin of the entity it
+		 * names, while they keep the screen px of the script's projection: the core moves them with the
+		 * camera, and the entity, when the frame is presented. For what a script projects itself; content
+		 * laid out around a point from the start belongs on {@link Anchor}. On a host without anchors,
+		 * and where the point cannot be placed, the commands stand on the screen as given.
+		 * @example
+		 * surface.Pin(-1, impact.x, impact.y, impact.z)
+		 * surface.Push({ kind: "circle", x: screen.x, y: screen.y, radius: 4, color })
+		 * surface.Anchor()
+		 */
+		public Pin(handle: number, x: number, y: number, z: number): void
+		/**
 		 * A frame opens at its first command rather than on a call, so a caller drawing from more than
 		 * one phase of the tick lands in one frame instead of having the earlier phase discarded.
 		 */
 		public Push(command: HudCommand): void
 		/**
-		 * Ends the frame: the surface takes its panel the first time it has anything to show, grows
-		 * the pools a longer frame needs, and writes what is left onto the elements it already has.
-		 * An empty frame on a surface that has no panel yet ends here: wiping nothing mounts nothing.
-		 *
-		 * A grown pool asks its own layer for a render rather than the whole host: the registry
-		 * tracks a version per stack, so invalidating the menu store would leave the new elements
-		 * unbuilt until something unrelated refreshed - and refreshing all three stacks makes one
-		 * unit's growth a re-render of every panel on screen.
+		 * Ends the frame and writes it onto the screen. The surface takes its panel the first time a
+		 * frame has something to show, and a frame that needs more elements than the surface holds
+		 * shows once its layer has rendered them. A surface from {@link HudSurfaceOf} is closed with
+		 * the host's frame.
 		 */
 		public Close(): void
+		/** Wipes what the surface shows, by opening and closing an empty frame. */
 		public Clear(): void
 		/**
 		 * Takes the surface off the panel host for good, for a thing that is gone rather than merely
@@ -410,21 +501,7 @@ declare namespace MenuSDK {
 		public Destroy(): void
 		/** One tick has finished drawing: flush what was pushed, or wipe a surface that drew nothing. */
 		public Tick(): void
-		/**
-		 * Ends the host frame for this surface, which {@link EndHudFrame} does for every one: wiped
-		 * while the host keeps overlays down, left as it stands on a frame without a retained pass if
-		 * that is where it was drawn - its capsule slots claimed again, or wiped where they ran out -
-		 * and ticked otherwise.
-		 */
-		public EndFrame_(shown: boolean, retainedPass: boolean): void
-		/** Whether what the surface shows has frosted glass on it, which needs the backdrop captured. */
-		public get Frosted_(): boolean
 	}
-	/**
-	 * How many HUD frames have ended so far. A surface that notes the frame it last drew in can tell
-	 * a frame it sat out from a frame that never came: a stalled tick moves the clock, not this.
-	 */
-	function HudFrame(): number
 	/**
 	 * The surface a panel draws into, created on first use in the layer it belongs to and kept for
 	 * the session. A surface anchored to the screen goes into `Screen`, which the host stacks over
@@ -444,14 +521,6 @@ declare namespace MenuSDK {
 	 */
 	function DropHudSurface(key: string): void
 	/**
-	 * Closes the tick for every surface, which the menu does for its host once every frame, after
-	 * the last thing has drawn. While the host says an overlay may not draw — a screen of the game's
-	 * own standing over the world, anything outside a match — whatever was pushed this tick is
-	 * dropped and every surface wipes: the gate lives here so no consumer can draw across one by
-	 * forgetting to ask.
-	 */
-	function EndHudFrame(): void
-	/**
 	 * Draws `drawer` at the end of every retained pass, so what it puts on a surface stands until the
 	 * next pass; on a host without a retained pass every frame is one, see {@link RunRetainedHudPass}.
 	 * For an overlay that stands on the screen and changes at a tick's rate - anything placed from a
@@ -461,21 +530,9 @@ declare namespace MenuSDK {
 	 */
 	function OnRetainedHudPass(drawer: () => void): void
 	/**
-	 * The host's retained pass begins: a surface opened from here until {@link EndRetainedHudPass}
-	 * keeps what it draws until the next pass. Wired to {@link MenuHost.onRetainedPass}.
-	 */
-	function BeginRetainedHudPass(): void
-	/**
-	 * The host's retained pass is over once the drawers handed to {@link OnRetainedHudPass} have drawn;
-	 * see {@link BeginRetainedHudPass}.
-	 */
-	function EndRetainedHudPass(): void
-	/** A whole retained pass at once, every frame, for a host that runs none of its own. */
-	function RunRetainedHudPass(): void
-	/**
-	 * Asks the host to run its retained pass on the next frame, for a surface drawn in it that the
-	 * user is moving by hand - a panel in a drag, a hover easing in - which the pass's own rate would
-	 * make visibly step. A host without a retained pass draws every frame anyway.
+	 * Asks the host to run its retained pass on the next frame, for a surface drawn in it that is
+	 * moving under the user's hand, such as a panel being dragged, which the pass's own rate would
+	 * show moving in steps. A host without a retained pass draws every frame and ignores the call.
 	 */
 	function RequestRetainedHudPass(): void
 	/**
@@ -487,28 +544,21 @@ declare namespace MenuSDK {
 	/** Fades everything drawn onto the active surface from here on; the card frame calls it. */
 	function SetHudAlphaScale(value: number): void
 	/**
-	 * How much of the theme's blur a frosted backdrop drawn now carries: the card's own fade times
-	 * the fraction the active surface was handed through {@link CHudSurface.Backdrop}, so a card
-	 * fading in on the menu's open motion frosts on the effect's own blur curve.
-	 */
-	function HudBlurScale(): number
-	/**
-	 * Opens and closes the window a panel's content callback draws in. The surface's theme scope is
-	 * entered along with it, so a colour the callback asks the menu for - `HudColors.accent`, a token,
-	 * a blur - resolves against the theme that surface wears instead of the window's. It cannot be
-	 * taken from the command: by the time one is pushed its colour is already a literal, and only the
-	 * callback knows which surface it is drawing into. Surfaces nest: a panel drawn from inside
-	 * another panel's callback hands the outer one back on close, scope and all.
+	 * Makes `surface` the one {@link EmitHud} draws onto and enters its theme scope, so a colour asked
+	 * of the theme meanwhile, such as `HudColors.accent`, resolves against the theme that surface
+	 * wears. Called without one, it hands back the surface and scope that were active before, so
+	 * calls nest. Either way {@link HudAlphaScale} goes back to 1.
+	 * @example
+	 * MenuSDK.SetActiveSurface(surface)
+	 * try {
+	 * 	MenuSDK.HudCard.Frame(box)
+	 * } finally {
+	 * 	MenuSDK.SetActiveSurface(undefined)
+	 * }
 	 */
 	function SetActiveSurface(surface: Nullable<CHudSurface>): void
 	/** Where every HUD primitive lands while a panel's content callback runs. */
 	function EmitHud(command: HudCommand): void
-	/**
-	 * `#rrggbbaa`, from the engine's 0-255 alpha. Hex rather than `rgba()` because a colour also goes
-	 * into `shader("rounded-rect …")`, whose arguments are separated by spaces: the commas and spaces
-	 * of a functional notation split into junk tokens there, and the shader falls back to opaque
-	 * white - which is why every line drew white whatever the menu picked.
-	 */
 	/**
 	 * A colour as a command carries it: one number, so a frame of commands is compared and stored
 	 * without walking a string per colour, and the literal below is built only for a command that
@@ -518,5 +568,9 @@ declare namespace MenuSDK {
 	 * EmitHud({ kind: "rect", x, y, w, h, color: HudColor(HudColors.glass, hudAlpha()) })
 	 */
 	function HudColor(color: Color, alpha?: number): number
+	/**
+	 * `color` as a `#rrggbbaa` string, with `alpha`, 0 to 255, in place of its own; each channel is
+	 * rounded and held to that range.
+	 */
 	function CssColor(color: Color, alpha?: number): string
 }

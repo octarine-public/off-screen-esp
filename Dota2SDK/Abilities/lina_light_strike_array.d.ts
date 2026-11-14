@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class lina_light_strike_array extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get SkillShotType(): ESkillShotType
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number

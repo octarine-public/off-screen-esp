@@ -4,8 +4,6 @@ declare class modifier_dragon_knight_corrosive_breath_dot extends Modifier imple
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public GetTexturePath(): string
-	/** The corrosion an attack of the dragon lays ticks on the unit by itself (`DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/**
 	 * The corrosion an attack lays: `corrosive_damage_per_second` each second, the first a second
 	 * after the attack, the last as it ends, `corrosive_duration` after the latest attack; an

@@ -7,6 +7,5 @@ declare class modifier_slark_pounce_leash extends Modifier implements IDebuff, I
 	public get LeashRadius(): number
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

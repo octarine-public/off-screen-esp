@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_searing_signet extends Modifier {
-	/** A spell of its bearer's burns the unit it hits hard enough (`HitOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/**
 	 * Each magical hit of a spell of its bearer's - an item's too, a tick of its damage over time
 	 * too - over `damage_threshold`, as the unit takes it, lays the signet's burn

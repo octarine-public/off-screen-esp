@@ -8,7 +8,6 @@ declare class modifier_eul_cyclone extends Modifier implements IBuff, IShield, I
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	public IsDisable(): this is IDisable
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** An enemy drops out of the cyclone hurt (`Ability.DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**

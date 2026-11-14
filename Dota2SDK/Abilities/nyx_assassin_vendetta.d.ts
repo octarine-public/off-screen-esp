@@ -16,5 +16,4 @@ declare class nyx_assassin_vendetta extends Ability implements IBuff {
 	 */
 	public get IsCombatBuff(): boolean
 	public get RevealBonusDamage(): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

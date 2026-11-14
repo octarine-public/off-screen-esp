@@ -5,7 +5,6 @@ declare class dragon_knight_breathe_fire extends Ability implements INuke {
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number
-	protected MeetsSpellBlock(): boolean
 	public get AbilityBehaviorMask(): DOTA_ABILITY_BEHAVIOR
 	public GetBaseRangeForLevel(level: number): number
 }

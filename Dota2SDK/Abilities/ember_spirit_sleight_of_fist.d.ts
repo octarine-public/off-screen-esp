@@ -11,8 +11,6 @@ declare class ember_spirit_sleight_of_fist extends Ability implements INuke {
 	public get AppliesUnitState(): bigint
 	/** The invulnerability is Ember Spirit's own. */
 	public get StatesOnCaster(): boolean
-	/** One strike's `attack_interval`, the least he is invulnerable for. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	/**
 	 * For Ember Spirit himself: an `attack_interval` for each unit he strikes cast at his spot
 	 * (`StatesSpotOf`), none without one; for another unit as the base says.

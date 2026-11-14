@@ -25,11 +25,9 @@ declare class marci_companion_run extends Ability implements INuke {
 	public get HomingTime(): number
 	public TargetTeamOf(data: AbilityData): DOTA_UNIT_TARGET_TEAM
 	public CanTarget(unit: Unit): boolean
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseDamageForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public get AppliesUnitState(): bigint
-	protected MeetsSpellBlock(): boolean
 }

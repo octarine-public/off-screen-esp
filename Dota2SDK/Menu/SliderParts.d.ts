@@ -59,12 +59,12 @@ declare namespace MenuSDK {
 	/**
 	 * The menu slider's rail with two thumbs, the stretch between them filled and each end's value
 	 * in a bubble over its thumb: the span a range slider picks. The rail is cut into its `steps`,
-	 * a dot at each, lit where the span covers it. A press takes the thumb nearer to it - the high
-	 * one from a press right of the two where they stand together - and drags it; a thumb dragged
-	 * into the other stops against it, and two bubbles that would overlap are read as one.
+	 * a dot at each when there are 24 or fewer, lit where the span covers it. A press drags the
+	 * thumb nearer to it, and where the two stand together, the high one from a press right of them.
+	 * A thumb dragged into the other stops against it, and two bubbles that would overlap merge.
 	 *
 	 * @example
-	 * <RangeBar low={0.3} high={0.5} lowText="150" highText="250" steps={10} onChange={setSpan} />
+	 * <MenuSDK.RangeBar low={0.3} high={0.5} lowText="150" highText="250" onChange={setSpan} />
 	 */
 	function RangeBar(props: IRangeBarProps): React.ReactElement
 	/** What a host writes a {@link SliderValueInput}'s value through between renders; see {@link ISliderValueInputProps.display}. */

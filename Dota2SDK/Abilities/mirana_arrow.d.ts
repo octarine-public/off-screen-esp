@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class mirana_arrow extends Ability implements INuke {
-	/** The longest the arrow stuns, flown its whole `arrow_max_stunrange`; nearer, shorter (`GetAppliedDuration`). */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get SkillShotType(): ESkillShotType
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number

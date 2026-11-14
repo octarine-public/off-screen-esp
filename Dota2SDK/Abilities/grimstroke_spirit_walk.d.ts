@@ -24,6 +24,4 @@ declare class grimstroke_spirit_walk extends Ability {
 	 * - less for less, which is not weighed. The Shard's `shard_bonus_damage_pct` adds to both.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	/** The buff lasts `buff_duration`. */
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

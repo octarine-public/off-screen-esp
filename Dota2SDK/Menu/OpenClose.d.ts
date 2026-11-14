@@ -1,23 +1,22 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * The open/close motion of the menu window. A linear progress value runs from
-	 * 0 (fully closed) to 1 (fully open) across `MenuFlags.MenuOpenDuration`; the
-	 * selected effect shapes it into the frame's opacity multiplier and backdrop
-	 * blur fraction, both landing on the theme's own opacity and blur at 1.
-	 * Closing has no motion: the progress drops to 0 and the window leaves the
-	 * same frame, from any point mid-open. Surfaces that stand beside the window
-	 * rather than inside it - a preview card and its stage - follow the same
-	 * progress, so the menu opens as one thing. The module also owns the native
-	 * backdrop capture, releasing it the moment the window closes.
+	 * A way the menu window opens: two curves over the open progress, which runs linearly from 0 to
+	 * 1 across {@link OpenDuration}, giving the frame's opacity and backdrop blur as fractions of
+	 * the theme's own. Closing plays no curve: the window is gone the same frame.
 	 */
 	interface OpenEffect {
+		/** The entry the "Menu open effect" dropdown shows for it. */
 		readonly name: string
 		/** Frame opacity as a fraction of the theme opacity, over progress 0..1. */
 		readonly opacity: (t: number) => number
 		/** Backdrop blur as a fraction of the theme blur, over progress 0..1. May overshoot 1. */
 		readonly blur: (t: number) => number
 	}
+	/**
+	 * The effects the menu window can open with, in the order the "Menu open effect" dropdown lists
+	 * them. {@link ActiveOpenEffect} is the one the menu is set to.
+	 */
 	const OpenEffects: OpenEffect[]
 	/**
 	 * The open effect the menu is set to, for a surface that comes in on the window's own terms

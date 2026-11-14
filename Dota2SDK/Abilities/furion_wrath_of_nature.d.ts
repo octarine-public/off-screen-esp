@@ -10,6 +10,4 @@ declare class furion_wrath_of_nature extends Ability {
 	public GetBaseDamageForLevel(level: number): number
 	public get CastRange(): number
 	public get AppliesUnitState(): bigint
-	/** The root of the first hit - on the unit it is cast at. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

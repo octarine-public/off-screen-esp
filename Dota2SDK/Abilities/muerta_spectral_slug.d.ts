@@ -24,5 +24,4 @@ declare class muerta_spectral_slug extends Ability implements INuke {
 	public GetBaseSpeedForLevel(level: number): number
 	/** The bullet's `damage` lands on the form it lays: harder by the form's cut (`AmplificationOf`). */
 	public GetRawDamage(target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

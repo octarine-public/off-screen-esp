@@ -9,30 +9,35 @@ type BenchmarkProvider = (emit: BenchmarkGaugeSink) => void
  * providers add the counts that say what grew. Everything is a no-op in a build without the
  * recorder, so a layer registers what it knows without checking first.
  */
-declare class CBenchmark {
-	public get Enabled(): boolean
+interface CBenchmark {
+	/** Whether this build carries the recorder. Without it every method here does nothing. */
+	get Enabled(): boolean
 	/**
 	 * Writes a labelled point in time into the session, to line a change up with what the
 	 * numbers did around it.
 	 * @example
 	 * SharedSDK.Benchmark.Mark("config applied")
 	 */
-	public Mark(label: string): void
+	Mark(label: string): void
 	/**
 	 * Registers gauges reported once per bucket. The provider runs on the script thread every
 	 * five seconds, so it should read counts it already has, not compute them.
 	 * @example
 	 * SharedSDK.Benchmark.RegisterProvider(emit => emit("modifiers.active", active.size))
 	 */
-	public RegisterProvider(provider: BenchmarkProvider): void
+	RegisterProvider(provider: BenchmarkProvider): void
 	/**
-	 * Starts a span in code the emitters do not see - a parser, a loop body - and returns what
-	 * `End` needs. Zero when the recorder is absent, and `End` does nothing with it then.
+	 * Starts a span around code no event listener covers, such as a parser or a loop body, and
+	 * returns what {@link End} needs to close it: 0 without the recorder, which `End` ignores.
 	 * @example
 	 * const started = SharedSDK.Benchmark.Begin()
 	 * parse(buffer)
 	 * SharedSDK.Benchmark.End("parse", started)
 	 */
-	public Begin(): number
-	public End(name: string, started: number): void
+	Begin(): number
+	/**
+	 * Closes the span {@link Begin} started and adds its length to the zone `name`. Every five
+	 * seconds a zone reports how many spans it took, their total and the longest, in milliseconds.
+	 */
+	End(name: string, started: number): void
 }

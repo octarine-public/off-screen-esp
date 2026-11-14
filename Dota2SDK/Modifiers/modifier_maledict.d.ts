@@ -10,6 +10,5 @@ declare class modifier_maledict extends Modifier implements IDebuff {
 	 * it; what else hurt the bearer before is not known. `NaN` before it shows.
 	 */
 	public HealthLaid(ticks: DamageTicks): number
-	protected OnAdded(): void
 	public get IsPurgable(): boolean
 }

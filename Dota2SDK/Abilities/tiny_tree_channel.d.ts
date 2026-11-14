@@ -12,5 +12,4 @@ declare class tiny_tree_channel extends Ability {
 	public get SkillShotType(): ESkillShotType
 	public GetRawDamage(target: Unit): number
 	public GetDamage(target: Unit): number
-	protected MeetsSpellBlock(): boolean
 }

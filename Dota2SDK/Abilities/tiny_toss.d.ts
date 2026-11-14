@@ -10,7 +10,6 @@ declare class tiny_toss extends Ability implements INuke {
 	public GetBaseAOERadiusForLevel(level: number): number
 	/** Toss damage plus the bonus Grow adds to it. */
 	public GetBaseDamageForLevel(level: number): number
-	protected MeetsSpellBlock(): boolean
 	/** The data calls its targets custom: a unit of either side to land on, an enemy hero too. */
 	public TargetTeamOf(): DOTA_UNIT_TARGET_TEAM
 	/** A hero or a creep. */

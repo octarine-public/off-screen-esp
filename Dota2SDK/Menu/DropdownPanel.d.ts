@@ -2,12 +2,14 @@
 declare namespace MenuSDK {
 	/** The picture an option carries, and the gap between it and the name it belongs to. */
 	const OptionIconDp = 20
+	/** The space between an option's picture and its name, in dp. */
 	const OptionIconGapDp = 8
 	/**
 	 * Width of the widest value `entry` offers, in dp, as text in `role` sets it: the list in the
 	 * panel is set like the menu, the value in the trigger like the settings row it stands in.
 	 */
 	function WidestValueDp(entry: PanelEntry, role?: EFontRole): number
+	/** The stored entry of a dropdown or a multi-select, the rows an option list opens for. */
 	type PanelEntry = DropdownEntry | MultiSelectEntry
 	/**
 	 * The pickers riding the options that are picked right now, in the order the list holds them.
@@ -15,6 +17,11 @@ declare namespace MenuSDK {
 	 * colours of what it is set to without anyone having to open the list.
 	 */
 	function SelectedColors(entry: PanelEntry): ColorEntry[]
+	/**
+	 * Opens the option list of `entry` under `anchor`, a rect in dp, right edges aligned, replacing
+	 * any option list open. A dropdown closes on a pick; a multi-select stays open and flips each
+	 * option clicked.
+	 */
 	function OpenDropdown(entry: PanelEntry, anchor: ScreenRect): void
 	/** How {@link OpenOptionPicker} behaves beyond picking. */
 	interface IOptionPickerOptions {
@@ -52,6 +59,11 @@ declare namespace MenuSDK {
 	 * read on every repaint, and each pick returns a new array in option order.
 	 */
 	function OpenMultiOptionPicker(values: readonly string[], selected: () => readonly string[], anchor: ScreenRect, pick: (values: string[]) => void): void
+	/**
+	 * Closes the option list, whichever call opened it, and runs the `onClose` an
+	 * {@link OpenOptionPicker} list was given.
+	 */
 	function CloseDropdown(): void
+	/** Whether an option list is open; given `entry`, whether it is that entry's list. */
 	function IsDropdownOpen(entry?: PanelEntry): boolean
 }

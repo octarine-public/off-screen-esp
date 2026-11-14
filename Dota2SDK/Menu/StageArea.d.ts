@@ -15,7 +15,9 @@ declare namespace MenuSDK {
 	 * chams.Place(left, top, right - left, bottom - top)
 	 */
 	class CStageArea {
+		/** Its settings; the area wears the accent frame while this node's settings are open. */
 		public readonly Settings: Node
+		/** What its tooltip names it, localized by {@link CStageArea.Caption}. */
 		public readonly Title: string
 		/** Whether the cursor is over its pointer area. */
 		public Hovered: boolean
@@ -27,7 +29,11 @@ declare namespace MenuSDK {
 		 * @param Settings its settings, opened beside the stage.
 		 * @param Title what its tooltip names it.
 		 */
-		constructor(Settings: Node, Title: string)
+		constructor(
+		/** Its settings; the area wears the accent frame while this node's settings are open. */
+		Settings: Node, 
+		/** What its tooltip names it, localized by {@link CStageArea.Caption}. */
+		Title: string)
 		/** Whether it is in hand. */
 		public get Held(): boolean
 		/** What its tooltip names it: its title; a script adds what it reads now after it. */

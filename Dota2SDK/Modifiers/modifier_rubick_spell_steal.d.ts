@@ -7,6 +7,5 @@ declare class modifier_rubick_spell_steal extends Modifier implements IBuff {
 	public readonly BuffModifierName: string
 	public get ForceVisible(): boolean
 	public IsBuff(): this is IBuff
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

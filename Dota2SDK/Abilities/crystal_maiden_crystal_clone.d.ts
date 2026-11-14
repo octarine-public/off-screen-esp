@@ -7,8 +7,6 @@ declare class crystal_maiden_crystal_clone extends Ability {
 	 * as it breaks (`ActivationDelay`): Frostbite's root and disarm, for Frostbite's time.
 	 */
 	public get AppliesUnitState(): bigint
-	/** The statue holds by Frostbite. */
-	protected get HoldingAbility(): Nullable<string>
 	public get Range(): number
 	/**
 	 * When the statue breaks, at the latest: her Crystal Nova or an explosion of her Freezing Field

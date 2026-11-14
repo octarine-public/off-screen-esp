@@ -4,6 +4,5 @@ declare class modifier_lion_finger_of_death_kill_counter extends Modifier implem
 	public readonly BuffModifierName: string
 	public IsBuff(): this is IBuff
 	public GetSpellBonusDamage(rawDamage: number): number
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

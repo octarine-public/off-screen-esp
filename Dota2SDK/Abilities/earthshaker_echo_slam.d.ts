@@ -1,8 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class earthshaker_echo_slam extends Ability implements INuke {
 	public IsNuke(): this is INuke
-	/** The slam stuns by Aftershock. */
-	protected get HoldingAbility(): Nullable<string>
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number
 	/**

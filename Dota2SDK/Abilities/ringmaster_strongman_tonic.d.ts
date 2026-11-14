@@ -6,6 +6,5 @@ declare class ringmaster_strongman_tonic extends Ability implements IHealthResto
 	public readonly HealthRestoreModifierName = "modifier_ringmaster_strongman_tonic_buff"
 	public GetHealthRestore(_target: Unit): number
 	public GetBaseSpeedForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsHealthRestore(): this is IHealthRestore<Unit>
 }

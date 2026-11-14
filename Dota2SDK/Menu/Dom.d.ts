@@ -1,6 +1,11 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** The CSS property a camel-case style key names: `backdropFilter` is `backdrop-filter`. */
 	function cssName(key: string): string
+	/**
+	 * `value` as a dp length, rounded to two decimals: `dp(2.5)` is `"2.5dp"`. Unlike a font size or
+	 * radius given to {@link applyStyle} as a number, it is not scaled by the theme.
+	 */
 	function dp(value: number): string
 	/**
 	 * Whether an element is still there to be written to. The host frees the native object behind an
@@ -27,12 +32,25 @@ declare namespace MenuSDK {
 	 */
 	function ElementsFreedEpoch(): number
 	/**
-	 * Says that elements were freed outside the destroy queue - a document closed, a root destroyed
-	 * whole - so what holds elements of its own looks at them again.
+	 * Moves {@link ElementsFreedEpoch} on. Call it after freeing elements outside the destroy queue,
+	 * such as closing a document or destroying a root whole, so whatever holds elements checks them
+	 * again.
 	 */
 	function NoteElementsFreed(): void
+	/**
+	 * Writes `style` onto `element`'s inline style. A number is a length in dp, with `fontSize` and
+	 * radii scaled by the theme; `opacity`, `zIndex`, `flex` and `fontWeight` take it bare, the weight
+	 * through the font weight setting. A theme token is resolved, and {@link retintStyles} resolves it
+	 * again later. `undefined` clears the property. Only a value that changed is written, and an
+	 * element already freed is left alone.
+	 */
 	function applyStyle(element: HTMLElement, style: RmlStyle): void
+	/** Takes the properties `keys` name, in camel case, off `element`'s inline style. */
 	function clearStyle(element: HTMLElement, keys: string[]): void
+	/**
+	 * Resolves again every theme token {@link applyStyle} wrote on `root` and everything under it,
+	 * against the theme scope that is active: the pass to run after that scope's palette changed.
+	 */
 	function retintStyles(root: HTMLElement): void
 	/**
 	 * Attaches an event listener that re-arms itself after every dispatch.
@@ -49,6 +67,10 @@ declare namespace MenuSDK {
 	 * carried no vertical delta.
 	 */
 	function WheelDirection(event: Event): -1 | 0 | 1
+	/**
+	 * Takes off a listener {@link listen} attached with the same `name`, `callback` and `capture`. On
+	 * `document` it also comes off the layer documents the listener reached.
+	 */
 	function unlisten(element: HTMLElement, name: string, callback: (event: Event) => void, capture?: boolean): void
 	/**
 	 * The layer documents document-level listeners must also reach. An event bubbles only inside
@@ -65,6 +87,11 @@ declare namespace MenuSDK {
 	 * but once detached it is always queued: skipping the queue leaks the native element.
 	 */
 	function deferDestroy(element: HTMLElement, parent?: HTMLElement): void
+	/**
+	 * Queues `action` for the menu's next drain of its destroy queue, which follows every render of a
+	 * menu root and comes once a frame besides. It runs with the theme scope active at this call; an
+	 * action it queues runs in the same drain, and one that throws is logged.
+	 */
 	function runAfterFrame(action: () => void): void
 	/**
 	 * Defers an action until the engine has performed a document update, so
@@ -75,6 +102,14 @@ declare namespace MenuSDK {
 	 * retries at most once per document update.
 	 */
 	function runAfterLayout(action: () => void): void
+	/**
+	 * Runs every action {@link runAfterLayout} queued, logging one that throws, then
+	 * {@link FlushAfterEvent}. The menu calls it once a frame.
+	 */
 	function flushAfterLayout(): void
+	/**
+	 * Destroys every element {@link deferDestroy} queued, then runs every action
+	 * {@link runAfterFrame} queued. A menu root calls it after each render and once a frame.
+	 */
 	function flushDestroyQueue(): void
 }

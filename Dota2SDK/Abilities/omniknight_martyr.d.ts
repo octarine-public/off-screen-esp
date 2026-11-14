@@ -9,6 +9,4 @@ declare class omniknight_martyr extends Ability implements IBuff {
 	public IsBuff(): this is IBuff
 	/** The unit it is cast at is immune to debuffs. */
 	public get AppliesUnitState(): bigint
-	/** The immunity lasts its `duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

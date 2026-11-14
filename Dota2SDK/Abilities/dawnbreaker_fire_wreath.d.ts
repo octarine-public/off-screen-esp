@@ -29,7 +29,6 @@ declare class dawnbreaker_fire_wreath extends Ability {
 	public GetBaseCastRangeForLevel(level: number): number
 	/** The smash lands once the spin is through. */
 	public GetBaseActivationDelayForLevel(level: number): number
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * How far ahead of where Dawnbreaker casts it the smash's centre lands: her walk in the spin

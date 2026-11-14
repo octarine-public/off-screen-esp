@@ -22,41 +22,46 @@ interface IRevealer {
  * 	return
  * }
  */
-declare class CVision {
-	/** The class of the map's spots revealed to a team for good. */
-	public static readonly RevealerClass = "ent_fow_revealer"
+interface CVision {
 	/** The line of sight the game draws its fog by. */
-	public readonly Terrain: TerrainSight
-	constructor()
+	readonly Terrain: TerrainSight
 	/** The team the local player fights against; `Team.None` for a spectator. */
-	public get EnemyTeam(): Team
+	get EnemyTeam(): Team
 	/**
 	 * Whether `viewer` sees `point` now: alive, within its vision range for the time of day, in
 	 * its line of sight or with flying vision.
 	 */
-	public Sees(viewer: Unit, point: Vector2 | Vector3): boolean
+	Sees(viewer: Unit, point: Vector2 | Vector3): boolean
 	/**
 	 * The viewers of `team` whose place we know: alive units of the team with any vision, seen
 	 * now or never moving. Gathered once per game time.
 	 */
-	public Viewers(team: Team): readonly Unit[]
+	Viewers(team: Team): readonly Unit[]
 	/**
 	 * The first viewer of `team` we know of that sees `point`; none for a point only a spot the
 	 * map reveals to the team shows them.
 	 */
-	public ViewerOf(team: Team, point: Vector2 | Vector3): Nullable<Unit>
+	ViewerOf(team: Team, point: Vector2 | Vector3): Nullable<Unit>
 	/** Whether a viewer of `team` we know of, or a spot the map reveals to it, sees `point`. */
-	public TeamSees(team: Team, point: Vector2 | Vector3): boolean
+	TeamSees(team: Team, point: Vector2 | Vector3): boolean
 	/**
 	 * Whether a viewer of the enemy team we know of sees `point`: what a unit of ours standing
 	 * there would show them, unless it is invisible to them.
 	 * @example
 	 * const safe = spots.filter(spot => !VisionSDK.EnemySees(spot))
 	 */
-	public EnemySees(point: Vector2 | Vector3): boolean
+	EnemySees(point: Vector2 | Vector3): boolean
+	/**
+	 * Whether our team sees `point` now, by the game's own fog of war: whether a tile of the fog
+	 * within `radius` of it is lit, the tile under it alone for a `radius` of 1 or less. Only X
+	 * and Y count; `false` before the map has loaded.
+	 * @example
+	 * if (!VisionSDK.IsPointVisible(creep.Position)) {
+	 * 	return
+	 * }
+	 */
+	IsPointVisible(point: Vector3, radius?: number): boolean
 	/** The spots the map reveals to a team for good, read from the map once it loads. */
-	public Revealers(): readonly IRevealer[]
-	protected GameEnded(): void
-	protected PostDataUpdate(dt: number): void
+	Revealers(): readonly IRevealer[]
 }
 declare const VisionSDK: CVision

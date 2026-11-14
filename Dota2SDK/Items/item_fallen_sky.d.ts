@@ -2,7 +2,6 @@
 declare class item_fallen_sky extends Item implements INuke {
 	/** Its cast dodges the projectiles flying at its caster (ProjectileDodge, server.dll). */
 	public get Disjoints(): boolean
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	/** Its impact and burn are magical: the data names no type. */
 	public get DamageType(): DAMAGE_TYPES

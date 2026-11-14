@@ -5,7 +5,6 @@ declare class modifier_oracle_rain_of_destiny extends Modifier implements IBuff,
 	public readonly DebuffModifierName: string
 	public IsBuff(): this is IBuff
 	public IsDebuff(): this is IDebuff
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** The rain harms an enemy while it stays in (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**

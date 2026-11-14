@@ -20,7 +20,6 @@
  * not counted.
  */
 declare class modifier_batrider_smoldering_resin_debuff extends Modifier {
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** It deals its queue by itself once an attack fed it (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**
@@ -39,6 +38,4 @@ declare class modifier_batrider_smoldering_resin_debuff extends Modifier {
 	 * his debuff on it learns from its first whether the attack laying it counted twice.
 	 */
 	public static Ticked(victim: Unit, caster: Unit, damage: number): void
-	protected UpdateSpecialValues(): void
-	protected OnAdded(): void
 }

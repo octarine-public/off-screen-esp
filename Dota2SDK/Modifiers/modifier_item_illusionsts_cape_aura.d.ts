@@ -8,7 +8,4 @@
  * (a courier) its `OwnerPlayerID`, none (-1) otherwise.
  */
 declare class modifier_item_illusionsts_cape_aura extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
-	protected GetDamageOutgoingPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

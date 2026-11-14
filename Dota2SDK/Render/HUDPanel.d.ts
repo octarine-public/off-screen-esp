@@ -1,9 +1,10 @@
 // AUTO-GENERATED - do not edit.
-declare const enum PanelLookup {
-	WindowRoot = 0,
-	Child = 1,
-	ChildIndex = 2,
-	Descendant = 3
+type PanelLookup = PanelLookup.WindowRoot | PanelLookup.Child | PanelLookup.ChildIndex | PanelLookup.Descendant
+declare namespace PanelLookup {
+	type WindowRoot = 0
+	type Child = 1
+	type ChildIndex = 2
+	type Descendant = 3
 }
 /**
  * A live reference to one Panorama panel, resolved lazily and kept across frames.
@@ -117,62 +118,52 @@ declare class HUDPanel {
 	/** True when the panel or any of its ancestors carries the given CSS class. */
 	public AscendantHasClass(name: string): boolean
 	/**
-	 * Takes the whole panel through the game's own API, and is the only place that touches
-	 * it: everything else on this class answers from what this left behind.
-	 *
-	 * Panorama reads are not locked on the native side and the script runs on its own
-	 * thread, so a read racing the game's own layout can catch a panel as it is being
-	 * destroyed. GUIInfo runs this for every panel inside one main-thread session a reading,
-	 * where the game main thread is parked and cannot be part-way through anything.
+	 * The panel's attribute `name` as the game's layout or script set it, or `fallback` when it
+	 * has none or is gone. Main thread only.
 	 */
-	public Snapshot_(): void
+	public Attribute(name: string, fallback?: string): string
+	/**
+	 * Runs `script` as JavaScript in the game's own Panorama, as `Panel.RunScript` does; nothing
+	 * while the panel is gone. Main thread only.
+	 */
+	public RunScript(script: string): void
 }
 /**
  * Owns the panel cache: the window roots, the interned CSS class symbols, and the two epochs
  * that decide when a cached lookup and a cached measurement have gone stale.
  */
-declare class CPanelTree {
+interface CPanelTree {
 	/**
 	 * True while {@link CPanelTree.Snapshot} is under way, inside the main-thread session: the
 	 * one stretch where a panel may be read out of the game directly.
 	 */
-	public get Reading(): boolean
+	get Reading(): boolean
 	/**
 	 * True when a panel was built or first asked about outside a reading since the last one. Its
 	 * answer waits for a reading, so GUIInfo takes one on the next pass.
 	 */
-	public get Wanted(): boolean
+	get Wanted(): boolean
 	/** Bumped whenever every cached lookup has to be made again. */
-	public get ResolveEpoch(): number
+	get ResolveEpoch(): number
 	/** Counts every panel measurement that came out different from the one before it. */
-	public get Changes(): number
+	get Changes(): number
 	/** Bumped once a reading; the first read of a panel after it re-measures. */
-	public get FrameEpoch(): number
+	get FrameEpoch(): number
 	/**
 	 * The root of a Panorama window. The reference is cached and survives the window being torn
 	 * down and built again.
 	 * @example
 	 * const hud = GUIInfo.Root(PanoramaWindow.Hud)
 	 */
-	public Root(window: PanoramaWindow): HUDPanel
+	Root(window: PanoramaWindow): HUDPanel
 	/** Interns a CSS class name once; Panorama's symbol table holds 65535 of them. */
-	public Symbol(name: string): PanoramaSymbol
+	Symbol(name: string): PanoramaSymbol
 	/** Recorded by a panel whose rectangle came out different from the previous reading's. */
-	public NoteChange(): void
+	NoteChange(): void
 	/** Drops every cached lookup, so the next read walks the game's tree again. */
-	public Invalidate(): void
+	Invalidate(): void
 	/** Opens a new frame: the next read of any panel measures it again. */
-	public Tick(): void
-	/**
-	 * Takes every panel the tree has handed out. A panel registers itself when built and is read
-	 * the way {@link CPanelTree.Read_} reads it.
-	 */
-	public Register_(panel: HUDPanel): void
-	/**
-	 * Reads a panel that was just built or asked something for the first time: at once during a
-	 * reading, and otherwise by asking for the next one ({@link CPanelTree.Wanted}).
-	 */
-	public Read_(panel: HUDPanel): void
+	Tick(): void
 	/**
 	 * Reads the whole tree out of the game in one go, then runs `during` with the reading still
 	 * open, so whatever it asks about for the first time is read on the spot rather than a
@@ -182,5 +173,5 @@ declare class CPanelTree {
 	 * reached after the one it hangs off. Run this inside a main-thread session — it is the
 	 * only moment anything here touches Panorama.
 	 */
-	public Snapshot(during: () => void): void
+	Snapshot(during: () => void): void
 }

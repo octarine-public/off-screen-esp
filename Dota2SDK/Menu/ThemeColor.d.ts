@@ -1,16 +1,36 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** `value` rounded and held to 0 to 255, as two lowercase hex digits. */
 	function toHex2(value: number): string
+	/** `color` as `#rrggbb`, with `aa` appended when its alpha is below 255. */
 	function cssColor(color: Color): string
+	/**
+	 * `hex` with `alpha`, 0 to 1, appended as two hex digits. `hex` has to be `#rrggbb`: an alpha
+	 * already there is not replaced.
+	 */
 	function cssAlpha(hex: string, alpha: number): string
 	/** The hue circle laid out left to right, as a decorator: what a rainbow shows while it stands still. */
 	const HueGradient = "linear-gradient(to right, #ff0000, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000)"
 	/** A gradient's two colours laid out left to right, as a decorator: what it shows while it stands still. */
 	function gradientDecorator(from: Color, to: Color): string
+	/**
+	 * The red, green, blue and alpha of `#rrggbb` or `#rrggbbaa`, each 0 to 255; the alpha is 255
+	 * when the string has none. The `#` is optional, and the three-digit form is not understood.
+	 */
 	function parseHex(hex: string): [number, number, number, number]
+	/**
+	 * `#rrggbb` from channels of 0 to 255, each rounded and held to that range, with `aa` appended
+	 * when `a` is below 255.
+	 */
 	function composeHex(r: number, g: number, b: number, a: number): string
+	/**
+	 * `from` moved toward `to` by `ratio` on red, green and blue, 0 giving `from` and 1 giving `to`.
+	 * The alpha stays that of `from`.
+	 */
 	function mixHex(from: string, to: string, ratio: number): string
+	/** {@link mixHex} with the alpha moved toward that of `to` as well. */
 	function lerpHex(from: string, to: string, ratio: number): string
+	/** `hex` with its alpha multiplied by `alpha`, 0 to 1. */
 	function fadeHex(hex: string, alpha: number): string
 	/**
 	 * `layer` laid over `ground` by its own alpha: the colour a translucent fill reads as on that
@@ -29,9 +49,19 @@ declare namespace MenuSDK {
 	 * const stop = fadeHex(tint, ramp * scrimPeak(tint))
 	 */
 	function scrimPeak(tint: string): number
+	/** `hex` with its alpha dropped, as `#rrggbb`. */
 	function opaqueHex(hex: string): string
+	/**
+	 * `hex` moved by `ratio` toward black when the mean of its red, green and blue is above 140,
+	 * toward white otherwise. The alpha stays.
+	 */
 	function shiftHex(hex: string, ratio: number): string
+	/**
+	 * An opaque `#rrggbb` from hue, saturation and lightness, each 0 to 1: the hue is a share of the
+	 * circle, not degrees.
+	 */
 	function hslHex(hue: number, saturation: number, lightness: number): string
+	/** The hue, saturation and lightness of `hex` as {@link hslHex} takes them, alpha ignored. */
 	function hslOf(hex: string): [number, number, number]
 	/** Relative luminance of an opaque color, per WCAG: 0 for black, 1 for white. */
 	function luminanceOf(hex: string): number
@@ -46,13 +76,10 @@ declare namespace MenuSDK {
 	/** Whether a foreground has to go darker, rather than lighter, to be seen on `hex`. */
 	function isLightHex(hex: string): boolean
 	/**
-	 * `hex` walked along its own lightness until it clears `ratio` against `against`, away from that
-	 * backdrop - down on a light one, up on a dark one - and returned untouched when it already
-	 * reads. Hue and saturation are kept, so a colour that has to stay recognisable stays itself: the
-	 * danger red of a light theme is the same red, deeper.
-	 *
-	 * @example
-	 * StatusGood: readableHex(DefaultPalette.StatusGood, seeds.Background, 3)
+	 * `hex` made darker on a light `against` and lighter on a dark one ({@link isLightHex}), in
+	 * lightness steps of 0.02, until its contrast with `against` reaches `ratio`. Hue and saturation
+	 * stay, the alpha is dropped, and the walk ends at black or white. A `hex` that already reads
+	 * comes back as it is.
 	 */
 	function readableHex(hex: string, against: string, ratio: number): string
 }

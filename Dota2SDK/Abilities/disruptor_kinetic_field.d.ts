@@ -14,7 +14,6 @@ declare class disruptor_kinetic_field extends Ability implements IDebuff {
 	public get Field(): Nullable<modifier_disruptor_kinetic_field_thinker>
 	public IsDebuff(): this is IDebuff
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 	/** The data names no targets: its wall keeps in the enemies in its area. */
 	public TargetTeamOf(): DOTA_UNIT_TARGET_TEAM

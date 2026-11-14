@@ -6,7 +6,4 @@
  * against creeps", `DOTA_Tooltip_ability_meepo_ransack_Description`).
  */
 declare class modifier_meepo_ransack extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
-	protected GetProcAttackBonusDamagePure(params?: IModifierParams): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

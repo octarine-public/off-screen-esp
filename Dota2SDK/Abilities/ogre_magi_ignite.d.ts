@@ -13,6 +13,4 @@ declare class ogre_magi_ignite extends Ability {
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
 	public GetBaseSpeedForLevel(level: number): number
-	/** Its fire slows the unit it hits by `slow_movement_speed_pct` percent for `duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

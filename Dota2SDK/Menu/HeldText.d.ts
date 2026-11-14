@@ -11,10 +11,10 @@ declare namespace MenuSDK {
 	 *     return
 	 * }
 	 * const width = pad + this.reading.Width
-	 * MenuSDK.HudText.Draw(x, centerY, this.reading.Text, FONT, color, WEIGHT)
+	 * MenuSDK.HudText.Left(x, centerY, this.reading.Text, FONT, color, WEIGHT)
 	 */
 	class HeldText {
-		/** The text to draw: the latest one measured, empty until any has been. */
+		/** The text to draw: the latest one {@link Take} found a width for, empty until then. */
 		public Text: string
 		/** How wide {@link Text} stands at the size it was last taken at, 0 while nothing is measured. */
 		public Width: number

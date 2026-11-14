@@ -42,20 +42,3 @@ interface IParticleRoles {
 	 */
 	readonly Aura?: boolean
 }
-/**
- * A particle an ability shows when it is cast and the roles of its control points. A class
- * declares it with `@ThreatParticle`, so a cast seen only through the particle, out of the fog,
- * still becomes a threat.
- * @example
- * @Source2SDK.WrapperClass("pudge_meat_hook")
- * @ThreatParticle("particles/units/heroes/hero_pudge/pudge_meathook.vpcf", {
- * 	Source: 0,
- * 	Target: 1,
- * 	TargetEntity: 1
- * })
- * export class pudge_meat_hook extends Ability {}
- */
-interface IThreatParticle extends IParticleRoles {
-	/** The particle's path without the econ suffix. */
-	readonly Path: string
-}

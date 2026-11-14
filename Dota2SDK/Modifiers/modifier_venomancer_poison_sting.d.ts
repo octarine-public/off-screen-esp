@@ -2,9 +2,7 @@
 declare class modifier_venomancer_poison_sting extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** The sting poisons the unit while it lasts (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**
@@ -15,6 +13,4 @@ declare class modifier_venomancer_poison_sting extends Modifier implements IDebu
 	 * every 1 s (server.dll).
 	 */
 	public DamageOverTime(out: DamageTicks, _level: number): boolean
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

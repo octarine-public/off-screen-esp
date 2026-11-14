@@ -29,12 +29,34 @@ declare function fread(path: string, binary: boolean): Nullable<ArrayBuffer | st
 declare function fread(path: string, binary: true): Nullable<ArrayBuffer>
 declare function fread(path: string, binary: false): Nullable<string>
 
-// Native shared IO buffer (game-agnostic serialization scratch)
-declare var IOBuffer: Float32Array
-declare var IOBufferView: DataView
-
 // Native host high-resolution monotonic clock, in milliseconds
 declare function hrtime(): number
+
+interface Console {
+	memory: any
+	assert(condition?: boolean, ...data: any[]): void
+	clear(): void
+	count(label?: string): void
+	countReset(label?: string): void
+	debug(...data: any[]): void
+	dir(item?: any, options?: any): void
+	dirxml(...data: any[]): void
+	error(...data: any[]): void
+	exception(message?: string, ...optionalParams: any[]): void
+	group(...data: any[]): void
+	groupCollapsed(...data: any[]): void
+	groupEnd(): void
+	info(...data: any[]): void
+	log(...data: any[]): void
+	table(tabularData?: any, properties?: string[]): void
+	time(label?: string): void
+	timeEnd(label?: string): void
+	timeLog(label?: string, ...data: any[]): void
+	timeStamp(label?: string): void
+	trace(...data: any[]): void
+	warn(...data: any[]): void
+}
+declare var console: Console
 
 declare interface BigInt {
 	hasBit(bit: bigint): boolean
@@ -190,22 +212,3 @@ declare interface Math {
 }
 
 declare const __OCT_PACKAGE_ROOT__: string
-declare function LoadFont(path: string, isFallback: boolean, weight?: number): boolean
-declare function SendListenerPerf(line: string, took: number, gameSecond: number): void
-/**
- * Clicks `x, y` in the game window the way the mouse does, without moving the real cursor or taking
- * the foreground. The Octarine UI takes the click where it has an element, the game everywhere else.
- * Coordinates are surface pixels, the space the window size is reported in. Returns `false` when the
- * point lies outside the window, the previous click has not been delivered yet or the game window is
- * not hooked; `true` only means the click was queued, so check the state it should change.
- * @example
- * PostWindowClick(960, 540)
- * PostWindowClick(960, 540, true) // right button
- */
-declare function PostWindowClick(x: number, y: number, right?: boolean): boolean
-
-// The benchmark recorder bridge, present only in a build that carries the recorder
-// (octarine-core, OCT_ENABLE_BENCHMARK). `Managers/Benchmark.ts` wraps it; a script should reach for that.
-declare const BENCHMARK_ENABLED: boolean
-declare function benchmarkSubmit(text: string): void
-declare function benchmarkMark(label: string): void

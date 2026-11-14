@@ -6,5 +6,4 @@ declare class modifier_earthshaker_aftershock extends Modifier {
 	 * `AOEDamage` at one within `aftershock_range` of him and its hull, none farther.
 	 */
 	public DamageAt(target: Unit): number
-	protected UpdateSpecialValues(): void
 }

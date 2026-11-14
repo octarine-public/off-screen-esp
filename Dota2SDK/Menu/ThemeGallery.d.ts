@@ -24,9 +24,13 @@ declare namespace MenuSDK {
 	 * })
 	 */
 	function ThemeGalleryPage(host: IThemeGalleryHost): () => React.ReactNode
+	/**
+	 * A theme gallery card: the preview of `theme` with `name` under it in the theme's typeface, and
+	 * a mark while `active`. A click on a card that is not active runs `onApply`.
+	 */
 	function ThemeCard(props: {
 		name: string
-		/** The look the card pictures - colors, accent, corners and typeface - and sets its name in. */
+		/** The theme the card previews; `name` is set in its typeface. */
 		theme: IThemeSnapshot
 		/** What the look's glow lights with. Omitted means its accent. */
 		glow?: IThemeGlowStyle

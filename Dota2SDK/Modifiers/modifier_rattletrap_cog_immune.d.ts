@@ -3,11 +3,8 @@ declare class modifier_rattletrap_cog_immune extends Modifier implements IBuff, 
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	public GetTexturePath(): string
-	protected GetAbsoluteNoDamagePure(): [number, boolean]
-	protected GetMagicalResistanceBonus(params?: IModifierParams): [number, boolean]
 	public get IsPurgable(): boolean
 }

@@ -12,7 +12,5 @@ declare class modifier_enchantress_natures_attendants extends Modifier implement
 	 * `heal` of each of the `wisp_count` wisps, beyond the unit's regeneration.
 	 */
 	public HealOf(unit: Unit): number
-	protected get HealsAround(): boolean
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

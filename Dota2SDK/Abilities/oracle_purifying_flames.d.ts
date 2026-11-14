@@ -7,5 +7,4 @@ declare class oracle_purifying_flames extends Ability implements IHealthRestore<
 	public IsHealthRestore(): this is IHealthRestore<Unit>
 	public GetHealthRestore(_target: Unit): number
 	public GetBaseDamageForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

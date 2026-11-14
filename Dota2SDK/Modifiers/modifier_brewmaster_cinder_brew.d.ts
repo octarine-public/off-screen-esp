@@ -2,9 +2,7 @@
 declare class modifier_brewmaster_cinder_brew extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/**
 	 * Whether the brew is ignited - the unit took magic or pure damage in it: the brew then runs on
 	 * `extra_duration` past what was left, its time renewed, its length off the brew's `duration`
@@ -17,6 +15,4 @@ declare class modifier_brewmaster_cinder_brew extends Modifier implements IDebuf
 	 * data.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

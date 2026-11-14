@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class sandking_burrowstrike extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number

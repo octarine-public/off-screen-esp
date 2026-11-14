@@ -19,5 +19,4 @@ declare class death_prophet_spirit_siphon extends Ability implements IDebuff {
 	 * thinks every 0.25 s (server.dll).
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

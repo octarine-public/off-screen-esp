@@ -2,9 +2,5 @@
 declare class modifier_troll_warlord_berserkers_rage_maim extends Modifier implements IDebuff {
 	public readonly IsHidden = false
 	public readonly DebuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsDebuff(): this is IDebuff
-	protected GetMoveSpeedBonusPercentage(): [number, boolean]
-	protected GetAttackSpeedBonusConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

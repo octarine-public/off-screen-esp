@@ -1,99 +1,139 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
-	class Handle<E extends EntryCommon> {
-		public readonly entry: E
-		public executeOnAdd: boolean
-		constructor(entry: E)
-		public get IsVisible(): boolean
-		public set IsVisible(value: boolean)
-		/** Whether this entry and its descendants may appear in the hotkeys panel. Does not hide menu settings or change key handling. */
-		public get HotkeysVisible(): boolean
-		public set HotkeysVisible(value: boolean)
-		public get IsDisabled(): boolean
-		public set IsDisabled(value: boolean)
-		public get InternalName(): string
-		/** The tooltip as the script wrote it, before the translation of the day. */
-		public get InternalTooltipName(): string
+	/**
+	 * What every menu control and node has: a name, a tooltip, an icon, visibility and a place among
+	 * its siblings.
+	 */
+	interface Handle<E extends EntryCommon> {
+		/** The stored entry this handle reads and writes. */
+		readonly entry: E
 		/**
-		 * Extra words the menu search finds this entry by, besides its name. Each keyword is also
-		 * matched in every translation it has, so synonyms users type can be added per language.
+		 * Whether a callback added with `OnValue` is also called once at the moment it is added.
+		 * `true` except on a button.
+		 */
+		executeOnAdd: boolean
+		/** Whether the control is shown in the menu. */
+		get IsVisible(): boolean
+		set IsVisible(value: boolean)
+		/** Whether this entry and its descendants may appear in the hotkeys panel. Does not hide menu settings or change key handling. */
+		get HotkeysVisible(): boolean
+		set HotkeysVisible(value: boolean)
+		/**
+		 * Whether the control is disabled, by the script or by a Safe mode lock. Setting it changes
+		 * the script's part only.
+		 */
+		get IsDisabled(): boolean
+		set IsDisabled(value: boolean)
+		/** The same as {@link Name}. */
+		get InternalName(): string
+		/** The tooltip as the script set it, untranslated. */
+		get InternalTooltipName(): string
+		/**
+		 * Extra words the menu search finds this control by, besides its name. A keyword is matched
+		 * in its translations too.
 		 * @example
 		 * distance.SearchKeywords = ["Camera zoom", "Zoom out"]
 		 */
-		public get SearchKeywords(): readonly string[]
-		public set SearchKeywords(value: readonly string[])
-		public get IconPath(): string
-		public set IconPath(value: string)
-		public foreachParent(callback: (node: Node) => void, includeSelf?: boolean): void
-		public everyParent(predicate: (node: Node) => boolean): boolean
-		public get parent(): Nullable<Node>
+		get SearchKeywords(): readonly string[]
+		set SearchKeywords(value: readonly string[])
+		/** Path of the control's icon. */
+		get IconPath(): string
+		set IconPath(value: string)
 		/**
-		 * Ties controls this row draws on its own to it: resetting the row resets them too, and the
-		 * row wears the changed mark while any of them is changed. For a row of a custom page that
-		 * shows values kept in hidden controls.
+		 * Calls `callback` for every node above this control, nearest first. With `includeSelf`, a
+		 * node is passed itself before them.
+		 */
+		foreachParent(callback: (node: Node) => void, includeSelf?: boolean): void
+		/** Whether `predicate` holds for every node above this control; stops at the first that fails. */
+		everyParent(predicate: (node: Node) => boolean): boolean
+		/** The node this control sits in; a tab's is the menu's root node, which alone has none. */
+		get parent(): Nullable<Node>
+		/**
+		 * Links other controls to this row: resetting the row resets them, and the row shows as
+		 * changed while any of them is. For a row that displays values kept in hidden controls.
 		 * @example
 		 * state.Companions(sound, volume)
 		 */
-		public Companions(...handles: {
+		Companions(...handles: {
 			readonly entry: Entry
 		}[]): this
-		public get IsHidden(): boolean
-		public set IsHidden(value: boolean)
-		public get Name(): string
-		public get Hint(): Nullable<MenuHint>
-		public set Hint(value: Nullable<MenuHint>)
-		public get Description(): string
-		public set Description(value: string)
+		/** The opposite of {@link IsVisible}. */
+		get IsHidden(): boolean
+		set IsHidden(value: boolean)
+		/** The name the control was created with, as the script gave it. */
+		get Name(): string
+		/** The hint shown with the control; `undefined` for none. */
+		get Hint(): Nullable<MenuHint>
+		set Hint(value: Nullable<MenuHint>)
+		/** The control's description; `""` when it has none. */
+		get Description(): string
+		set Description(value: string)
 		/**
-		 * Entry this handle's row mirrors. When set, the row's context menu offers
-		 * "Go to", which reveals the target the way search navigation does.
-		 *
+		 * The control this row stands in for. When set, the row's context menu offers "Go to", which
+		 * opens the target the way picking it in the search does.
 		 * @example
 		 * const row = list.AddKeybind(path.join(" > "), source.assignedKeyStr)
 		 * row.RevealTarget = source
 		 */
-		public get RevealTarget(): Nullable<AnyHandle>
-		public set RevealTarget(value: Nullable<AnyHandle>)
+		get RevealTarget(): Nullable<AnyHandle>
+		set RevealTarget(value: Nullable<AnyHandle>)
 		/**
-		 * Rows of your own under the ones this entry's context menu builds for itself — the menu its
-		 * row opens, and for a tab of a page whose children are tabs, the menu a right click on the
-		 * tab opens. Asked for every time the menu opens, so a row can say what is true right then.
-		 *
+		 * Extra items for this control's context menu, shown under the built-in ones. The function
+		 * is called every time the menu opens. On a page shown as a tab they also appear in the menu
+		 * a right click on the tab opens.
 		 * @example
 		 * page.ContextItems = () => [
 		 * 	{ icon: "menu/ui/copy.svg", label: "Take style", disabled: false, run: take }
 		 * ]
 		 */
-		public get ContextItems(): Nullable<() => readonly ContextMenuItem[]>
-		public set ContextItems(value: Nullable<() => readonly ContextMenuItem[]>)
+		get ContextItems(): Nullable<() => readonly ContextMenuItem[]>
+		set ContextItems(value: Nullable<() => readonly ContextMenuItem[]>)
 		/**
-		 * Icon buttons on the row's right, before its settings button and drawn as it is - a lock of
-		 * a list's order, a pin. Hand the list over anew whenever one changes, to draw it so.
-		 *
+		 * Icon buttons at the right of the row, before its settings button. Assign a new array to
+		 * redraw them after one changes.
 		 * @example
 		 * selector.RowActions = [
 		 * 	{ icon: MenuSDK.MenuIcons.LockKeyhole, tooltip: "Default order", active: locked, run: flip }
 		 * ]
 		 */
-		public get RowActions(): readonly RowAction[]
-		public set RowActions(value: readonly RowAction[])
-		public get tooltip(): string
-		public set tooltip(value: string)
-		public IsDefault(): boolean
-		public get IsDefaultValue(): boolean
-		public get IsNode(): boolean
-		public ResetToDefault(): void
-		public UpdateIsDefault(): void
-		public Update(): void
-		public get Priority(): number
-		public set Priority(value: number)
-		public get IconColor(): Nullable<Color>
-		public set IconColor(value: Nullable<Color>)
-		public DetachFromParent(): boolean
-		public OnConfigLoaded(): void
-		public get FirstTime(): boolean
-		public get SaveConfig(): boolean
-		public set SaveConfig(value: boolean)
+		get RowActions(): readonly RowAction[]
+		set RowActions(value: readonly RowAction[])
+		/** Text shown while the pointer rests on the control. */
+		get tooltip(): string
+		set tooltip(value: string)
+		/** Whether the control holds its default value. A control without a value answers `true`. */
+		IsDefault(): boolean
+		/** `true` when the control is not saved to the config or holds its default value. */
+		get IsDefaultValue(): boolean
+		/** Whether this is a node: a container of other controls. */
+		get IsNode(): boolean
+		/** Puts the default value back. */
+		ResetToDefault(): void
+		/** Redraws the menu; the same as {@link Update}. */
+		UpdateIsDefault(): void
+		/** Redraws the menu. */
+		Update(): void
+		/**
+		 * Sort key among the controls of one node: lower comes first. Used only in a node that sorts
+		 * its children.
+		 */
+		get Priority(): number
+		set Priority(value: number)
+		/** Colour the icon is drawn in; `undefined` when none is set. */
+		get IconColor(): Nullable<Color>
+		set IconColor(value: Nullable<Color>)
+		/** Removes the control from its node. `false` when it has no node or is no longer in it. */
+		DetachFromParent(): boolean
+		/** Redraws the menu; the same as {@link Update}. */
+		OnConfigLoaded(): void
+		/**
+		 * Whether this machine had not shown the control before the config was loaded at start. Its
+		 * row carries the "new" mark until the pointer has been over it.
+		 */
+		get FirstTime(): boolean
+		/** Whether the control's value is saved to the config. */
+		get SaveConfig(): boolean
+		set SaveConfig(value: boolean)
 	}
 	/** A driven value as a script hands it over: whatever kind the owning entry carries. */
 	type DrivenValue = boolean | number | string | string[]
@@ -104,8 +144,15 @@ declare namespace MenuSDK {
 	 * for a dropdown, or option values for a multiselect.
 	 */
 	class HotkeyHandle<T extends DrivenValue> {
+		/** The stored hotkey this handle reads and writes. */
 		public readonly hotkey: EntryHotkey<T>
-		constructor(owner: DriverHolder, hotkey: EntryHotkey<T>)
+		/**
+		 * A handle over `hotkey`, one of the hotkeys of the entry `owner`. A control's `AddHotkey` and
+		 * `Hotkeys` hand these out.
+		 */
+		constructor(owner: DriverHolder, 
+		/** The stored hotkey this handle reads and writes. */
+		hotkey: EntryHotkey<T>)
 		/** Packed bind code, 0 while unbound. */
 		public get Bind(): number
 		public set Bind(value: number)
@@ -154,8 +201,15 @@ declare namespace MenuSDK {
 	 * again. All setters persist to the config and repaint the menu.
 	 */
 	class LogicHandle<T extends DrivenValue> {
+		/** The stored rule this handle reads and writes. */
 		public readonly rule: EntryLogic<T>
-		constructor(owner: DriverHolder, rule: EntryLogic<T>)
+		/**
+		 * A handle over `rule`, one of the logic rules of the entry `owner`. A control's `AddLogic` and
+		 * `Logic` hand these out.
+		 */
+		constructor(owner: DriverHolder, 
+		/** The stored rule this handle reads and writes. */
+		rule: EntryLogic<T>)
 		/** Whether the rule holds its value after its threshold or before it. */
 		public get When(): LogicWhen
 		public set When(value: LogicWhen)
@@ -181,63 +235,90 @@ declare namespace MenuSDK {
 		/** Removes the rule, putting back what the entry held before it engaged. */
 		public Remove(): void
 	}
-	class Toggle extends Handle<ToggleEntry> {
+	/** An on/off switch. */
+	class Toggle implements Handle<ToggleEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/**
+		 * Theme token whose colour the row's mark is drawn in, in place of the "new" and "changed"
+		 * marks; `""` for none.
+		 */
 		public get MarkColorToken(): string
 		public set MarkColorToken(value: string)
+		/** Calls every {@link OnValue} callback now, without changing the value. */
 		public TriggerOnValueChangedCBs(): Toggle
+		/** {@link OnValue} for the changes that leave the switch off. */
 		public OnDeactivate(callback: (caller: Toggle) => void): Toggle
+		/**
+		 * Whether the switch is on. A set that changes it runs the {@link OnValue} callbacks; while
+		 * {@link HoldValue} is set, the held value is stored instead.
+		 */
 		public get value(): boolean
 		public set value(next: boolean)
 		/**
-		 * The value the switch is pinned to, or nothing while it is free. Pinned, it takes the value
-		 * at once and every later set lands on it - a config, a hotkey, a rule, a click - and the row
-		 * reads as locked by Safe mode, which is what pins it.
+		 * A value the switch is locked to, or `undefined` while it is free. Setting one applies it at
+		 * once, and every later change, whether from a click, a hotkey, a rule or a config, is
+		 * replaced by it. Safe mode locks switches this way.
 		 */
 		public get HoldValue(): Nullable<boolean>
 		public set HoldValue(value: Nullable<boolean>)
-		/** What this switch was declared with. {@link ResetToDefault} puts it back. */
+		/** The value the switch was created with. */
 		public get defaultValue(): boolean
+		/**
+		 * Calls `callback` every time the value changes, and once right away unless
+		 * {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: Toggle) => void): Toggle
+		/** {@link OnValue} for the changes that leave the switch on. */
 		public OnActivate(callback: (caller: Toggle) => void): Toggle
 		/**
-		 * Rides colour pickers on this toggle's row: swatches to the left of the switch open their
-		 * palettes, the pickers lose rows of their own, and they show only while the toggle is on —
-		 * a colour for something switched off is nothing to look at. For "show X" + "X colour" pairs
-		 * that used to be two rows, and what each swatch stands for is read from its name on hover.
+		 * Puts colour pickers on this switch's row as swatches left of the switch. The pickers lose
+		 * their own rows and show only while the switch is on; hovering a swatch shows its name.
 		 * @example
 		 * const crates = objects.AddToggle("Crates", true)
 		 * crates.PairColors(objects.AddColorPicker("Crate color", new Color(210, 180, 140)))
 		 */
 		public PairColors(...pickers: ColorPicker[]): Toggle
+		/** The colour pickers attached with {@link PairColors}. */
 		public get PairedColors(): ColorPicker[]
 		/**
-		 * Adds a hotkey driving this toggle, exactly like "New Hotkey" in the row's
-		 * context menu. Hotkeys persist in the config, so call it on a user action
-		 * rather than on every script load — each call adds another hotkey.
+		 * Adds a hotkey for this switch, as "New Hotkey" in its context menu does. Hotkeys are saved
+		 * in the config and every call adds one more, so call it on a user action, not on script load.
 		 * @example
 		 * const panic = state.AddHotkey("F4", "hold")
 		 * panic.Value = false
 		 */
 		public AddHotkey(defaultKey?: string, mode?: HotkeyMode): HotkeyHandle<boolean>
-		/** The hotkeys riding this toggle, in creation order. */
+		/** The hotkeys of this switch, oldest first. */
 		public get Hotkeys(): HotkeyHandle<boolean>[]
 		/**
-		 * Adds a logic rule driving this toggle, exactly like "New logic" in the
-		 * row's context menu; it captures the switch's current state until edited.
-		 * Rules persist in the config, so call it on a user action rather than on
-		 * every script load — each call adds another rule.
+		 * Adds a logic rule for this switch, as "New logic" in its context menu does; the rule takes
+		 * the switch's current state until it is edited. Rules are saved in the config and every call
+		 * adds one more, so call it on a user action, not on script load.
 		 * @example
 		 * const lateGame = state.AddLogic("after", 5 * 60)
 		 * lateGame.Value = false
 		 */
 		public AddLogic(when?: LogicWhen, at?: number): LogicHandle<boolean>
-		/** The logic rules riding this toggle, in creation order. */
+		/** The logic rules of this switch, oldest first. */
 		public get Logic(): LogicHandle<boolean>[]
+		/**
+		 * Gives the switch a logic rule of its own, at `at` seconds of match time. A config with no
+		 * rules saved for the switch starts with it, the user edits or removes it like any other, and
+		 * "Reset to default" puts it back. Call it once, where the switch is created.
+		 * @example
+		 * state.AddDefaultLogic("after", 15 * 60, false)
+		 */
+		public AddDefaultLogic(when: LogicWhen, at: number, value: boolean): Toggle
 	}
-	class Slider extends Handle<SliderEntry> {
+	interface Toggle extends Handle<ToggleEntry> {}
+	/**
+	 * A number picked on a rail from {@link Slider.min} to {@link Slider.max}, rounded to the
+	 * precision the slider was created with.
+	 */
+	class Slider implements Handle<SliderEntry> {
 		public IsDefault(): boolean
+		/** A unit written after the number, localized like a label; `""` for none. */
 		public get Suffix(): string
 		public set Suffix(value: string)
 		/**
@@ -289,8 +370,16 @@ declare namespace MenuSDK {
 		public get Ticks(): Nullable<number[] | true>
 		public set Ticks(value: Nullable<number[] | true>)
 		public ResetToDefault(): void
+		/**
+		 * A floor inside the range: the rail still starts at {@link min}, but the value is kept at or
+		 * above this one. `undefined` for none. Setting it brings the current value within it.
+		 */
 		public get clampMin(): Nullable<number>
 		public set clampMin(value: Nullable<number>)
+		/**
+		 * A ceiling inside the range: the rail still ends at {@link max}, but the value is kept at or
+		 * below this one. `undefined` for none. Setting it brings the current value within it.
+		 */
 		public get clampMax(): Nullable<number>
 		public set clampMax(value: Nullable<number>)
 		public get min(): number
@@ -302,14 +391,33 @@ declare namespace MenuSDK {
 		 * known once the game says so - an ability's cast range, a cooldown.
 		 */
 		public set max(value: number)
+		/**
+		 * The number the slider stands at. A set is kept within the range and any {@link clampMin} or
+		 * {@link clampMax}, rounded to the precision, and runs the {@link OnValue} callbacks when it
+		 * changes the value.
+		 */
 		public get value(): number
 		public set value(next: number)
 		/** What this slider was declared with. {@link ResetToDefault} puts it back. */
 		public get defaultValue(): number
+		/**
+		 * Calls `callback` every time the value changes, and once right away unless
+		 * {@link executeOnAdd} is off. With {@link CallOnRelease} on, a drag along the rail calls it
+		 * once, when the drag ends.
+		 */
 		public OnValue(callback: (caller: Slider) => void): Slider
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): Slider
+		/**
+		 * Calls `callback` every time a drag along the rail ends, whether or not it moved the value.
+		 * A change made any other way does not call it.
+		 */
 		public OnChangeFinished(callback: (caller: Slider) => void): Slider
+		/**
+		 * Whether the {@link OnValue} callbacks wait for the hand to let go: on, a drag along the rail
+		 * calls them once, when it ends, and a change made any other way calls them at once. Off by
+		 * default.
+		 */
 		public get CallOnRelease(): boolean
 		public set CallOnRelease(value: boolean)
 		/**
@@ -338,7 +446,15 @@ declare namespace MenuSDK {
 		public AddLogic(when?: LogicWhen, at?: number): LogicHandle<number>
 		/** The logic rules riding this slider, in creation order. */
 		public get Logic(): LogicHandle<number>[]
+		/**
+		 * Gives the slider a logic rule of its own, as {@link Toggle.AddDefaultLogic} does a switch.
+		 * `value` is clamped and rounded like the slider's own.
+		 * @example
+		 * fov.AddDefaultLogic("before", 5 * 60, 120)
+		 */
+		public AddDefaultLogic(when: LogicWhen, at: number, value: number): Slider
 	}
+	interface Slider extends Handle<SliderEntry> {}
 	/**
 	 * A span picked on one rail with two thumbs, for a setting that is a stretch of values rather
 	 * than one: a delay drawn anew each time from between its ends, a band a reading has to fall in.
@@ -348,13 +464,15 @@ declare namespace MenuSDK {
 	 * const reaction = tab.AddRangeSlider("Reaction (ms)", 150, 250, 0, 500)
 	 * const delay = Math.randomRange(reaction.low, reaction.high) / 1000
 	 */
-	class RangeSlider extends Handle<RangeEntry> {
+	class RangeSlider implements Handle<RangeEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
 		/** A unit written after each end's number, localized like a label. */
 		public get Suffix(): string
 		public set Suffix(value: string)
+		/** The low end of the rail. */
 		public get min(): number
+		/** The high end of the rail. */
 		public get max(): number
 		/** The distance between two values the thumbs can stand on. */
 		public get step(): number
@@ -366,16 +484,30 @@ declare namespace MenuSDK {
 		public set high(value: number)
 		/** Sets both ends at once, taken the right way round whichever order they come in. */
 		public Set(low: number, high: number): void
+		/** The low end this span was declared with. {@link ResetToDefault} puts it back. */
 		public get defaultLow(): number
+		/** The high end this span was declared with. {@link ResetToDefault} puts it back. */
 		public get defaultHigh(): number
+		/**
+		 * Calls `callback` every time either end moves, and once right away unless
+		 * {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: RangeSlider) => void): RangeSlider
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): RangeSlider
 	}
-	class Dropdown extends Handle<DropdownEntry> {
+	interface RangeSlider extends Handle<RangeEntry> {}
+	/** A choice of one option from a list, saved as the option's index. */
+	class Dropdown implements Handle<DropdownEntry> {
+		/** Not read by the menu: setting it has no effect. */
 		public KeepArrowGap: boolean
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/**
+		 * Index of the selected option in {@link values}. A set lands on {@link HoldOption} while one
+		 * is held and is otherwise kept within the list; one that changes the selection runs the
+		 * {@link OnValue} callbacks.
+		 */
 		public get SelectedID(): number
 		public set SelectedID(next: number)
 		/**
@@ -386,8 +518,12 @@ declare namespace MenuSDK {
 		public set HoldOption(value: Nullable<number>)
 		/** Which option this dropdown was declared with. {@link ResetToDefault} puts it back. */
 		public get defaultValue(): number
+		/** The options, in order: the live array, so change them through {@link SetOptions}. */
 		public get values(): string[]
-		/** @deprecated the options are {@link values} */
+		/**
+		 * The same as {@link values}.
+		 * @deprecated the options are {@link values}
+		 */
 		public get ValuesNames(): string[]
 		/**
 		 * Replaces the options offered, for a list discovered at runtime rather than declared.
@@ -425,6 +561,10 @@ declare namespace MenuSDK {
 		 */
 		public get Layout(): DropdownLayout
 		public set Layout(value: DropdownLayout)
+		/**
+		 * Calls `callback` every time the selection changes or {@link SetOptions} changes the
+		 * options, and once right away unless {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: Dropdown) => void): Dropdown
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): Dropdown
@@ -436,6 +576,10 @@ declare namespace MenuSDK {
 		 * team.PairColors(0, node.AddColorPicker("Enemy color", new Color(227, 61, 61)))
 		 */
 		public PairColors(option: number | string, ...pickers: ColorPicker[]): Dropdown
+		/**
+		 * The colour pickers {@link PairColors} put on `option`, given by index or by name, in the
+		 * order they were paired; empty for none.
+		 */
 		public PairedColors(option: number | string): ColorPicker[]
 		/**
 		 * Adds a hotkey driving this dropdown, exactly like "New Hotkey" in the
@@ -463,17 +607,36 @@ declare namespace MenuSDK {
 		public AddLogic(when?: LogicWhen, at?: number): LogicHandle<string>
 		/** The logic rules riding this dropdown, in creation order. */
 		public get Logic(): LogicHandle<string>[]
+		/**
+		 * Gives the dropdown a logic rule of its own, as {@link Toggle.AddDefaultLogic} does a switch.
+		 * `value` is the option the rule selects; one the dropdown does not have adds nothing.
+		 * @example
+		 * mode.AddDefaultLogic("after", 10 * 60, "Legit")
+		 */
+		public AddDefaultLogic(when: LogicWhen, at: number, value: string): Dropdown
 	}
-	class MultiSelect extends Handle<MultiSelectEntry> {
+	interface Dropdown extends Handle<DropdownEntry> {}
+	/**
+	 * A list of options, any number of them ticked. Ticks are kept by option name, so reordering or
+	 * replacing the options does not move them.
+	 */
+	class MultiSelect implements Handle<MultiSelectEntry> {
+		/** Not read by the menu: setting it has no effect. */
 		public KeepArrowGap: boolean
 		public IsDefault(): boolean
 		public ResetToDefault(): void
 		/** Which options this list was declared with. {@link ResetToDefault} puts them back. */
 		public get defaultValue(): string[]
+		/** The options, in order: the live array, so change them through {@link SetOptions}. */
 		public get values(): string[]
 		/** Selection aligned to `values`, which is the shape a caller usually folds. */
 		public get SelectedFlags(): boolean[]
+		/** Indices in {@link values} of the ticked options, in order. */
 		public get SelectedIDs(): number[]
+		/**
+		 * The ticked options, in the order of {@link values}. Setting it ticks exactly the options
+		 * named; a name that is no option is ignored.
+		 */
 		public get SelectedNames(): string[]
 		public set SelectedNames(next: string[])
 		/**
@@ -484,8 +647,14 @@ declare namespace MenuSDK {
 		 * players.SetOptions(sources)
 		 */
 		public SetOptions(values: string[]): MultiSelect
+		/** Whether the option at index `id` of {@link values} is ticked; `false` out of range. */
 		public IsSelected(id: number): boolean
+		/** Ticks or unticks the option at index `id` of {@link values}; out of range does nothing. */
 		public Select(id: number, selected: boolean): void
+		/**
+		 * Calls `callback` every time an option is ticked or unticked or {@link SetOptions} changes the
+		 * options, and once right away unless {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: MultiSelect) => void): MultiSelect
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): MultiSelect
@@ -512,6 +681,14 @@ declare namespace MenuSDK {
 		/** The logic rules riding this multiselect, in creation order. */
 		public get Logic(): LogicHandle<string[]>[]
 		/**
+		 * Gives the multiselect a logic rule of its own, as {@link Toggle.AddDefaultLogic} does a
+		 * switch. `value` lists the options the rule selects; one the multiselect does not have adds
+		 * nothing.
+		 * @example
+		 * audience.AddDefaultLogic("after", 5 * 60, ["Enemies"])
+		 */
+		public AddDefaultLogic(when: LogicWhen, at: number, value: string[]): MultiSelect
+		/**
 		 * Rides colour pickers on one option's row, which is where a per-option colour belongs
 		 * instead of in a row of its own further down the node.
 		 * @example
@@ -523,14 +700,27 @@ declare namespace MenuSDK {
 		 * )
 		 */
 		public PairColors(option: number | string, ...pickers: ColorPicker[]): MultiSelect
+		/**
+		 * The colour pickers {@link PairColors} put on `option`, given by index or by name, in the
+		 * order they were paired; empty for none.
+		 */
 		public PairedColors(option: number | string): ColorPicker[]
 	}
-	class Keybind extends Handle<KeybindEntry> {
+	interface MultiSelect extends Handle<MultiSelectEntry> {}
+	/**
+	 * A key bind: one key, or a combination of two, that the user picks and the script hears pressed
+	 * and released.
+	 */
+	class Keybind implements Handle<KeybindEntry> {
 		/** Runtime active state shown in Hotkeys. Set undefined to follow the physical key again. */
 		public get HotkeysActive(): boolean | undefined
 		public set HotkeysActive(value: boolean | undefined)
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/**
+		 * Whether the bind also answers a press while the menu is open, outside a game, or while the
+		 * game has the keyboard for a chat box or a console. Off by default.
+		 */
 		public get ActivatesInMenu(): boolean
 		public set ActivatesInMenu(value: boolean)
 		/**
@@ -542,8 +732,17 @@ declare namespace MenuSDK {
 		 */
 		public get ClaimsKey(): boolean
 		public set ClaimsKey(value: boolean)
+		/**
+		 * Name of the bind declared as the default: one key as `SharedSDK.KeyNames` spells it, or a
+		 * combination such as `"Ctrl + F"`. Setting it sets {@link defaultKeyIdx} to that bind and
+		 * leaves the key bound now as it is.
+		 */
 		public get defaultKey(): string
 		public set defaultKey(value: string)
+		/**
+		 * The bind a reset returns to, as a number like {@link assignedKey}. {@link defaultKey} sets
+		 * it from a key name.
+		 */
 		public get defaultKeyIdx(): number
 		public set defaultKeyIdx(value: number)
 		/**
@@ -567,11 +766,11 @@ declare namespace MenuSDK {
 		public get Mode(): Nullable<HotkeyMode>
 		public set Mode(value: HotkeyMode)
 		/**
-		 * Full display name of the current bind: "Ctrl + F" for combinations,
-		 * "F" for single keys, "None" when unbound.
+		 * The bind as a name: `"Ctrl + F"` for a combination, `"F"` for one key, `"None"` while
+		 * unbound. Set, it takes a name of the same form, each key as `SharedSDK.KeyNames` spells
+		 * it; a name it cannot read leaves the bind with no key.
 		 */
 		public get assignedKeyStr(): string
-		/** Binds by name — "Shift", "Ctrl + F" — the way a config or a preset spells it. */
 		public set assignedKeyStr(value: string)
 		/**
 		 * Shows the capture popup affordance that assigns the left mouse button.
@@ -585,18 +784,36 @@ declare namespace MenuSDK {
 		 */
 		public get AllowCombinations(): boolean
 		public set AllowCombinations(value: boolean)
+		/** The same as {@link assignedKey}. */
 		public get ConfigValue(): number
 		public set ConfigValue(value: number)
+		/** {@link OnValue} for the changes that leave the bind pressed. */
 		public OnPressed(callback: (caller: Keybind) => void): Keybind
+		/**
+		 * The bind as a number: 0 while unbound, a key's `SharedSDK.VKeys` code for one key, and
+		 * `first * 256 + second` for a combination. A set that changes it runs the {@link OnValue}
+		 * callbacks.
+		 */
 		public get assignedKey(): number
 		public set assignedKey(next: number)
+		/**
+		 * Whether the bind is down: set by a press it answers, cleared when its key, or either key of
+		 * its combination, comes up.
+		 */
 		public get isPressed(): boolean
+		/**
+		 * Calls `callback` every time the bind is pressed, released, rebound or switched to another
+		 * {@link Mode}, and once right away unless {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: Keybind) => void): Keybind
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): Keybind
+		/** Calls `callback` every time the bind goes from pressed to released. */
 		public OnRelease(callback: (caller: Keybind) => void): Keybind
 	}
-	class Button extends Handle<ButtonEntry> {
+	interface Keybind extends Handle<KeybindEntry> {}
+	/** A button that runs its {@link OnValue} callbacks when pressed. It holds no value to save. */
+	class Button implements Handle<ButtonEntry> {
 		public executeOnAdd: boolean
 		/** Visual emphasis used to distinguish primary, neutral, quiet and destructive actions. */
 		public get Variant(): ButtonVariant
@@ -604,10 +821,17 @@ declare namespace MenuSDK {
 		/** Height and spacing scale of the button. */
 		public get Size(): ButtonSize
 		public set Size(value: ButtonSize)
+		/**
+		 * Calls `callback` every time the button is pressed or {@link Trigger} is called; never at
+		 * the moment it is added.
+		 */
 		public OnValue(callback: (caller: Button) => void): Button
+		/** Runs the {@link OnValue} callbacks, as a press does. */
 		public Trigger(): void
 	}
-	class ColorPicker extends Handle<ColorEntry> {
+	interface Button extends Handle<ButtonEntry> {}
+	/** A colour control: one colour, a gradient between two, or a rainbow, as {@link Mode} says. */
+	class ColorPicker implements Handle<ColorEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
 		/**
@@ -629,6 +853,7 @@ declare namespace MenuSDK {
 		 * across its surface, from the first colour at one edge to the second at the other.
 		 */
 		public get GradientColors(): [Color, Color]
+		/** Sets the far end of the gradient, the second of {@link GradientColors}. */
 		public set SecondColor(next: Color)
 		/**
 		 * The colour at one point along the surface, 0 at its start and 1 at its end: the gradient
@@ -669,6 +894,10 @@ declare namespace MenuSDK {
 		 * )
 		 */
 		public Follows(ink: () => Color): ColorPicker
+		/**
+		 * Sets the colour, which is the first end of a gradient and the seed of a rainbow, and returns
+		 * the picker. `color` is kept as given, not copied.
+		 */
 		public SetColor(color: Color): ColorPicker
 		/**
 		 * Whether the value listeners wait for the hand to let go: on, a drag across the palette
@@ -678,19 +907,31 @@ declare namespace MenuSDK {
 		 */
 		public get CallOnRelease(): boolean
 		public set CallOnRelease(value: boolean)
+		/**
+		 * Calls `callback` every time a colour, the mode or the period changes, and once right away
+		 * unless {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: ColorPicker) => void): ColorPicker
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): ColorPicker
 	}
-	class TextInput extends Handle<TextEntry> {
+	interface ColorPicker extends Handle<ColorEntry> {}
+	/** A text field. A reset empties it. */
+	class TextInput implements Handle<TextEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/** The text in the field. A set that changes it runs the {@link OnValue} callbacks. */
 		public get text(): string
 		public set text(next: string)
+		/**
+		 * Calls `callback` every time the text changes, and once right away unless
+		 * {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: TextInput) => void): TextInput
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): TextInput
 	}
+	interface TextInput extends Handle<TextEntry> {}
 	/**
 	 * A list of short strings the user edits in the row itself: a field with an Add button, and a
 	 * row per string with its own remove control. Values are trimmed, cut at {@link MaxLength} and
@@ -701,7 +942,7 @@ declare namespace MenuSDK {
 	 * messages.SaveConfig = false
 	 * messages.OnValue(list => this.store(list.values))
 	 */
-	class TextList extends Handle<ListEntry> {
+	class TextList implements Handle<ListEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
 		/** The list as it stands. The array is replaced on every change and never mutated in place. */
@@ -713,26 +954,38 @@ declare namespace MenuSDK {
 		public get MaxItems(): number
 		/** Appends one string; false when it is empty once trimmed, already there, or the list is full. */
 		public Add(text: string): boolean
+		/** Removes the string at `index` of {@link values}; an index out of range does nothing. */
 		public Remove(index: number): void
+		/**
+		 * Calls `callback` every time the list changes, and once right away unless
+		 * {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: TextList) => void): TextList
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): TextList
 	}
-	class ShortDescription extends Handle<DescriptionEntry> {
+	interface TextList extends Handle<ListEntry> {}
+	/**
+	 * A line of text among a node's rows, holding no value: a note from
+	 * {@link Node.AddShortDescription} or a heading from {@link Node.AddSectionHeader}.
+	 */
+	class ShortDescription implements Handle<DescriptionEntry> {
+		/** Whether the note's row is drawn highlighted. */
 		public get Selected(): boolean
 		public set Selected(value: boolean)
 		/**
-		 * Puts a button at the end of the note and makes the whole row press it: for a note that
-		 * says what is missing and can set it right on the spot. `undefined` takes the button away.
+		 * Puts a button labelled `label` at the end of the note, and makes a click anywhere on the row
+		 * press it, for a row that names what is missing and can set it right. `undefined` takes the
+		 * button away.
 		 * @example
 		 * const note = node.AddShortDescription("Required humanizer")
 		 * note.SetAction("Enable", () => Humanizer.RequestEnable())
 		 */
 		public SetAction(label: Nullable<string>, run?: () => void): ShortDescription
 		/**
-		 * Where the thing the note names stands: a short word at the note's end in the tone it reads
-		 * as - before its button, when it has one - and, with a `detail`, a line under the note saying
-		 * why. `undefined` takes both away.
+		 * Where the thing the note names stands: a short word at the end of the note, coloured by its
+		 * `tone` and set before the button when there is one, and with a `detail`, a line under the
+		 * note saying why. `undefined` takes both away.
 		 * @example
 		 * row.Status = fits
 		 * 	? { text: "Will answer", tone: "good" }
@@ -741,9 +994,19 @@ declare namespace MenuSDK {
 		public get Status(): Nullable<DescriptionStatus>
 		public set Status(value: Nullable<DescriptionStatus>)
 	}
-	class ImageSelector extends Handle<ImagesEntry> {
+	interface ShortDescription extends Handle<DescriptionEntry> {}
+	/**
+	 * A row of image tiles, each turned on or off by a click and, when {@link ImageSelector.Draggable},
+	 * dragged into an order.
+	 */
+	class ImageSelector implements Handle<ImagesEntry> {
+		/**
+		 * How a tile is shaped: `"square"`, the default, as wide as its image up to a cap; `"item"` as
+		 * wide as its image; `"hero"` 16:9; `"circle"` round.
+		 */
 		public get Variant(): ImageVariant
 		public set Variant(value: ImageVariant)
+		/** Whether the user can drag the tiles into another order, which the config then keeps. */
 		public get Draggable(): boolean
 		public set Draggable(value: boolean)
 		/**
@@ -761,7 +1024,15 @@ declare namespace MenuSDK {
 		public MoveImage(from: number, to: number): void
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/** Whether none of the tiles of {@link values} is on, as {@link IsEnabled} reads them. */
 		public IsZeroSelected(): boolean
+		/**
+		 * The tiles' values in their current order. Setting it lays the tiles out anew: one that stays
+		 * keeps its state, a new one starts at the `createdDefaultState` given to
+		 * {@link Node.AddImageSelector}, and one left out keeps its state for a list that names it
+		 * again - a filter hides tiles, it does not forget them. A reset puts back the declared states,
+		 * not the ones the tiles hold at the assignment. {@link RemoveImage} forgets a tile for good.
+		 */
 		public get values(): string[]
 		public set values(next: string[])
 		public get enabledValues(): Map<string, boolean>
@@ -789,25 +1060,42 @@ declare namespace MenuSDK {
 		/** The selection as the config carries it. Same state as {@link enabledValues}. */
 		public get ConfigValue(): Map<string, boolean>
 		public set ConfigValue(next: Map<string, boolean> | [string, boolean][])
+		/** Whether the tile `value` is on; `false` for a value the selector holds no state for. */
 		public IsEnabled(value: string): boolean
+		/** Turns the tile `value` on or off, as a click on it does. */
+		public SetEnabled(value: string, on: boolean): void
 		/**
 		 * Adds a tile after the selector was built, e.g. an ability the game only now revealed: with the
 		 * state and place the config kept for it, `enabled` at the end for a tile it has never seen.
 		 */
 		public AddImage(value: string, enabled?: boolean): ImageSelector
+		/**
+		 * Forgets tile `value` for good - a tile of an ability the data no longer knows: it leaves the
+		 * row, its state goes, and the config stops naming it. Setting {@link values} without it keeps
+		 * its state instead.
+		 * @example
+		 * plan.values.filter(name => !known(name)).forEach(name => plan.RemoveImage(name))
+		 */
+		public RemoveImage(value: string): ImageSelector
 		/** Where a tile sits in the current order, which is what a drag rearranges. */
 		public GetPriority(value: string): number
+		/**
+		 * Calls `callback` every time a tile is turned on or off or moved, on a reset, when a config
+		 * brings in a different selection, and once right away unless {@link executeOnAdd} is off. A
+		 * set of {@link values} or {@link enabledValues} changes the tiles without calling it.
+		 */
 		public OnValue(callback: (caller: ImageSelector) => void): ImageSelector
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): ImageSelector
 	}
+	interface ImageSelector extends Handle<ImagesEntry> {}
 	/**
 	 * A preset selector: its row shows the chosen preset and opens a panel listing a permanent base
 	 * preset above the user's own. Presets are added, renamed and removed in the panel, and every
 	 * one beyond the base claims values from {@link Catalogue} — each value belonging to at most
 	 * one preset, so the base stands for whatever no other claims.
 	 */
-	class PresetSelector extends Handle<PresetsEntry> {
+	class PresetSelector implements Handle<PresetsEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
 		/** Heading of the row's panel where it should differ from the row's own name. */
@@ -835,6 +1123,10 @@ declare namespace MenuSDK {
 		 * per-preset state of its own by. Treat as read-only — the selector owns the structure.
 		 */
 		public get Presets(): readonly PresetGroup[]
+		/**
+		 * Index of the selected preset in {@link Presets}, 0 being the base. A set out of range lands
+		 * on the nearest preset; one that changes the selection runs the {@link OnValue} callbacks.
+		 */
 		public get SelectedID(): number
 		public set SelectedID(next: number)
 		/** The preset the panel has selected, which is the one a script should be editing. */
@@ -852,6 +1144,10 @@ declare namespace MenuSDK {
 			name: string
 			values: readonly string[]
 		}[], selected?: number): PresetSelector
+		/**
+		 * Calls `callback` every time the selection or the presets change, and once right away unless
+		 * {@link executeOnAdd} is off.
+		 */
 		public OnValue(callback: (caller: PresetSelector) => void): PresetSelector
 		/**
 		 * Carries one preset's settings over to another, for the Copy settings / Paste settings rows
@@ -865,9 +1161,15 @@ declare namespace MenuSDK {
 		/** Runs the value listeners without a value having changed. */
 		public TriggerOnValueChangedCBs(): PresetSelector
 	}
-	class Node extends Handle<NodeEntry> {
+	interface PresetSelector extends Handle<PresetsEntry> {}
+	/**
+	 * A node of the menu tree, holding controls and other nodes. Under {@link Menu} it is a tab;
+	 * deeper it stands as a page, a card or a row, as its place and its settings decide.
+	 */
+	class Node implements Handle<NodeEntry> {
 		public IsDefault(): boolean
 		public ResetToDefault(): void
+		/** Handles of the node's children, in order, made anew on every read. */
 		public get entries(): AnyHandle[]
 		/**
 		 * Runs the callback whenever any control under this node changes - for a script that rebuilds
@@ -880,8 +1182,13 @@ declare namespace MenuSDK {
 		 * page.OnValue(() => this.Rebuild())
 		 */
 		public OnValue(callback: (caller: Node) => void): Node
+		/**
+		 * Whether the node is open: shown, marked open, and with every node above it open. Setting it
+		 * opens or closes the node; opening a tab, or a page of a tab, closes the ones beside it.
+		 */
 		public get IsOpen(): boolean
 		public set IsOpen(value: boolean)
+		/** Whether the node itself is marked open, whatever its visibility and the nodes above it. */
 		public get IsOpenStored(): boolean
 		/**
 		 * Whether this node's card can be folded by clicking its header. Off on a page, it also
@@ -889,6 +1196,25 @@ declare namespace MenuSDK {
 		 */
 		public get Collapsible(): boolean
 		public set Collapsible(value: boolean)
+		/**
+		 * Whether each child node is a unit of its own when settings are picked out of a config or
+		 * copied into another: a hero of a hero list rather than the whole list. Off by default.
+		 * @example
+		 * const heroes = MenuSDK.Menu.AddEntry("Heroes")
+		 * heroes.ConfigCollection = true
+		 */
+		public get ConfigCollection(): boolean
+		public set ConfigCollection(value: boolean)
+		/**
+		 * Which config the settings under the node are kept in: `"config"`, the scripts' one, or
+		 * `"changer"`, the changer's, which a player switches and shares apart from it. A node takes
+		 * its parent's when created; setting it moves the entries under it that had the node's.
+		 * @example
+		 * const changer = MenuSDK.Menu.AddEntry("Changer")
+		 * changer.Document = "changer"
+		 */
+		public get Document(): EntryDocument
+		public set Document(value: "config" | "changer")
 		/**
 		 * Whether the menu is showing this node's page right now. A panel that belongs to a page —
 		 * a preview of what it configures — has no business on screen while another page is open.
@@ -911,20 +1237,25 @@ declare namespace MenuSDK {
 		 * A panel that belongs to one tab has no business on screen while another is open.
 		 */
 		public get ActiveTab(): Nullable<Node>
+		/** Sets {@link IsOpenStored} alone: no other node is closed and the menu is not redrawn. */
 		public SetOpenRaw(value: boolean): void
+		/**
+		 * Whether the node keeps its children sorted: a control named `"State"` first, then by
+		 * {@link Priority}, then by kind, then by name. On by default; off, the children keep the
+		 * order they have and a child added later goes last.
+		 */
 		public get SortNodes(): boolean
 		public set SortNodes(value: boolean)
+		/** Corner radius of the node's icon, in dp; the default, -1, leaves the corners to the menu. */
 		public get IconRound(): number
 		public set IconRound(value: number)
 		/**
-		 * Name of the child node pinned above the list of this node's pages. The
-		 * pinned page is what the tab opens on, so it is the current one - the hero
-		 * being played - rather than merely the first page alphabetically.
-		 * @example
-		 * heroes.PinnedName = LocalPlayer?.Hero?.Name ?? ""
+		 * Name of the page pinned above this tab's list of pages, under {@link PinnedLabel}, such as
+		 * the hero being played. Setting it opens that page if the tab has it; `""` pins none.
 		 */
 		public get PinnedName(): string
 		public set PinnedName(value: string)
+		/** Heading written in capitals over the page {@link PinnedName} pins; `""` leaves it blank. */
 		public get PinnedLabel(): string
 		public set PinnedLabel(value: string)
 		/**
@@ -942,8 +1273,13 @@ declare namespace MenuSDK {
 		 */
 		public get GeneralIcon(): string
 		public set GeneralIcon(value: string)
+		/** Gives this tab's list of pages a search field showing this text; `""` for no field. */
 		public get SearchPlaceholder(): string
 		public set SearchPlaceholder(value: string)
+		/**
+		 * Filter chips for this tab's list of pages, one per group: turning a chip off hides the pages
+		 * whose {@link FilterGroup} is that group's `id`.
+		 */
 		public get FilterGroups(): MenuFilterGroup[]
 		public set FilterGroups(value: MenuFilterGroup[])
 		/**
@@ -956,8 +1292,16 @@ declare namespace MenuSDK {
 		 */
 		public get GroupHeadings(): boolean
 		public set GroupHeadings(value: boolean)
+		/**
+		 * The `id` of the group of its tab's {@link FilterGroups} this page belongs to; `undefined`
+		 * for none, which no chip hides.
+		 */
 		public get FilterGroup(): Nullable<number>
 		public set FilterGroup(value: Nullable<number>)
+		/**
+		 * Whether the node's icon is tinted in the menu's colours. Off, it keeps its own, as a picture
+		 * does. On by default.
+		 */
 		public get IconTint(): boolean
 		public set IconTint(value: boolean)
 		/**
@@ -970,20 +1314,26 @@ declare namespace MenuSDK {
 		 */
 		public get IconAspectRatio(): number
 		public set IconAspectRatio(value: number)
+		/** Not read by the menu: setting it has no effect. */
 		public get IconGrayScale(): boolean
 		public set IconGrayScale(value: boolean)
+		/** Not read by the menu: setting it has no effect. */
 		public get TextColor(): Nullable<Color>
 		public set TextColor(value: Nullable<Color>)
 		/**
-		 * Fades this node's row in the navigation list - its icon and name - so it reads as one to
-		 * trust less than the rows around it: a hero a script plays without being sure of it. Pair it
-		 * with a {@link Hint}, which the page shows beside its title in the top bar, saying why.
+		 * Fades this node's icon and name in the navigation list, marking a page to trust less than
+		 * those around it, such as a hero a script plays without being sure of it. Pair it with a
+		 * {@link Hint} saying why, which the page shows beside its title in the top bar.
 		 * @example
 		 * page.Muted = true
 		 * page.Hint = { title: "May play wrong", text: "No module of its own for this hero yet" }
 		 */
 		public get Muted(): boolean
 		public set Muted(value: boolean)
+		/**
+		 * Whether the node stands as a settings row whose button opens its controls in a popover,
+		 * instead of as a page or a fold of rows. {@link AddSettings} makes such a node.
+		 */
 		public get Popover(): boolean
 		public set Popover(value: boolean)
 		/** Status glyphs before this node's settings button. An empty list hides them without replacing the main icon. */
@@ -992,6 +1342,10 @@ declare namespace MenuSDK {
 		/** Preferred popover width in dp. Undefined uses the compact default; the panel fits within the screen. */
 		public get PopoverWidth(): Nullable<number>
 		public set PopoverWidth(value: Nullable<number>)
+		/**
+		 * Whether this page shows its child pages as tabs along its top, one at a time; the open one
+		 * is {@link ActiveTab}.
+		 */
 		public get TabbedChildren(): boolean
 		public set TabbedChildren(value: boolean)
 		/**
@@ -1022,11 +1376,11 @@ declare namespace MenuSDK {
 		public get GeneralTab(): boolean
 		public set GeneralTab(value: boolean)
 		/**
-		 * Stands this page of a top-level tab in the navigation column right under the General entry, a
-		 * row of its own like it, instead of in the list of the tab's pages - under no heading, kept out
-		 * of the search and the group headings: a page every entry of the tab shares, as the General
-		 * page is. Only while the column shows the General entry on top of its list - a tab with a
-		 * pinned page or a search; otherwise the page stays in the list.
+		 * Lists this page of a top-level tab in the navigation column right under the General entry,
+		 * on a row of its own like it, instead of among the tab's pages, where the search and the
+		 * group headings do not reach it: for a page every entry of the tab shares. It applies only
+		 * while the column shows General on top, as it does for a tab with a General page and a pinned
+		 * page or a search; otherwise the page stays in the list.
 		 * @example
 		 * const heroes = MenuSDK.Menu.AddEntry("Heroes")
 		 * const killSteal = heroes.AddNode("Kill steal")
@@ -1035,16 +1389,12 @@ declare namespace MenuSDK {
 		public get BesideGeneral(): boolean
 		public set BesideGeneral(value: boolean)
 		/**
-		 * Stands this node as one row of the card holding it, its child nodes as tiles under the title
-		 * line and its {@link HeaderControl} switch at the end of it, instead of as a page or a fold of
-		 * rows: a block of the same few settings repeated per thing - a key and a switch per spell -
-		 * takes two rows of pictures instead of a card each.
-		 *
-		 * A tile shows its node's icon, the key of the node's first keybind on a badge in its corner -
-		 * red while another tile has the same key - and the icons of its switches that are on in the
-		 * other. A click captures the key; the right button opens the tile's keybinds and switches as a
-		 * menu, with the reset of the whole tile under them. A tile offers nothing but those two kinds
-		 * of rows. Hotkey lists and reveals name a tile's bind and switches after the tile.
+		 * Stands this node as one row of its card: its child nodes as tiles under the title line and
+		 * its {@link HeaderControl} switch at the end of it, for the same few settings repeated per
+		 * thing, such as a key and a switch per spell. A tile shows its node's icon, the key of its
+		 * first keybind on a corner badge, red while another tile has the same key, and the icons of
+		 * its switches that are on in the other corner. A click captures the key; a right click opens
+		 * the tile's keybinds and switches, the only rows a tile offers, with a reset of the tile.
 		 * @example
 		 * const spells = tab.AddNode("Spell by key")
 		 * spells.Tiles = true
@@ -1056,17 +1406,12 @@ declare namespace MenuSDK {
 		public get Tiles(): boolean
 		public set Tiles(value: boolean)
 		/**
-		 * Stands this node as one row of the card holding it, editing tabs of sequences of image
-		 * steps the script keeps - a spell combo per tab, a build order - instead of as a page or a
-		 * fold of rows: the tabs along its top, the one in use lit and shown, its steps as tiles with
-		 * their place in the corner, a plus that lists what may be added and a bin that clears the
-		 * tab, and the tab's key bind as a row under them.
-		 *
-		 * A click on a tab puts it in use. A tile dragged moves its step, dropped on the bin takes it
-		 * out, and a click on it takes it out too; an empty tab offers the source's presets. The row
-		 * keeps nothing: it reads the source each time it draws and hands every edit to it, so the
-		 * script decides what a step may be and where it goes. Hand the controls the sequences live
-		 * in to {@link Host}, and they leave their rows and reset with this one.
+		 * Stands this node as one row of its card, editing sequences of image steps the script keeps,
+		 * such as a spell combo per tab: the tabs along the top with the one in use lit, its steps as
+		 * tiles, a plus that lists what may be added, a bin that clears the tab, and the tab's key bind
+		 * under them. A click on a tab puts it in use; a step is moved by a drag and taken out by a
+		 * click or a drop on the bin. The row keeps nothing and hands every edit to the source. Pass
+		 * the controls the sequences live in to {@link Host}; they leave their rows and reset with it.
 		 * @example
 		 * const combos = card.AddNode("Combos")
 		 * combos.Sequences = source
@@ -1083,16 +1428,24 @@ declare namespace MenuSDK {
 		public Host(...handles: {
 			readonly entry: Entry
 		}[]): Node
+		/**
+		 * Whether the node keeps what the config holds for children it does not have: a save writes
+		 * those values back, and a control added later starts from its saved value. On by default.
+		 */
 		public get SaveUnusedConfigs(): boolean
 		public set SaveUnusedConfigs(value: boolean)
+		/**
+		 * The control standing on the node's header instead of on a row among its children: on the
+		 * top bar while the node is the page shown, and as a switch on its card's or fold's header or
+		 * at the end of its settings row. While it is a switch that is off, everything under the node
+		 * is drawn with a muted accent. A node is not taken: handing one clears it.
+		 */
 		public get HeaderControl(): Nullable<AnyHandle>
 		public set HeaderControl(value: Nullable<AnyHandle>)
 		/**
-		 * Toggle that gates this page: while it is off everything under it paints with a muted
-		 * accent instead of the live one, and the art of image selector tiles goes grey — switches
-		 * stay on and keep their values, they simply stop reading as running. Nothing is locked
-		 * and no label loses contrast, so the page is as easy to read and to set up as a working
-		 * one. The gate itself keeps the accent: it is the switch that turns the page back on.
+		 * The switch that turns this page on. While it is off, everything under the page is drawn with
+		 * a muted accent and image tiles go grey, but nothing is locked and no value changes, so the
+		 * page is as easy to set up as a running one. The switch itself keeps the accent.
 		 * @example
 		 * const general = page.AddNode("General")
 		 * this.State = general.AddToggle("State", false)
@@ -1102,9 +1455,9 @@ declare namespace MenuSDK {
 		public get Gate(): Nullable<Toggle>
 		public set Gate(value: Nullable<Toggle>)
 		/**
-		 * Banner shown above the page while its {@link Gate} is off, with a button that turns
-		 * the gate on. It closes the page rather than muting it — the cards fade back and stop
-		 * taking clicks — so declare it only where there is nothing to prepare while it is off.
+		 * A banner shown above the page while its {@link Gate} is off, with a button that turns the
+		 * gate on. While it shows, the page's cards are dimmed and take no clicks, so give one only to
+		 * a page with nothing to set up while it is off.
 		 */
 		public get DisabledNotice(): Nullable<DisabledNotice>
 		public set DisabledNotice(value: Nullable<DisabledNotice>)
@@ -1123,10 +1476,11 @@ declare namespace MenuSDK {
 		public get BackAction(): Nullable<() => boolean>
 		public set BackAction(value: Nullable<() => boolean>)
 		/**
-		 * Drops the top bar - the history arrows and the breadcrumb - over this node's pages and its
-		 * children's, giving its height to the page. For a tool whose pages carry their own navigation
-		 * and need every row of the window. The window still drags by its side column's header and by
-		 * any bare stretch of the page, and Alt+← still runs the page's {@link BackAction}.
+		 * Drops the top bar, with its history arrows and breadcrumb, over this node's pages and its
+		 * children's, and gives its height to the page: for a tool whose pages carry their own
+		 * navigation. The window still drags by its side column's header and by any bare stretch of
+		 * the page, and Alt+← still runs the page's {@link BackAction}. A tab's {@link HeaderControl}
+		 * switch, which the top bar would show, stands beside the tab's name in the side column.
 		 * @example
 		 * const changer = MenuSDK.Menu.AddEntry("Skin Changer", icon)
 		 * changer.HideTopBar = true
@@ -1158,13 +1512,9 @@ declare namespace MenuSDK {
 		 */
 		public AddTileSettings(host: ImageSelector, name?: string, iconPath?: string): Node
 		/**
-		 * A settings row of this node's own: the row carries its name and the button that opens it,
-		 * and everything added to the node it returns lives in the popover the button opens — the
-		 * panel {@link AddSubSettings} opens for a row, titled with the name given here.
-		 *
-		 * For a block of settings that belongs to no single row of the card — the typography of a
-		 * label, the timings of a feature — where a fold would spend the card's height on rows read
-		 * once and left alone. Colours ride the row itself through {@link Node.PairColors}.
+		 * A settings row: `name` and a button that opens everything added to the returned node in a
+		 * popover titled `name`. For a block of settings that belongs to no single row, such as the
+		 * typography of a label; colour pickers go on the row itself through {@link PairColors}.
 		 * @example
 		 * const text = card.AddSettings("Text settings", "images/icons/text.svg")
 		 * text.AddSlider("Font size", 13, 10, 24)
@@ -1177,11 +1527,29 @@ declare namespace MenuSDK {
 		 * What each one stands for is read from its name on hover.
 		 */
 		public PairColors(...pickers: ColorPicker[]): Node
+		/** A heading among the node's rows: `name`, after `iconPath` when one is given. */
 		public AddSectionHeader(name: string, iconPath?: string): ShortDescription
+		/**
+		 * A note: `name` as a line of muted text after an icon, the alert icon unless `iconPath` names
+		 * another or is `""` for none.
+		 */
 		public AddShortDescription(name: string, tooltip?: string, priority?: number, iconPath?: string, iconRound?: number): ShortDescription
+		/**
+		 * A node under this one, or the one already named `name`, which takes `iconPath` if it has no
+		 * icon yet.
+		 */
 		public AddNode(name: string, iconPath?: string, tooltip?: string, iconRound?: number, priority?: number): Node
+		/** The same as {@link AddNode}. */
 		public AddEntry(name: string, iconPath?: string, tooltip?: string, iconRound?: number, priority?: number): Node
+		/**
+		 * A switch, on at first when `defaultValue` is. One named `"State"` takes the power icon when
+		 * given none, and comes first in a node that sorts its children.
+		 */
 		public AddToggle(name: string, defaultValue?: boolean, tooltip?: string, priority?: number, iconPath?: string, iconRound?: number): Toggle
+		/**
+		 * A slider from `min` to `max`, at `defaultValue` until moved, its value rounded to
+		 * `precision` decimals.
+		 */
 		public AddSlider(name: string, defaultValue?: number, min?: number, max?: number, precision?: number, tooltip?: string, priority?: number): Slider
 		/**
 		 * A span of values on one rail with two thumbs, from `defaultLow` to `defaultHigh` until it is
@@ -1193,7 +1561,9 @@ declare namespace MenuSDK {
 		 * reaction.OnValue(range => console.log(range.low, range.high))
 		 */
 		public AddRangeSlider(name: string, defaultLow?: number, defaultHigh?: number, min?: number, max?: number, step?: number, tooltip?: string, priority?: number): RangeSlider
+		/** A dropdown offering `values`, with the option at index `defaultValue` selected at first. */
 		public AddDropdown(name: string, values: string[], defaultValue?: number, tooltip?: string, priority?: number): Dropdown
+		/** A multiselect offering `values`, the options named in `defaultValue` ticked at first. */
 		public AddMultiSelect(name: string, values: string[], defaultValue?: string[], tooltip?: string, priority?: number): MultiSelect
 		/** Adds a keybind, optionally hidden from Hotkeys by default; users can change its visibility in the context menu. */
 		public AddKeybind(name: string, defaultKey?: string, tooltip?: string, priority?: number, defaultHotkeysHidden?: boolean): Keybind
@@ -1204,7 +1574,9 @@ declare namespace MenuSDK {
 		 * create.IconPath = "menu/ui/plus.svg"
 		 */
 		public AddButton(name: string, tooltip?: string, priority?: number, variant?: ButtonVariant, size?: ButtonSize): Button
+		/** A colour picker holding `defaultColor` at first, green when none is given. */
 		public AddColorPicker(name: string, defaultColor?: Color, tooltip?: string, priority?: number): ColorPicker
+		/** A text field that starts empty and shows `placeholder`, the name by default, while it is. */
 		public AddTextInput(name: string, placeholder?: string, priority?: number): TextInput
 		/**
 		 * A list of short strings edited in place: `placeholder` is what the empty field says,
@@ -1235,6 +1607,11 @@ declare namespace MenuSDK {
 		 * this.lotus.AddImage("item_sphere", false)
 		 */
 		public AddDynamicImageSelector(name: string, values: string[], defaultValues?: Map<string, boolean> | [string, boolean][], createdDefaultState?: boolean, tooltip?: string, priority?: number): ImageSelector
+		/**
+		 * A row of image tiles, one per value of `values`, each turned on and off by a click.
+		 * `defaultValues` gives a tile its first state, and one it leaves out starts as
+		 * `createdDefaultState`; `draggable` lets the user put the tiles in another order.
+		 */
 		public AddImageSelector(name: string, values: string[], defaultValues?: Map<string, boolean> | [string, boolean][], tooltip?: string, createdDefaultState?: boolean, priority?: number, draggable?: boolean): ImageSelector
 		/**
 		 * A preset selector: a row showing the chosen preset, opening a panel that lists a permanent
@@ -1246,27 +1623,42 @@ declare namespace MenuSDK {
 		 */
 		public AddPresetSelector(name: string, baseName?: string, tooltip?: string, priority?: number): PresetSelector
 	}
+	interface Node extends Handle<NodeEntry> {}
 	/** What {@link Node.AddVector2} hands back: the two sliders, and the point they make. */
 	interface Vector2Handle {
+		/** The node holding the two sliders. */
 		readonly node: Node
+		/** The slider of the x coordinate, hidden in the menu. */
 		readonly X: Slider
+		/** The slider of the y coordinate, hidden in the menu. */
 		readonly Y: Slider
+		/**
+		 * The point {@link X} and {@link Y} make. A set moves both, each kept in its range and rounded
+		 * to a whole number.
+		 */
 		Vector: Vector2
 	}
 	/** What {@link Node.AddParticlePicker} hands back. */
 	interface ParticlePicker {
+		/** The node holding the picker's controls. */
 		readonly Node: Node
 		/** Only there when the picker was asked for one. */
 		readonly State: Nullable<Toggle>
+		/** Whether the shape is filled; on at first. */
 		readonly Fill: Toggle
+		/** The shape's colour. */
 		readonly Color: ColorPicker
+		/** Which of the `styles` given to {@link Node.AddParticlePicker} the shape is drawn in. */
 		readonly Style: Dropdown
 	}
+	/** The handle of any control or node, as {@link WrapEntry} returns it. */
 	type AnyHandle = Node | Toggle | Slider | RangeSlider | Dropdown | MultiSelect | Keybind | Button | ColorPicker | TextInput | TextList | ImageSelector | PresetSelector | ShortDescription
 	/** A hotkey of any entry, whatever kind of value it drives. */
 	type AnyHotkey = HotkeyHandle<DrivenValue>
 	/** A logic rule of any entry, whatever kind of value it drives. */
 	type AnyLogic = LogicHandle<DrivenValue>
+	/** A new handle over `entry`, of the class its kind calls for. */
 	function WrapEntry(entry: Entry): AnyHandle
+	/** The root of the menu tree; a node added to it is a tab. */
 	const Menu: Node
 }

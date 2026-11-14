@@ -7,8 +7,6 @@ declare class kez_raptor_dance extends Ability {
 	public get StatesOnCaster(): boolean
 	/** The invulnerability comes as the cast point begins, not as it ends. */
 	public get StateDelay(): number
-	/** He is invulnerable `invuln_period`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseDamageForLevel(level: number): number
 	public GetRawDamage(target: Unit): number
 	/** Each strike after the first strikes as the first (`GetRawDamage`). */

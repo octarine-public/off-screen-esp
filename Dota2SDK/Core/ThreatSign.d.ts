@@ -5,14 +5,14 @@
  * control points. The store updates every sign each tick and lets go of one that has nothing
  * left to follow; a sign that learns its effect is off the table invalidates its threat.
  */
-declare abstract class ThreatSign {
-	public abstract readonly Threat: Threat
+interface ThreatSign {
+	readonly Threat: Threat
 	/** Follows the game at the game time `now`; false once there is nothing left to follow. */
-	public Update(_now: number): boolean
+	Update(_now: number): boolean
 	/** The cast phase, channel or particle behind the sign ended; `cancel` when that alone means the effect is off. */
-	public Ended(_cancel: boolean): void
+	Ended(_cancel: boolean): void
 	/** The particle behind the sign changed. */
-	public Changed(_particle: NetworkedParticle): void
+	Changed(_particle: NetworkedParticle): void
 	/** The game let the particle behind the sign go: it plays out on its own, nothing more comes of it. */
-	public Released(): void
+	Released(): void
 }

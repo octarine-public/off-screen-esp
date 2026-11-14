@@ -5,10 +5,7 @@
  * acts on its bearer's attacks, `MODIFIER_EVENT_ON_ATTACK`; not those of Lunar Orbit).
  */
 declare class modifier_venomancer_snakebite extends Modifier {
-	/** Snakebite ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** `base_damage` from Venomancer, through its bearer's resistances. */
 	public get DamageOnOwnAttack(): number
 	public get IsPurgable(): boolean
-	protected UpdateSpecialValues(): void
 }

@@ -1,8 +1,11 @@
 // AUTO-GENERATED - do not edit.
 /** Mutable 3D vector (x, y, z) with a large set of math, geometry and angle helpers. */
 declare class Vector3 {
+	/** The x component. {@link Angle} is 0 along its positive direction. */
 	public x: number
+	/** The y component. {@link Angle} is `Math.PI / 2` along its positive direction. */
 	public y: number
+	/** The z component, which {@link Angle} and the `2D` members leave out. */
 	public z: number
 	/** Shared immutable-by-convention zero vector `(0, 0, 0)`. Do not mutate. */
 	public static readonly Zero: Vector3
@@ -104,7 +107,13 @@ declare class Vector3 {
 	 * @example
 	 * const vec = new Vector3(1, 2, 3)
 	 */
-	constructor(x?: number, y?: number, z?: number)
+	constructor(
+	/** The x component. {@link Angle} is 0 along its positive direction. */
+	x?: number, 
+	/** The y component. {@link Angle} is `Math.PI / 2` along its positive direction. */
+	y?: number, 
+	/** The z component, which {@link Angle} and the `2D` members leave out. */
+	z?: number)
 	/**
 	 * Whether the vector is valid (every component is finite, i.e. not `NaN`/`Infinity`).
 	 * @example

@@ -10,7 +10,6 @@ declare class venomancer_snakebite extends Ability implements INuke, IDebuff {
 	public IsDebuff(): this is IDebuff
 	/** Initial bite damage; the toxin adds `tick_damage` per second on top of it. */
 	public GetBaseDamageForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/**
 	 * The toxin after the bite: `tick_damage` a second over each `damage_interval`, the first a
 	 * tick after it lands, the last as it ends.

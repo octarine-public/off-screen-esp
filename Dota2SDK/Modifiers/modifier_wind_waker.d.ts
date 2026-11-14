@@ -8,7 +8,6 @@ declare class modifier_wind_waker extends Modifier implements IBuff, IShield, ID
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
 	public IsDisable(): this is IDisable
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** An enemy drops out of the cyclone hurt (`Ability.DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**

@@ -17,9 +17,4 @@ declare class queenofpain_blink extends Ability {
 	public MotionOn(target: Unit, from: Vector3, toward: Vector3, landsAt: number): Nullable<Motion>
 	public GetBaseAOERadiusForLevel(level: number): number
 	public get AppliesUnitState(): bigint
-	/**
-	 * The Shard's silence lasts `shard_duration` - none without it: a Shard blink onto Slark
-	 * silenced him 1.75 s as she came down (20 October 2026, demo).
-	 */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

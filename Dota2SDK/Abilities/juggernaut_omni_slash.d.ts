@@ -1,7 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class juggernaut_omni_slash extends Ability {
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** Juggernaut slashes invulnerable and immune to spells for its `duration`. */
 	public get AppliesUnitState(): bigint
 	/** The states are Juggernaut's own, cast at an enemy (`StatesTargetOf`). */

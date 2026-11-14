@@ -1,27 +1,61 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** One font file the menu ships, as {@link FontRegistry} lists it. */
 	interface FontVariant {
+		/** The family the face belongs to, by the name styles and the font picker use. */
 		readonly family: string
+		/** Path of the font file under {@link FontsBase}. */
 		readonly file: string
+		/** The face's weight: 400 regular, 500 medium, 600 semibold, 700 bold. */
 		readonly weight: number
+		/**
+		 * Whether the face is the family's italic. In a family without one, italic text is set
+		 * upright ({@link MenuFontStyle}).
+		 */
 		readonly italic: boolean
+		/**
+		 * Whether the face is loaded as a fallback face. A family whose every face is a fallback, as
+		 * NotoEmoji's is, stays out of the font picker.
+		 */
 		readonly fallback: boolean
+		/**
+		 * The language this face draws, by the name the menu's language list uses: while the menu is
+		 * in that language its text is set in this family, and the face is loaded only while the list
+		 * has it.
+		 * Omitted on a face of no particular language.
+		 */
 		readonly language?: string
 	}
+	/**
+	 * Loads the font file at `path` into the menu's renderer as a face of the family the file
+	 * names, at `weight`; a fallback face draws the glyphs the faces of a text's own family lack.
+	 * Answers whether the file loaded.
+	 * @example
+	 * MenuSDK.LoadFontFace("panorama/fonts/radiance-bold.otf", 700)
+	 */
+	function LoadFontFace(path: string, weight: number, fallback?: boolean): boolean
+	/** The asset folder every {@link FontVariant.file} is relative to. */
 	const FontsBase = "fonts/"
+	/**
+	 * The family a surface is set in until a theme picks another, and the one a family the pickers
+	 * do not offer falls back to.
+	 */
 	const DefaultFamily = "Roboto"
+	/**
+	 * Every font face the menu ships, one per file; {@link ActiveFonts} picks the ones it loads. The
+	 * font picker lists families in this order.
+	 */
 	const FontRegistry: FontVariant[]
 	/**
-	 * How large `family` is drawn against the size a style asks for, so every face takes about the
-	 * room the menu was laid out for in Roboto. It is measured from the lowercase width and the
-	 * x-height: a family that sets larger is drawn smaller, a narrow one larger - never wider than
-	 * Roboto, or a label that fit would be cut. A family setting within a few percent of Roboto is
-	 * drawn at the size asked for: the engine cuts a font size down to a whole pixel, so a small
-	 * correction would take a full pixel off. Inter and Montserrat also ship with their letters set
-	 * 0.025em apart by `tools/track-font.cjs`, because the engine places every letter on a whole
-	 * pixel and drops the fraction of a `letter-spacing`.
+	 * The factor `family` is drawn at against the font size a style asks for, so every family takes
+	 * about the room the menu was laid out for in Roboto: below 1 for a family that sets larger, above
+	 * 1 for a narrower one, and 1 for Roboto and every family drawn at the size asked for.
 	 */
 	function FamilySize(family: string): number
+	/**
+	 * The faces of {@link FontRegistry} the menu loads: all of them but those drawing a language the
+	 * menu's language list does not have.
+	 */
 	function ActiveFonts(): FontVariant[]
 	/**
 	 * Families the font picker offers, in registry order: every family with a
@@ -35,7 +69,12 @@ declare namespace MenuSDK {
 	 * in {@link FontWeightNames}. Part of a theme snapshot, one per surface the menu dresses.
 	 */
 	interface IThemeFont {
+		/** The family's name, one the font picker offers ({@link MenuFontFamilies}). */
 		family: string
+		/**
+		 * The lightest weight the surface's text is drawn at, by its name in {@link FontWeightNames};
+		 * text asking for a heavier one keeps it.
+		 */
 		weight: string
 		/**
 		 * The weight the surface's settings rows are set in, by its name in {@link FontWeightNames}.
@@ -58,9 +97,9 @@ declare namespace MenuSDK {
 	/** Whether two themes are set in the same type. A theme that names none is set in the default one. */
 	function fontsEqual(a: Nullable<IThemeFont>, b: Nullable<IThemeFont>): boolean
 	/**
-	 * Bumped whenever any surface's typeface moves. A writer that pins the face onto an element and
-	 * rewrites it only when its own input moved - the HUD pools, whose commands say nothing about
-	 * the face they are set in - watches this to know it owes the elements one more write.
+	 * A counter that goes up whenever any surface's family or weight changes, or a language comes to
+	 * be drawn in another face. Code that writes the face onto elements itself and writes again only
+	 * when its own input moved compares it to know the elements need one more write.
 	 */
 	function FontEpoch(): number
 	/** The family `scope` renders with, before language overrides; the active scope's by default. */
@@ -110,14 +149,10 @@ declare namespace MenuSDK {
 	 */
 	function SettingsFontWeight(weight: number): string
 	/**
-	 * The `font-style` text asking for `style` is set in under `scope` - the active one by default.
-	 * The engine draws nothing at all for italic text in a family that ships no italic face, so in
-	 * such a family - the one the scope sets its language in - italic stands upright instead. It is
-	 * resolved at render rather than at write: a language or typeface that moves re-renders the
-	 * tree, and the style follows it.
-	 *
-	 * @example
-	 * <Text style={{ fontStyle: MenuFontStyle("italic") }}>{hint}</Text>
+	 * The `font-style` to write for text asking for `style` under `scope`, the active one by default.
+	 * Italic comes back as `"normal"` when the family the scope draws its language in has no italic
+	 * face, since the engine draws no text at all for italic without one. Call it while rendering, so
+	 * the style follows a change of language or family.
 	 */
 	function MenuFontStyle(style: "normal" | "italic", scope?: EThemeScope): "normal" | "italic"
 	/**

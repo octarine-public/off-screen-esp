@@ -1,9 +1,13 @@
 // AUTO-GENERATED - do not edit.
 /** An axis-aligned bounding box defined by a `Base` position plus min/max corner offsets and a Z shift. */
 declare class AABB {
+	/** The point the box is placed at; both corner offsets are measured from it. */
 	public readonly Base: Vector3
+	/** The minimum corner relative to {@link Base}, before {@link DeltaZ}. */
 	public readonly MinOffset: Vector3
+	/** The maximum corner relative to {@link Base}, before {@link DeltaZ}. */
 	public readonly MaxOffset: Vector3
+	/** Added to the z of both corners: moves the box along z and leaves {@link Base} alone. */
 	public DeltaZ: number
 	/**
 	 * Creates an AABB from a `Base` position and its min/max corner offsets, plus an optional `DeltaZ`
@@ -11,7 +15,15 @@ declare class AABB {
 	 * @example
 	 * const box = new AABB(pos, new Vector3(-50, -50), new Vector3(50, 50))
 	 */
-	constructor(Base?: Vector3, MinOffset?: Vector3, MaxOffset?: Vector3, DeltaZ?: number)
+	constructor(
+	/** The point the box is placed at; both corner offsets are measured from it. */
+	Base?: Vector3, 
+	/** The minimum corner relative to {@link Base}, before {@link DeltaZ}. */
+	MinOffset?: Vector3, 
+	/** The maximum corner relative to {@link Base}, before {@link DeltaZ}. */
+	MaxOffset?: Vector3, 
+	/** Added to the z of both corners: moves the box along z and leaves {@link Base} alone. */
+	DeltaZ?: number)
 	/** Absolute Z of the top of the box (`Base.z + MaxOffset.z + DeltaZ`). @example const top = box.MaxZ */
 	public get MaxZ(): number
 	/** Minimum corner as a new Vector3 (`Base + MinOffset`, shifted by `DeltaZ`). @example const lo = box.Min */

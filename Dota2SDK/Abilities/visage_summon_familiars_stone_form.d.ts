@@ -5,7 +5,6 @@
  * units round it within `stun_radius` for `stun_duration`.
  */
 declare class visage_summon_familiars_stone_form extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number

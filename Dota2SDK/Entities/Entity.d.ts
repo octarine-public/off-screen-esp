@@ -6,7 +6,6 @@ declare class Entity implements INativeEntity {
 	public CreateTime: number
 	public readonly MaxHP: number
 	public readonly PlaybackRate: number
-	public readonly CBodyComponent_: Nullable<EntityPropertiesNode>
 	public HP: number
 	public HPPrediction: number
 	public IsValid: boolean
@@ -43,14 +42,8 @@ declare class Entity implements INativeEntity {
 	public Team: Team
 	public LifeState: LifeState
 	public LastLifeStateUpdate: number
-	/**
-	 * @private NOTE: this is internal field, use CreateTime
-	 * @deprecated
-	 */
-	public FakeCreateTime_: number
 	public readonly VisualPosition: Vector3
 	public readonly NetworkedPosition: Vector3
-	public readonly NetworkedPosition_: Vector3
 	public readonly VisualAngles: QAngle
 	/**
 	 * Filled from the visual stream. Dota's stream carries only position and angles, so this stays
@@ -58,7 +51,6 @@ declare class Entity implements INativeEntity {
 	 */
 	public readonly VisualVelocity: Vector3
 	public readonly NetworkedAngles: QAngle
-	public readonly NetworkedAngles_: QAngle
 	public readonly PredictedPosition: Vector3
 	public readonly VisualPredictedPosition: Vector3
 	public LastPredictedPositionUpdate: number
@@ -72,31 +64,9 @@ declare class Entity implements INativeEntity {
 	public PreviousNetworkedYaw: Nullable<number>
 	public readonly BoundingBox: AABB
 	public readonly SpawnPosition: Vector3
-	/** @private NOTE: this is internal field, use Name */
-	public Name_: string
-	/** @private NOTE: this is internal field, use Owner or OwnerEntity */
-	public Owner_: number
 	public OwnerEntity: Nullable<Entity>
-	/** @private NOTE: this is internal field, use ParentEntity */
-	public Parent_: number
 	public ParentEntity: Nullable<Entity>
-	/** @private NOTE: this is internal field use Target */
-	public TargetIndex_: number
 	public AttachmentsHashMap: Nullable<Map<number, number>>
-	/** @private NOTE: this is internal field */
-	public FieldHandlers_: Nullable<Map<number, FieldHandler>>
-	/** @private NOTE: this is internal field */
-	public Properties_: EntityPropertiesNode
-	/**
-	 * @private NOTE: this is internal field
-	 *
-	 * Whether where this entity stands still has to be worked out. A move arrives as several
-	 * fields of one update - the cell and the offset in it per axis, the rotation - and each
-	 * one walked the entity's whole hierarchy again, a transform per node, for the same place.
-	 * A field that moves the entity raises this, and the walk happens once, when the update is
-	 * done with.
-	 */
-	public PositionsStale_: boolean
 	/**
 	 * Whether the entity stands in the view of this frame's camera, widened a little past the
 	 * screen's edges. For a unit it is a flag the core sets for the units it finds on screen before
@@ -146,11 +116,6 @@ declare class Entity implements INativeEntity {
 	public get CustomNativeID(): number
 	public get Handle(): number
 	public get Forward(): Vector3
-	/**
-	 * Whether the entity stands on screen, for a kind the core's on-screen list leaves out: its
-	 * position projected against the frame widened as the core widens it.
-	 */
-	protected OnScreenUnlisted(): boolean
 	public SerialMatches(serial: number): boolean
 	public HandleMatches(handle: number): boolean
 	public EntityMatches(ent: Entity): boolean

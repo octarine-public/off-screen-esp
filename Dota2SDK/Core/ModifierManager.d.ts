@@ -1,55 +1,54 @@
 // AUTO-GENERATED - do not edit.
-declare class IModifier {
-	public readonly kv: RecursiveProtobuf
-	public readonly InternalName: string
-	public readonly InternalDDAbilityName: string
-	public IsFake: boolean
-	constructor(kv: RecursiveProtobuf)
-	public get EntryType(): Nullable<DOTA_MODIFIER_ENTRY_TYPE>
-	public get Parent(): Nullable<number>
-	public get Index(): Nullable<number>
-	public get SerialNum(): Nullable<number>
-	public get ModifierClass(): number
-	public get AbilityLevel(): Nullable<number>
-	public get AuraWithInRange(): Nullable<boolean>
-	public get StackCount(): Nullable<number>
-	public get CreationTime(): number
-	public get Duration(): number
-	public get Caster(): Nullable<number>
-	public get Ability(): Nullable<number>
-	public get Armor(): Nullable<number>
-	public get FadeTime(): Nullable<number>
-	public get Subtle(): Nullable<boolean>
-	public get ChannelTime(): Nullable<number>
-	public get vStart(): Nullable<Vector4>
-	public get vEnd(): Nullable<Vector4>
-	public get PortalLoopAppear(): Nullable<string>
-	public get PortalLoopDisappear(): Nullable<string>
-	public get HeroLoopAppear(): Nullable<string>
-	public get HeroLoopDisappear(): Nullable<string>
-	public get MovementSpeed(): Nullable<number>
-	public get IsAura(): Nullable<boolean>
-	public get Activity(): Nullable<number>
-	public get Damage(): Nullable<number>
-	public get Range(): Nullable<number>
-	public get DDModifierID(): Nullable<number>
-	public get DDAbilityID(): Nullable<number>
-	public get IllusionLevel(): Nullable<number>
-	public get IsActive(): Nullable<boolean>
-	public get PlayerIDs(): Nullable<string>
-	public get LuaName(): Nullable<string>
-	public get AttackSpeed(): Nullable<number>
-	public get AuraOwner(): Nullable<number>
-	public get BonusAllStats(): Nullable<number>
-	public get BonusHealth(): Nullable<number>
-	public get BonusMana(): Nullable<number>
-	public get CustomEntity(): Nullable<number>
-	public get IllusionLabel(): Nullable<string>
-	public get MoveSlow(): Nullable<number>
-	public get HasShard(): Nullable<boolean>
-	public get HasScepter(): Nullable<boolean>
-	public GetProperty<T>(name: string): Nullable<T>
-	public GetVector(name: string): Nullable<Vector4>
-	public AddInternalModifier(modifier: Modifier): void
-	public RemoveInternalModifier(modifier: Modifier): void
+interface IModifier {
+	readonly kv: RecursiveProtobuf
+	readonly InternalName: string
+	readonly InternalDDAbilityName: string
+	IsFake: boolean
+	get EntryType(): Nullable<DOTA_MODIFIER_ENTRY_TYPE>
+	get Parent(): Nullable<number>
+	get Index(): Nullable<number>
+	get SerialNum(): Nullable<number>
+	get ModifierClass(): number
+	get AbilityLevel(): Nullable<number>
+	get AuraWithInRange(): Nullable<boolean>
+	get StackCount(): Nullable<number>
+	get CreationTime(): number
+	get Duration(): number
+	get Caster(): Nullable<number>
+	get Ability(): Nullable<number>
+	get Armor(): Nullable<number>
+	get FadeTime(): Nullable<number>
+	get Subtle(): Nullable<boolean>
+	get ChannelTime(): Nullable<number>
+	get vStart(): Nullable<Vector4>
+	get vEnd(): Nullable<Vector4>
+	get PortalLoopAppear(): Nullable<string>
+	get PortalLoopDisappear(): Nullable<string>
+	get HeroLoopAppear(): Nullable<string>
+	get HeroLoopDisappear(): Nullable<string>
+	get MovementSpeed(): Nullable<number>
+	get IsAura(): Nullable<boolean>
+	get Activity(): Nullable<number>
+	get Damage(): Nullable<number>
+	get Range(): Nullable<number>
+	get DDModifierID(): Nullable<number>
+	get DDAbilityID(): Nullable<number>
+	get IllusionLevel(): Nullable<number>
+	get IsActive(): Nullable<boolean>
+	get PlayerIDs(): Nullable<string>
+	get LuaName(): Nullable<string>
+	get AttackSpeed(): Nullable<number>
+	get AuraOwner(): Nullable<number>
+	get BonusAllStats(): Nullable<number>
+	get BonusHealth(): Nullable<number>
+	get BonusMana(): Nullable<number>
+	get CustomEntity(): Nullable<number>
+	get IllusionLabel(): Nullable<string>
+	get MoveSlow(): Nullable<number>
+	get HasShard(): Nullable<boolean>
+	get HasScepter(): Nullable<boolean>
+	GetProperty<T>(name: string): Nullable<T>
+	GetVector(name: string): Nullable<Vector4>
+	AddInternalModifier(modifier: Modifier): void
+	RemoveInternalModifier(modifier: Modifier): void
 }

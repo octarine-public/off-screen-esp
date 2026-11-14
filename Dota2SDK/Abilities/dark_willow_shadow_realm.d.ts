@@ -14,6 +14,4 @@ declare class dark_willow_shadow_realm extends Ability implements IBuff {
 	public get StatesOnCaster(): boolean
 	/** She is in the realm `fade_time` after the cast. */
 	public GetBaseActivationDelayForLevel(level: number): number
-	/** She stays in the realm its `duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

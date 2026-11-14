@@ -2,86 +2,155 @@
 declare namespace MenuSDK {
 	/** Image presentation in screen pixels. A source rectangle selects a sprite sheet frame. */
 	interface CanvasImageStyle {
+		/** Tint the image is multiplied by, white when omitted; its alpha fades the image. */
 		readonly color?: Color
+		/** Corner radius in px. */
 		readonly radius?: number
+		/**
+		 * Clips the image to the ellipse its box holds, a circle in a square box, in place of
+		 * {@link radius}.
+		 */
 		readonly circle?: boolean
+		/** Rotation in degrees, clockwise about the image's centre. */
 		readonly angle?: number
+		/** Draws the image in greyscale. */
 		readonly grayscale?: boolean
+		/** Only the part of the image inside this rectangle is drawn, in the px of its position. */
 		readonly clip?: Rectangle
+		/** Top-left corner of the part of the file to draw, in its own pixels ({@link ImageSize}). */
 		readonly sourcePosition?: Vector2
+		/**
+		 * Size of the part of the file to draw, in the file's own pixels. Nothing is drawn while either
+		 * side is 0 or less, and the image waits to show until the host knows the file's size.
+		 */
 		readonly sourceSize?: Vector2
+		/**
+		 * `"cover"`, the default, fills the box with the image's proportions kept and crops the
+		 * overhang about its centre, once the host knows the file's size; `"stretch"` scales the whole
+		 * source to the box.
+		 */
 		readonly fit?: "cover" | "stretch"
 	}
 	/** An analytic shape, with the stroke centred on its boundary. Angles are clockwise degrees. */
 	interface CanvasShapeStyle {
+		/** Fill colour, white when omitted. */
 		readonly color?: Color
+		/** Stroke colour, white when omitted. */
 		readonly borderColor?: Color
+		/** Stroke width in px, held to 1 to 2; no stroke while 0 or omitted. */
 		readonly borderWidth?: number
+		/** Corner radius of a {@link Canvas.Rect} in px; {@link Canvas.Circle} ignores it. */
 		readonly radius?: number
+		/**
+		 * Where the sector begins, in degrees clockwise from three o'clock; -90, twelve o'clock, when
+		 * omitted.
+		 */
 		readonly start?: number
+		/**
+		 * How many degrees of the shape are drawn from {@link start}, clockwise, or counter-clockwise
+		 * when negative. 360, the whole shape, when omitted; 0 draws nothing.
+		 */
 		readonly sweep?: number
 	}
 	/**
-	 * A circular timer: a round portrait with the progress ring on its rim and a reading over the
-	 * middle. The ring runs clockwise from twelve o'clock, `progress` of a full turn, in `color`,
-	 * `ringWidth` pixels wide (8% of the diameter, and 3dp at least, when omitted). The text is
-	 * `textScale` of the diameter tall (0.35 when omitted), bold, white, outlined. Without a
-	 * texture only the text is painted. A `shadow` sets the portrait on a soft drop shadow that many
-	 * px wide all round it and darkens its own edge inward, `shadowColor` (black at six tenths when
-	 * omitted) at the rim and gone at the reach: the shadows the game's buff icons wear, whatever
-	 * the progress; none when omitted. `opacity` fades the whole timer, portrait included, 0 to 1
-	 * and whole when omitted; it multiplies into whatever alpha the colours carry.
+	 * A circular timer for {@link Canvas.CircleTimer}: a round portrait with a progress ring on its
+	 * rim and a text over the middle.
 	 */
 	interface CanvasCircleTimerStyle {
+		/** Path of the portrait. Without one only {@link text} is painted, with no ring or shadow. */
 		readonly texture?: string
+		/** Share of a full turn the ring covers clockwise from twelve o'clock, clamped to 0 to 1. */
 		readonly progress: number
+		/** Colour of the ring. */
 		readonly color: Color
+		/**
+		 * Width of the ring in px, inside the portrait's edge; 8% of the diameter, and 3 dp at least,
+		 * when omitted.
+		 */
 		readonly ringWidth?: number
+		/**
+		 * Width in px of a soft shadow around the portrait, {@link shadowColor} at its rim and clear at
+		 * its reach, with a 1 dp rim line in that colour. It also shades the portrait's edge inward 2.5
+		 * times as far unless {@link innerShadow} is off. No shadow when omitted or 0.
+		 */
 		readonly shadow?: number
+		/** Colour of the shadow at the portrait's rim; black at alpha 153 when omitted. */
 		readonly shadowColor?: Color
 		/** Whether the outer shadow also shades the portrait's inner edge. Defaults to true. */
 		readonly innerShadow?: boolean
+		/** Text centred over the timer and outlined, painted with or without a {@link texture}. */
 		readonly text?: string
+		/** Font size of the text as a share of the diameter, shrunk to fit; 0.35 when omitted. */
 		readonly textScale?: number
+		/** Colour of the text, white when omitted. */
 		readonly textColor?: Color
+		/** Font weight of the text, 700 when omitted. */
 		readonly weight?: number
+		/**
+		 * Fades the whole timer, 0 to 1, by multiplying the alpha of every colour in it; 1 when
+		 * omitted. Nothing is painted at 0.
+		 */
 		readonly opacity?: number
 	}
 	/** Text measured and painted in the same RmlUi face and pixel size. */
 	interface CanvasTextStyle {
+		/** Text colour, white when omitted. Its alpha fades the whole run, outline included. */
 		readonly color?: Color
+		/** Font family; the menu's own, which follows its language, when omitted. */
 		readonly family?: string
+		/**
+		 * Font size in px, 18 when omitted. {@link Canvas.TextIn} caps it at the box's height, shrinks
+		 * it to fit the box's width, and without one takes it from {@link division}.
+		 */
 		readonly size?: number
+		/** Font weight, 400 when omitted; the menu's weight setting may raise it, never lower it. */
 		readonly weight?: number
+		/** Sets the text in the italic face. */
 		readonly italic?: boolean
+		/** `false` drops the dark outline text carries by default; {@link effect} overrides it. */
 		readonly outline?: boolean
+		/** What is drawn under the glyphs: an outline when omitted, a shadow, or nothing. */
 		readonly effect?: EHudTextEffect
+		/** How dark the outline or shadow is drawn, 0 to 1; 1 when omitted. */
 		readonly effectOpacity?: number
+		/**
+		 * Where {@link Canvas.TextIn} sets the text in its box: `Top` or `Bottom`, `Left` or `Right`,
+		 * centred on an axis the flags leave open. `TextFlags.Center` when omitted.
+		 */
 		readonly flags?: TextFlags
+		/**
+		 * Without a {@link size}, {@link Canvas.TextIn} sets the text at the box's height divided by
+		 * this; 1.2 when omitted, and never less.
+		 */
 		readonly division?: number
 	}
 	/**
-	 * An image's own size in the file's pixels — the units `sourcePosition`, `sourceSize` and a crop
-	 * region are given in — the same at every resolution and menu scale. Zero until RmlUi has
-	 * measured it.
+	 * The size of the image at `path` in the file's own pixels, the units of
+	 * {@link CanvasImageStyle.sourcePosition} and {@link CanvasImageStyle.sourceSize}; it does not
+	 * change with resolution or menu scale. `(0, 0)` while the host cannot tell it yet.
 	 */
 	function ImageSize(path: string): Vector2
 	/** The size of a text run in screen pixels. */
 	function TextSize(text: string, style?: CanvasTextStyle): Vector3
 	/**
-	 * A script's RmlUi surface in screen pixels. Project world anchors before painting; the surface
-	 * pools DOM elements, updates changed properties, and hides anything omitted from the next frame.
+	 * A script's drawing surface, in screen px, or in px from the anchor while {@link Canvas.Anchor}
+	 * is in force. Anything a frame does not paint again is hidden. While the host keeps overlays
+	 * down, such as outside a match, nothing shows unless the canvas is on {@link EPanelLayer.Menu}.
 	 *
-	 * What it draws lands on whole pixels unless it is made with {@link EHudPlacement.Subpixel}, for
-	 * markers that glide - icons crossing the minimap - rather than stand on something the game draws;
-	 * there a sprite frame is also scaled from its own texels, the way the game draws minimap icons.
+	 * What it draws lands on whole pixels unless the canvas is made with
+	 * {@link EHudPlacement.Subpixel}, for markers that glide, such as icons crossing the minimap.
 	 * @example
-	 * const canvas = new Canvas("cooldowns")
+	 * const canvas = new MenuSDK.Canvas("cooldowns")
 	 * canvas.Image(ability.TexturePath, position, size, { radius: 4 })
 	 * @example
-	 * const minimap = new Canvas("minimap-icons", EPanelLayer.World, EHudPlacement.Subpixel)
+	 * const subpixel = MenuSDK.EHudPlacement.Subpixel
+	 * const minimap = new MenuSDK.Canvas("minimap-icons", MenuSDK.EPanelLayer.World, subpixel)
 	 */
 	class Canvas {
+		/**
+		 * A canvas on the surface `key` names, made in `layer` with `placement` the first time the key
+		 * is used and kept for the session: every canvas on that key shares it as it was first made.
+		 */
 		constructor(key: string, layer?: EPanelLayer, placement?: EHudPlacement)
 		/** Hides the surface immediately. */
 		public Clear(): void
@@ -108,6 +177,26 @@ declare namespace MenuSDK {
 		 * canvas.Anchor()
 		 */
 		public AnchorWorld(x: number, y: number, z: number, screenX?: number, screenY?: number): void
+		/**
+		 * Pins what is painted after it, until {@link Canvas.Anchor} or the end of the frame, to the
+		 * world point `x, y, z`: screen px the script projected from that point, or from things near
+		 * it, keep up with the camera even on a frame whose script pass ran late. Where the host has no
+		 * anchors or the point does not project, what follows stays where it was painted.
+		 * @example
+		 * if (Source2SDK.Projection.WorldToScreenXYZ(hit.x, hit.y, hit.z, at)) {
+		 * 	canvas.Pin(hit.x, hit.y, hit.z)
+		 * 	canvas.Circle(new Vector2(at[0] - 4, at[1] - 4), new Vector2(8, 8), { color })
+		 * 	canvas.Anchor()
+		 * }
+		 */
+		public Pin(x: number, y: number, z: number): void
+		/**
+		 * {@link Canvas.Pin} on `x, y, z` world units from the origin of the entity `handle` names: what
+		 * follows keeps to the entity too.
+		 * @example
+		 * canvas.PinEntity(pawn.Handle, 0, 0, 36)
+		 */
+		public PinEntity(handle: number, x?: number, y?: number, z?: number): void
 		/** Paints a rectangular image with optional clipping, tint, rotation and desaturation. */
 		public Image(path: string, position: Vector2, size: Vector2, style?: CanvasImageStyle): void
 		/** Paints a square frame from a horizontal sprite sheet once its intrinsic size is available. */

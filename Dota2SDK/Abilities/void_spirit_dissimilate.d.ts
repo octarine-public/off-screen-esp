@@ -8,7 +8,6 @@
 declare class void_spirit_dissimilate extends Ability implements INuke {
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** While Void Spirit is dissimilated he is invulnerable and attacks miss him. */
 	public get AppliesUnitState(): bigint
 	/** The states are Void Spirit's own. */

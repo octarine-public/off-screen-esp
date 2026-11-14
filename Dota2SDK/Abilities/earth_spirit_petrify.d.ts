@@ -5,7 +5,6 @@ declare class earth_spirit_petrify extends Ability {
 	/** None at the unit it is cast on: it becomes the remnant, its shatter striking those around. */
 	public GetDamage(_target: Unit): number
 	public get CastRange(): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/**
 	 * The unit it is cast on turns to stone for `duration`: stunned, invulnerable and out of the
 	 * game - a hold on an enemy, a shelter for an ally.

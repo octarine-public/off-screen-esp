@@ -8,5 +8,4 @@ declare class modifier_furion_sprout_tether extends Modifier implements IDebuff,
 	public get LeashRadius(): number
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
-	protected UpdateSpecialValues(): void
 }

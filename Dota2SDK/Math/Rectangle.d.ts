@@ -1,7 +1,9 @@
 // AUTO-GENERATED - do not edit.
 /** An axis-aligned 2D rectangle defined by its top-left (`pos1`) and bottom-right (`pos2`) corners. */
 declare class Rectangle {
+	/** The top-left corner. Nothing keeps it above and to the left of {@link pos2}. */
 	public pos1: Vector2
+	/** The bottom-right corner, which {@link Contains} leaves out along with its two edges. */
 	public pos2: Vector2
 	/**
 	 * Creates a rectangle from its top-left (`pos1`) and bottom-right (`pos2`) corners. Both default
@@ -9,7 +11,11 @@ declare class Rectangle {
 	 * @example
 	 * const r = new Rectangle(new Vector2(0, 0), new Vector2(100, 50))
 	 */
-	constructor(pos1?: Vector2, pos2?: Vector2)
+	constructor(
+	/** The top-left corner. Nothing keeps it above and to the left of {@link pos2}. */
+	pos1?: Vector2, 
+	/** The bottom-right corner, which {@link Contains} leaves out along with its two edges. */
+	pos2?: Vector2)
 	/** `true` when both corner vectors are valid (finite, non-NaN). @example if (r.IsValid) {} */
 	public get IsValid(): boolean
 	/** Left edge (`pos1.x`). @example const left = r.x */
@@ -22,11 +28,11 @@ declare class Rectangle {
 	public set y(val: number)
 	/** Size as a new Vector2 (`pos2 - pos1`), i.e. `(width, height)`. @example const s = r.Size */
 	public get Size(): Vector2
-	/** Width of the rectangle. @example const w = r.Width */
+	/** The horizontal extent, `pos2.x - pos1.x`: negative when `pos2` is to the left of `pos1`. */
 	public get Width(): number
 	/** Sets the width by moving the right edge; the left edge stays fixed. @example r.Width = 200 */
 	public set Width(val: number)
-	/** Height of the rectangle. @example const h = r.Height */
+	/** The vertical extent, `pos2.y - pos1.y`: negative when `pos2.y` is the smaller of the two. */
 	public get Height(): number
 	/** Sets the height by moving the bottom edge; the top edge stays fixed. @example r.Height = 200 */
 	public set Height(val: number)

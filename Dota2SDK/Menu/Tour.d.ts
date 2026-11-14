@@ -31,6 +31,7 @@ declare namespace MenuSDK {
 	function OpenTour(): void
 	/** Closes the tour and remembers that it was shown. */
 	function CloseTour(): void
+	/** Whether the menu tour is showing, from {@link OpenTour} until it is closed. */
 	function IsTourOpen(): boolean
 	/**
 	 * Registers the tour's localization strings and the Settings → Assistant

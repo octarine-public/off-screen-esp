@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare type PanoramaSymbol = number
-
 declare interface IUIPanel {
 	FindChild(id: string): Nullable<IUIPanel>
 	FindChildTraverse<T extends IUIPanel>(id: string): Nullable<T>
@@ -116,63 +115,4 @@ declare interface IUIPanel {
 	SetAttribute(symbol: PanoramaSymbol, value: string): void
 	RemoveAttribute(symbol: PanoramaSymbol): void
 	BSetProperty(symbol: PanoramaSymbol, value: string): boolean
-}
-
-/** A panel of type Label (CLabel in C++). */
-declare interface CLabel extends IUIPanel {
-	SetText(text: string): void
-	GetText(): string
-}
-
-/** A panel of type Image (CImagePanel in C++). */
-declare interface CImage extends IUIPanel {
-	SetImage(imageURL: string): void
-	GetImage(): string
-}
-
-declare namespace Panorama {
-	/** The root panel of a window the game has open, `undefined` while it is not up. */
-	function FindRootPanel(window: string): Nullable<IUIPanel>
-	function CreatePanel<T extends IUIPanel>(
-		type: string,
-		id: string,
-		parent: IUIPanel
-	): Nullable<T>
-	/** Runs JavaScript inside the game's own Panorama context. */
-	function ExecuteScript(panel: IUIPanel, script: string): void
-	/** Interns a string; 65535 symbols is the engine's limit. */
-	function MakeSymbol(name: string): PanoramaSymbol
-	function GetSymbolString(symbol: PanoramaSymbol): string
-	/**
-	 * Attaches a callback to an event of the given type on one panel. The callback takes however
-	 * many arguments that event carries.
-	 * @returns the handle to unregister with
-	 */
-	function RegisterEventHandler(
-		eventName: string,
-		panel: IUIPanel,
-		callback: (panel: IUIPanel, ...args: any[]) => void
-	): number
-	/**
-	 * The same, for events no panel handled - either dispatched without one or ignored by it.
-	 * @returns the handle to unregister with
-	 */
-	function RegisterForUnhandledEvent(
-		eventName: string,
-		callback: (panel: IUIPanel, ...args: any[]) => void
-	): number
-	function UnregisterEventHandler(handle: number): void
-	function UnregisterForUnhandledEvent(handle: number): void
-	/**
-	 * Builds an event and sends it to a panel, or as an unhandled event when none is given.
-	 * @param eventString what constructs the event, e.g. `Activated(mouse)`
-	 * @param delay seconds to wait before dispatching
-	 */
-	function DispatchEventAsync(
-		eventString: string,
-		panel?: Nullable<IUIPanel>,
-		delay?: number
-	): void
-	function EnterMainThread(): Promise<number>
-	function LeaveMainThread(): number
 }

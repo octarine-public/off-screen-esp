@@ -71,7 +71,5 @@ declare class Item extends Ability {
 	 * Owner.CanBeCastedWhileSilenced
 	 */
 	public CanBeCasted(bonusMana?: number): boolean
-	/** A silence keeps no item from being cast: a mute does (`CanBeCastedAt`). */
-	protected get CanBeCastedWhileSilenced(): boolean
 	public CanBeCastedAt(time: number): boolean
 }

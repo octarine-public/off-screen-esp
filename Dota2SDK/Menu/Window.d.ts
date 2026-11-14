@@ -1,12 +1,10 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * The gate in front of the window body. The body is built the first time the window opens and
-	 * kept from then on: closing hides it instead of taking it down, so a reopen shows a tree that
-	 * is already laid out rather than building every element of the page again in one frame. A
-	 * closed menu still takes store invalidations — every bound hotkey press is one — and the body's
-	 * page computation is not free, so the hidden body hears nothing until the window opens again
-	 * and catches up in that one render.
+	 * The menu window as a React component, the one `MountMenu` renders. Nothing is built until the
+	 * window first opens; from then on closing hides the window instead of unmounting it, and a
+	 * hidden window ignores store and window changes until it opens again. Outside panic mode it
+	 * unmounts while the menu has no visible tab.
 	 */
 	function MenuWindow(): React.ReactElement | null
 }

@@ -6,6 +6,4 @@ declare class chaos_knight_phantasm extends Ability {
 	public get AppliesUnitState(): bigint
 	/** The invulnerability is Chaos Knight's own. */
 	public get StatesOnCaster(): boolean
-	/** He is invulnerable `invuln_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

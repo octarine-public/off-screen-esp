@@ -12,8 +12,6 @@ declare class lich_sinister_gaze extends Ability {
 	 */
 	public get ChannelTakesCasts(): boolean
 	public GetBaseAOERadiusForLevel(level: number): number
-	/** The gaze holds its target while Lich channels it, `channel_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	/**
 	 * Its target, drawn to Lich, can neither attack, cast, use an item nor be ordered: afraid,
 	 * walking through the trees.

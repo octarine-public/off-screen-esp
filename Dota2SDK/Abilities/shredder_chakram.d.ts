@@ -14,6 +14,12 @@ declare class shredder_chakram extends Ability implements INuke {
 	/** The spin as `DamageOverTime` has it, for as long as `mana` pays for it. */
 	public ChakramOverTime(out: DamageTicks, level: number, mana: number): boolean
 	/**
+	 * The saw spins until Timbersaw calls it back (Return Chakram) or his mana runs out: how long is
+	 * his to choose, the spin's `Duration` only the longest his mana pays for - 73 s at 3475 damage
+	 * with a full pool in the hero demo, none of it the cast's own.
+	 */
+	public get KeepsField(): boolean
+	/**
 	 * The saw flies to the point it was cast at and spins there, harming around it: a circle, not
 	 * a line.
 	 */

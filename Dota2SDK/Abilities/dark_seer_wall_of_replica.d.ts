@@ -24,7 +24,6 @@ declare class dark_seer_wall_of_replica extends Ability implements IDebuff {
 	 */
 	public get Length(): number
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public get Range(): number
 	/** The wall stands at once: a line without a projectile. */
 	public get SkillShotType(): ESkillShotType

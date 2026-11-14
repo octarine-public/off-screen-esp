@@ -7,7 +7,6 @@ declare class mirana_invis extends Ability {
 	 * after it.
 	 */
 	public get InvisibilityReturns(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(_level: number): number
 	/** Mirana and her allies fade `fade_delay` after the cast. */
 	public GetBaseActivationDelayForLevel(level: number): number

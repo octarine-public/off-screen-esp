@@ -13,6 +13,4 @@ declare class skywrath_mage_concussive_shot extends Ability {
 	 * (`Ability.CanHitAt`).
 	 */
 	public CanHitAt(target: Unit, time: number): boolean
-	/** Its shot slows the unit it hits by `movement_speed_pct` percent for `slow_duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

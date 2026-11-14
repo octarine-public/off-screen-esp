@@ -13,9 +13,5 @@
  */
 declare class modifier_illusion extends Modifier {
 	public readonly IsHidden = false
-	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
 	public UnitPropertyChanged(changed?: boolean): boolean
-	protected GetDamageOutgoingPercentageIllusion(params?: IModifierParams): [number, boolean]
-	protected GetIncomingDamageIllusion(): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

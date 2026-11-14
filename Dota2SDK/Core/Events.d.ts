@@ -89,6 +89,10 @@ interface NativeEventsMap {
 	WndProc: [messageType: number, wParam: bigint, lParam: bigint, x: number, y: number]
 }
 
+/**
+ * The emitter the SDK raises its events on: frames, key and mouse input, server ticks, entities
+ * created and destroyed. `EventsMap` lists every event with the arguments its listeners get.
+ */
 declare const Events: EventEmitter<EventsMap>
 
 interface EventsMap {

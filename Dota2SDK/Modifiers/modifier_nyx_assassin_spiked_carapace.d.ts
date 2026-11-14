@@ -12,8 +12,6 @@ declare class modifier_nyx_assassin_spiked_carapace extends Modifier implements 
 	public IsBuff(): this is IBuff
 	/** Whether it turns back the next damage of `source`: once for each source a player controls. */
 	public TurnsBack(source: Unit): boolean
-	/** A cast's first hit on Nyx it turns back (`HitsBeyond`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/**
 	 * The first of the hits `hits` of a cast of `ability` landing on Nyx while it lasts deals none,
 	 * its owner not turned back yet (`TurnsBack`).
@@ -24,6 +22,5 @@ declare class modifier_nyx_assassin_spiked_carapace extends Modifier implements 
 	 * entity of index `inflictor`: the carapace turning the victim's hit back.
 	 */
 	public static Hurt(attacker: number, victim: number, inflictor: number): void
-	protected OnAdded(): void
 	public get IsPurgable(): boolean
 }

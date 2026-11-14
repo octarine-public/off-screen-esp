@@ -1,13 +1,10 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * Opens the editor of one hotkey as a side panel of the anchor rect, in screen
-	 * pixels: placed against its right edge at the anchor's height, flipped to the
-	 * left edge when the screen ends. The panel holds key capture, toggle/hold
-	 * mode, the driven value in the entry's own control — a switch for a toggle, a
-	 * slider for a slider, an option picker for a dropdown or multiselect —
-	 * overlay visibility and removal. It draws no scrim of its own; the owner
-	 * closes it.
+	 * Opens the editor of `hotkey` on `entry` beside `anchor`, a rect in screen pixels: right of it,
+	 * or left where the screen ends. It sets the key, toggle or hold mode, the value the hotkey
+	 * drives, when the hotkeys panel shows it and whether it blocks game input, and deletes it. It
+	 * draws no scrim of its own; {@link CloseHotkeyPanel} closes it.
 	 */
 	function OpenHotkeyPanel(entry: DriverHolder, hotkey: EntryHotkey, anchor: ScreenRect): void
 	/**

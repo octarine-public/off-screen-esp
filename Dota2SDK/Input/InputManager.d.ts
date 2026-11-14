@@ -1,10 +1,31 @@
 // AUTO-GENERATED - do not edit.
+/**
+ * Which keys and mouse buttons are held and where the cursor is, kept from the messages the game
+ * window receives. Use the `InputManager` instance.
+ */
 declare class CInputManager {
+	/**
+	 * Where the cursor is, in the screen pixels `WorldToScreen` answers in, as of the last window
+	 * message or frame. A new vector on every read.
+	 */
 	public get CursorOnScreen(): Vector2
+	/** Whether `key` is held: down from the window's key-down message until its key-up. */
 	public IsKeyDown(key: VKeys): boolean
+	/**
+	 * Whether a mouse button is held: down from its button-down or double-click message until its
+	 * button-up. Only the five buttons are tracked; `MK_SHIFT` and `MK_CONTROL` are never down.
+	 */
 	public IsMouseKeyDown(key: VMouseKeys): boolean
+	/**
+	 * Sets what {@link CursorOnScreen} answers. The SDK calls this on every window message and
+	 * every frame, so a position set by hand lasts until the next of either.
+	 */
 	public UpdateCursorOnScreen(x: number, y: number): void
 }
+/**
+ * Windows window-message codes (`WM_*`): what the `WndProc` event of `Source2SDK.NativeEvents`
+ * carries as `messageType`.
+ */
 declare const enum InputMessage {
 	WM_NULL = 0,
 	WM_CREATE = 1,
@@ -288,6 +309,12 @@ interface CInputManager {
 	 * }
 	 */
 	readonly UnitUnderCursor: Nullable<Unit>
+	/**
+	 * The entity the game itself has under the cursor: the `weaponselect` of its user command, as
+	 * it is, with none of the checks {@link UnitUnderCursor} makes before it counts as clicked.
+	 * None while the game names nothing.
+	 */
+	readonly WeaponSelect: Nullable<Entity>
 	/**
 	 * Whether a click of the player's lands on `entity` right now - a rune or an item on the
 	 * ground, which the game picks by the cursor itself rather than its `weaponselect`: the

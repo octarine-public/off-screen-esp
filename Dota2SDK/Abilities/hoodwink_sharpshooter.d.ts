@@ -18,6 +18,4 @@ declare class hoodwink_sharpshooter extends Ability implements INuke {
 	 * the charge.
 	 */
 	public get BreakDuration(): number
-	protected FillEffects(out: AbilityEffects): void
-	protected FillEffectsOn(out: AbilityEffects, target: Unit): void
 }

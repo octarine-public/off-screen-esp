@@ -8,5 +8,4 @@
  * back to him with it: a Scythe of Vyse the soul cast was cooling on him as he was back.
  */
 declare class dazzle_nothl_projection extends Ability {
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

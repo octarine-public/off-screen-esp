@@ -5,6 +5,5 @@ declare class techies_remote_mines extends Ability {
 	/** A mine's damage: `damage`, `damage_scepter` with Aghanim's Scepter. */
 	public GetBaseDamageForLevel(level: number): number
 	public GetBaseCastRangeForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 }

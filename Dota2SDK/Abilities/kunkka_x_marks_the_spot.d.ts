@@ -13,7 +13,6 @@ declare class kunkka_x_marks_the_spot extends Ability {
 	 * }
 	 */
 	public get Mark(): Nullable<modifier_kunkka_x_marks_the_spot>
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** The marked unit is set back on the mark as it ends. */
 	public get MovesTarget(): boolean
 	/** The mark sets its unit back as it ends: `duration` on an enemy, `allied_duration` on an ally. */

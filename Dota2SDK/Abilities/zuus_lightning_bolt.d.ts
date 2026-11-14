@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class zuus_lightning_bolt extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	/** It strikes round its target only with the talent: `aoe_radius`, none without it. */
 	public GetBaseAOERadiusForLevel(level: number): number

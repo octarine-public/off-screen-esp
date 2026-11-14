@@ -5,6 +5,7 @@ declare namespace MenuSDK {
 	 * re-themes the HUD with it, and nothing here has to be kept in step by hand.
 	 */
 	const HudColors: {
+		/** The theme's primary text colour, the one a card's title is drawn in. */
 		readonly title: Color
 		/**
 		 * A shade off {@link HudColors.title}, for a line that is the card's own subject rather than a
@@ -12,6 +13,7 @@ declare namespace MenuSDK {
 		 * when it is the only run of text there.
 		 */
 		readonly body: Color
+		/** The theme's muted text colour, `TextMuted`. */
 		readonly sub: Color
 		/**
 		 * A step under {@link HudColors.sub}, for a run that has to be there without being read — a
@@ -19,23 +21,20 @@ declare namespace MenuSDK {
 		 * writes anything in, so it wants the HUD's own bold under it at the sizes those runs are set at.
 		 */
 		readonly faint: Color
+		/** The theme's accent colour. */
 		readonly accent: Color
+		/** The theme's `StatusBad` colour. */
 		readonly kill: Color
+		/** The theme's `StatusGood` colour. */
 		readonly ok: Color
 		/** The material a card is carved from, for a badge that carries no card of its own. */
 		readonly glass: Color
 		/** The hairline a card is rimmed with, on the same terms. */
 		readonly rim: Color
 		/**
-		 * `color` relit until it reads on the card it is drawn on - deeper over a light theme, brighter
-		 * over a dark one - keeping its hue and its saturation, so a colour something is known by stays
-		 * that colour. A feature picks its own palette against one background and the menu wears
-		 * whichever the player set: the green a rune is read in was picked for dark glass, and on a
-		 * white panel it is a pale smear that says nothing. A colour that already reads is handed back
-		 * untouched, so every dark theme draws exactly what it drew before.
-		 *
-		 * @example
-		 * HudText.Right(x, y, MetersText(distance), 13, HudColors.readable(rune.color), true)
+		 * `color` relit until it reads on the card glass of the active theme, to a contrast ratio of
+		 * 4.5: darker on light glass, lighter on dark, with its hue, saturation and alpha kept. A
+		 * colour that already reads comes back unchanged.
 		 */
 		readonly readable: (color: Color) => Color
 	}
@@ -71,6 +70,10 @@ declare namespace MenuSDK {
 	 * are the same line.
 	 */
 	const HudRegular = 400
+	/**
+	 * The corner radius of a card in dp: {@link CHudCard.Frame}'s default, and what
+	 * {@link CHudCard.Border} always rounds to.
+	 */
 	const HudCardRadius = 10
 	/** Space the header leaves between a title and the value on its right. */
 	const HudHeaderGap = 10
@@ -94,33 +97,50 @@ declare namespace MenuSDK {
 	 * a marker keeps the same share of the screen on any monitor whatever the menu is set to.
 	 */
 	function setHudWorldScale(scale: number): void
+	/**
+	 * A horizontal length of `value` dp as screen px, at the layout scale of the card being laid out
+	 * ({@link setHudScale}, {@link setHudWorldScale}).
+	 */
 	function hudW(value: number): number
+	/** A vertical length of `value` dp as screen px, converted as {@link hudW} converts. */
 	function hudH(value: number): number
 	/**
-	 * A font size, carrying the font scale of the theme this surface wears. `applyStyle` runs a
-	 * numeric style through `ScaleMetric`, but every length here goes out as a `px` string - a
-	 * projected coordinate read as dp lands somewhere else entirely - so the scales the theme owns
-	 * have to be applied by hand. Measuring and emitting share this, or a measured width stops
-	 * matching what is drawn.
+	 * A font size in dp as the px a card sets it at: times the layout scale ({@link setHudScale},
+	 * {@link setHudWorldScale}) and the font scale of the theme the card is laid out against.
+	 * {@link HudText} takes sizes in dp and applies this itself.
 	 */
 	function hudFont(value: number): number
 	/** A corner radius, carrying that theme's radius scale for the same reason. */
 	function hudRadius(value: number): number
-	class CHudText {
-		public Width(text: string, size: number, weight?: number, family?: string): number
+	/**
+	 * A card's text, drawn onto the active surface; {@link HudText} is the instance. Sizes are font
+	 * sizes in dp, scaled as {@link hudFont} scales them, and the rest is px. A colour's alpha is not
+	 * used: text fades with {@link HudAlphaScale} alone, which {@link CHudCard.Frame} sets.
+	 */
+	interface CHudText {
+		/**
+		 * How wide `text` is at `size`, in px, every digit counted as a zero so a ticking number keeps
+		 * one width. 0 until the host can measure it.
+		 */
+		Width(text: string, size: number, weight?: number, family?: string): number
 		/**
 		 * The line the engine will actually lay out, in px. Digits are measured as zeroes: the
 		 * line box does not depend on which digit it is, and a ticking counter would otherwise
 		 * mint a fresh measurement cache entry every change.
 		 */
-		public Height(text: string, size: number, weight: number, family?: string): number
+		Height(text: string, size: number, weight: number, family?: string): number
 		/**
 		 * The longest prefix that fits, ellipsis included, found by binary search and remembered:
 		 * a clipped name is the same clipped name every frame, and the shrink loop cost one
 		 * measurement per overflowing character each time it ran.
 		 */
-		public Clip(text: string, maxWidth: number, size: number, weight?: number, family?: string): string
-		public Left(x: number, centerY: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): number
+		Clip(text: string, maxWidth: number, size: number, weight?: number, family?: string): string
+		/**
+		 * Draws `text` from `x`, centred on `centerY`, and returns its width as {@link CHudText.Width}
+		 * gives it. `effect` adds a dark outline or shadow, drawn at `effectOpacity` of full darkness
+		 * (1 when omitted).
+		 */
+		Left(x: number, centerY: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): number
 		/**
 		 * A line held to a box `width` px wide instead of clipped to a prefix: what does not fit is cut
 		 * by the box itself and its glyphs dissolve into the edge they are cut at, the way the menu's
@@ -130,20 +150,16 @@ declare namespace MenuSDK {
 		 *
 		 * @returns how far the line runs past its box, in px, and so the furthest `offset` can take it
 		 */
-		public Fit(x: number, centerY: number, width: number, text: string, offset: number, size: number, color: Color, weight?: number, effect?: EHudTextEffect): number
+		Fit(x: number, centerY: number, width: number, text: string, offset: number, size: number, color: Color, weight?: number, effect?: EHudTextEffect): number
 		/**
-		 * Centred inside a box the caller already sized - a chip, a cell - rather than at a computed
-		 * offset. Widths here are measured with the digits replaced by zeroes so a counter does not
-		 * reflow, and a zero is wider than a one: left-aligning inside that slack piles it all on one
-		 * side. Letting the layout centre it makes the measurement error invisible.
-		 *
-		 * `effect` cuts the glyphs against whatever is behind them, which is what a run of text standing
-		 * on the world rather than on a card needs to stay readable, and `effectOpacity` is how dark
-		 * that cut is drawn - a rim heavy enough for a bright wall is heavier than one over anything
-		 * else, so the two are asked apart.
+		 * Draws `text` centred in a box `boxWidth` px wide from `x`, on `centerY`, for a chip or a cell
+		 * the caller has sized. The layout does the centring, so a box sized by {@link CHudText.Width}
+		 * holds the run centred whatever its digits. `effect` and `effectOpacity` as in
+		 * {@link CHudText.Left}.
 		 */
-		public Center(x: number, centerY: number, boxWidth: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): void
-		public Right(rightX: number, centerY: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): number
+		Center(x: number, centerY: number, boxWidth: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): void
+		/** Draws `text` ending at `rightX` and returns its width; the rest as {@link CHudText.Left}. */
+		Right(rightX: number, centerY: number, text: string, size: number, color: Color, weight?: number, effect?: EHudTextEffect, family?: string, effectOpacity?: number): number
 	}
 	/**
 	 * A card's text. It is measured in the face, weight and size of the theme the card is laid out
@@ -164,6 +180,11 @@ declare namespace MenuSDK {
 	 * this.title.EndFrame()
 	 */
 	class HudMarquee {
+		/**
+		 * Draws `text` in a box `width` px wide from `x`, centred on `centerY`, cut at the box and
+		 * travelled while `reading` is true; `size` is a font size in dp. A `text` other than the last
+		 * one starts again from its head.
+		 */
 		public Left(x: number, centerY: number, width: number, text: string, size: number, color: Color, weight: number, reading: boolean, effect?: EHudTextEffect): void
 		/**
 		 * Closes the frame for this line, once a frame after the card is drawn, whether or not it
@@ -176,15 +197,25 @@ declare namespace MenuSDK {
 		 */
 		public EndFrame(): void
 	}
+	/** The value {@link CHudCard.Header} shows at the right edge of a header. */
 	interface HudHeaderValue {
+		/** What the header shows there. */
 		text: string
+		/** The colour of the text, and the tint of the badge with {@link HudHeaderValue.badge}. */
 		color: Color
+		/** Draws the value as a tinted badge ({@link CHudCard.BadgeRight}), not bold 13 dp text. */
 		badge?: boolean
 	}
-	class CHudCard {
-		public readonly Pad = 10
+	/**
+	 * The shapes a HUD card is drawn from, in screen px; {@link HudCard} is the instance. A call draws
+	 * onto the active surface ({@link SetActiveSurface}) and does nothing while there is none. Where a
+	 * call takes a colour and an `alpha`, the alpha (0 to 255) replaces the colour's own.
+	 */
+	interface CHudCard {
+		/** The padding in dp {@link CHudCard.Header} keeps from the card's left and right edges. */
+		readonly Pad: 10
 		/** A flat quad, for a card that does not use the shared palette. */
-		public Fill(x: number, y: number, w: number, h: number, color: Color, alpha?: number): void
+		Fill(x: number, y: number, w: number, h: number, color: Color, alpha?: number): void
 		/**
 		 * {@link CHudCard.Fill} with its corners taken off: the plate a chip standing on artwork or on
 		 * the world wears, where a {@link CHudCard.Disc} is rounder than what it carries and a quad
@@ -197,7 +228,7 @@ declare namespace MenuSDK {
 		 * @example
 		 * HudCard.Plate(x, y, w, h, h * 0.34, HudColors.glass, 150)
 		 */
-		public Plate(x: number, y: number, w: number, h: number, radius: number, color: Color, alpha?: number): void
+		Plate(x: number, y: number, w: number, h: number, radius: number, color: Color, alpha?: number): void
 		/**
 		 * The shadow under a tile lifted into the hand, `lift` of the way, as the menu's image selector
 		 * drops one (`0 6dp 14dp #00000040`): dropped 6 dp, its blur laid as rounded plates from inside
@@ -206,7 +237,7 @@ declare namespace MenuSDK {
 		 * @example
 		 * HudCard.LiftShadow({ x, y, w: side, h: side }, side * 0.2, lift)
 		 */
-		public LiftShadow(rect: Readonly<ScreenRect>, corner: number, lift: number): void
+		LiftShadow(rect: Readonly<ScreenRect>, corner: number, lift: number): void
 		/**
 		 * The dress a badge wears without its label: a plate washed `tint` deep in `color` and rimmed
 		 * `edge` deep in it by a hairline, for a chip whose contents the caller lays out itself - a
@@ -215,48 +246,53 @@ declare namespace MenuSDK {
 		 * @example
 		 * HudCard.Chip(x, y, w, h, 7, HudColors.ok, hudAlpha(36), hudAlpha(107))
 		 */
-		public Chip(x: number, y: number, w: number, h: number, radius: number, color: Color, tint: number, edge: number): void
+		Chip(x: number, y: number, w: number, h: number, radius: number, color: Color, tint: number, edge: number): void
 		/**
-		 * The card the menu's own panels wear, and the plate a marker standing in the world wears with
-		 * them: the theme's glass and its hairline rim carved by the shader, over the frosted backdrop
-		 * the menu's own window stands on. Both edges are analytic, so a card a couple of dozen pixels
-		 * tall holds its corner instead of showing every step the pixel grid cut into it.
-		 *
-		 * The backdrop is a second element a pixel inside the carved silhouette. RmlUi cuts a backdrop
-		 * filter with the rasterized stencil rather than in-shader, and that pixel is what keeps its
-		 * stepped corner under the carved edge and the rim drawn along it.
-		 *
-		 * `alpha` fades the glass along with everything drawn on it afterwards, and ramps the blur with
-		 * them: a backdrop filter does not answer to an element's own opacity, so a card that faded
-		 * without it held a frosted rectangle at full strength and then snapped away with the element.
-		 *
-		 * `dpRadius` is in dp, like a chip's, for a card that is not the window's own shape - a pill,
-		 * a tile. `carve` is how many steps of alpha to hold this card's glass off the one it would
-		 * otherwise be packed at: cards carved by one and the same shader string share a decorator
-		 * instance in RmlUi, so a surface drawing more than one has to hand each of them a step of its
-		 * own. The step is invisible, and only the glass carries it - the rim and the halo are left as
-		 * the theme set them.
+		 * The card the menu's own panels wear: the theme's glass, hairline rim and halo over a frosted
+		 * backdrop. `alpha` (0 to 255) fades it and sets {@link HudAlphaScale}, by which
+		 * {@link hudAlpha} and {@link HudText} fade the readings drawn on it afterwards. `dpRadius` is
+		 * the corner radius in dp. A surface that draws more than one card gives each its own `carve`,
+		 * the steps of alpha its glass is lowered by.
 		 *
 		 * @example
-		 * HudCard.Frame(box, hudAlpha(), CHIP_RADIUS, this.carved++)
+		 * MenuSDK.HudCard.Frame(box, MenuSDK.hudAlpha(), CHIP_RADIUS, this.carved++)
 		 */
-		public Frame(box: Rectangle, alpha?: number, dpRadius?: number, carve?: number): void
+		Frame(box: Rectangle, alpha?: number, dpRadius?: number, carve?: number): void
+		/**
+		 * {@link CHudCard.Frame} for chrome that belongs to no card - a handle beside one, a tab at the
+		 * screen's edge: the same glass, rim, halo and frost, in screen px at the menu's own scale,
+		 * whatever layout scale the last card laid out left behind ({@link setHudScale}). `radius` is
+		 * in px too; `alpha` fades it and sets {@link HudAlphaScale} as a frame's does.
+		 *
+		 * @example
+		 * MenuSDK.HudCard.FramePx(x, y, w, h, MenuSDK.DpToPx(7), 255 * presence)
+		 */
+		FramePx(x: number, y: number, w: number, h: number, radius: number, alpha?: number): void
 		/**
 		 * {@link CHudCard.Frame} as a disc: the same glass, the same hairline rim and the same frosted
 		 * backdrop under both, for a badge carrying a glyph instead of a row of readings. A card and a
 		 * badge are one material, so nothing about them has to be kept in step by hand.
 		 */
-		public Badge(centerX: number, centerY: number, radius: number, alpha?: number): void
-		public Outline(box: Rectangle, width: number, color: Color, alpha: number): void
+		Badge(centerX: number, centerY: number, radius: number, alpha?: number): void
+		/**
+		 * A square-cornered outline along the inside of `box`, `width` px held to 1 to 2:
+		 * {@link CHudCard.Stroke} from a `Rectangle`.
+		 */
+		Outline(box: Rectangle, width: number, color: Color, alpha: number): void
 		/**
 		 * A square-cornered outline drawn as four quads, in the same numbers {@link CHudCard.Fill}
 		 * takes. {@link CHudCard.Outline} is this from a `Rectangle`; a caller drawing every frame
 		 * uses this one and builds no rectangle to do it.
 		 */
-		public Stroke(x: number, y: number, w: number, h: number, width: number, color: Color, alpha?: number): void
+		Stroke(x: number, y: number, w: number, h: number, width: number, color: Color, alpha?: number): void
 		/** A rounded border around a card or panel. */
-		public Border(box: Rectangle, width: number, color: Color, alpha: number): void
-		public Header(box: Rectangle, height: number, title: string, right?: HudHeaderValue, underline?: boolean): void
+		Border(box: Rectangle, width: number, color: Color, alpha: number): void
+		/**
+		 * A header row `height` px tall across the top of `box`: an accent marker, `title` in bold at
+		 * 13 dp, cut short with an ellipsis where it would reach `right`, and `right` at the right
+		 * edge. A {@link CHudCard.Separator} goes under the row unless `underline` is false.
+		 */
+		Header(box: Rectangle, height: number, title: string, right?: HudHeaderValue, underline?: boolean): void
 		/**
 		 * A status chip: the tint washed back for the fill, the tint itself for the label, and the
 		 * menu's corner radius. A solid fill with primary text on top reads as an alert next to every
@@ -271,74 +307,57 @@ declare namespace MenuSDK {
 		 * stands on a busy plot rather than on the card's calm glass. `reserve` is a run the pill
 		 * keeps room for even while the label is shorter, so a ticking reading does not breathe.
 		 */
-		public BadgeRight(rightX: number, centerY: number, text: string, color: Color, frosted?: boolean, reserve?: string): number
+		BadgeRight(rightX: number, centerY: number, text: string, color: Color, frosted?: boolean, reserve?: string): number
 		/**
 		 * {@link CHudCard.BadgeRight} pinned by its left edge instead, for a reading standing in a
 		 * corner a card fills from the left. The same pill in the same metrics and on the same terms,
 		 * so a value wears one dress wherever it sits.
 		 */
-		public BadgeLeft(x: number, centerY: number, text: string, color: Color, frosted?: boolean, reserve?: string): number
-		public Bar(pos: Vector2, size: Vector2, pct: number, fillColor: Color, markerPct?: number): void
-		public Separator(x: number, y: number, width: number): void
+		BadgeLeft(x: number, centerY: number, text: string, color: Color, frosted?: boolean, reserve?: string): number
 		/**
-		 * An image on the card, cut for the box it is drawn in: raster artwork is resampled straight
-		 * to `size` rather than read off a mip level that does not hold it, so a caller passes the
-		 * path it has and nothing about sharpness is left for it to arrange.
-		 *
-		 * `radius` crops it — half the size makes a round portrait — and the crop is carved by the sdf
-		 * mask, so its edge carries per-pixel coverage and needs nothing drawn over it to hide a
-		 * stepping corner. `angle` turns it clockwise about its own centre in degrees, which is how a
-		 * glyph carries a bearing.
-		 *
-		 * `fit` says what to do when the box is not the artwork's shape. The default fills the box
-		 * with the whole source, which squashes art the box was not cut for — a hero's landscape
-		 * portrait in a shallower cell, an item's 11:8 icon in a squarer one. `"cover"` keeps the
-		 * source's proportions and crops it to the box about its centre, the way
-		 * {@link Canvas.Image} does, and holds the image back until the host has measured the
-		 * source, which is one frame at most.
-		 *
-		 * `source` draws only that rectangle of the artwork, in the file's own pixels
-		 * (`HostImageSize`), the way a HUD shows the middle of a picture its frame cuts the edges off;
-		 * like `"cover"` it holds the image back until the host has measured the source.
-		 *
-		 * @example
-		 * HudCard.Image(unit.TexturePath(), pos, size, Color.White, hudAlpha(), radius, 0, "cover")
+		 * A rounded bar of `size` at `pos`: the theme's slider track, filled from the left over `pct`
+		 * of its width (0 to 1) in `fillColor`, drawn opaque and faded with the card alone. A
+		 * `markerPct` strictly between 0 and 1 adds a tick across the bar there.
 		 */
-		public Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number, fit?: "cover" | "stretch", source?: {
+		Bar(pos: Vector2, size: Vector2, pct: number, fillColor: Color, markerPct?: number): void
+		/** A hairline from `x, y` across `width` px, 1 dp thick, in the theme's panel border colour. */
+		Separator(x: number, y: number, width: number): void
+		/**
+		 * Draws the image at `path` into the box `size` at `pos`, tinted `color`. `radius` rounds its
+		 * corners in px, half the size for a round portrait; `angle` turns it clockwise about its
+		 * centre in degrees. By default the whole file is stretched to the box; `"cover"` keeps its
+		 * proportions and crops it to the box about its centre. `source` draws only that rectangle of
+		 * the file, in its own pixels ({@link ImageSize}). With either, nothing shows until the host
+		 * knows the file's size.
+		 */
+		Image(path: string, pos: Vector2, size: Vector2, color: Color, alpha?: number, radius?: number, angle?: number, fit?: "cover" | "stretch", source?: {
 			readonly x: number
 			readonly y: number
 			readonly w: number
 			readonly h: number
 		}): void
 		/** A filled disc: the chip a glyph or a portrait is set on. */
-		public Disc(centerX: number, centerY: number, radius: number, color: Color, alpha?: number): void
+		Disc(centerX: number, centerY: number, radius: number, color: Color, alpha?: number): void
 		/**
-		 * A ring on the card, drawn by the sdf circle so it stays round at any size. `radius` is the
-		 * middle of the stroke, which is what the shape asked for is half a thickness wider than: the
-		 * shader lays a border inside the shape it is handed, the way a panel's rim sits inside its
-		 * box, and a ring measured that way would be drawn a half thickness in from the radius it was
-		 * struck at. Which is the one thing about a ring that has to agree with {@link CHudCard.Arc},
-		 * whose capsules straddle theirs — a track and the run filling it are struck from the same two
-		 * numbers, and the two conventions leave the arc riding a half thickness outside its own track.
+		 * A ring drawn by the sdf circle, round at any size. `radius` is the middle of the stroke and
+		 * `thickness` is held to 1 to 2 px.
 		 */
-		public Ring(centerX: number, centerY: number, radius: number, thickness: number, color: Color, alpha?: number): void
+		Ring(centerX: number, centerY: number, radius: number, thickness: number, color: Color, alpha?: number): void
 		/**
-		 * A run of a ring's edge, from `start` clockwise by `sweep` radians, with `0` at three
-		 * o'clock. One element whatever the sweep: the capsules shader unions the whole run into a
-		 * single field, so the arc is as smooth as a {@link CHudCard.Ring} and carries no seam at any
-		 * alpha. A host without that shader falls back to a chain of {@link CHudCard.Line}s.
-		 *
-		 * `radius` is the middle of the stroke, on the terms {@link CHudCard.Ring} states, so the two
-		 * struck from one radius and one thickness land on the same band: the ring is the track a
-		 * dial drains along and the arc is how much of it is left, and the pair only reads as one
-		 * ring while both are measured the same way.
+		 * An arc of a ring from `start` clockwise by `sweep` radians, `0` at three o'clock; nothing
+		 * while `sweep` is 0 or less. `radius` is the middle of the stroke, as on
+		 * {@link CHudCard.Ring}, so an arc and a ring of one radius and thickness lie on the same band;
+		 * `thickness` is held to 1 to 2 px. One shape with no joints, or a chain of
+		 * {@link CHudCard.Line}s where the capsules shader is missing or out of slots.
 		 *
 		 * @example
-		 * HudCard.Arc(x, y, radius, 2, -Math.PI / 2, Math.PI * 2 * health, HudColors.kill, hudAlpha())
+		 * const top = -Math.PI / 2
+		 * MenuSDK.HudCard.Arc(x, y, radius, 2, top, Math.PI * 2 * health, color, MenuSDK.hudAlpha())
 		 */
-		public Arc(centerX: number, centerY: number, radius: number, thickness: number, start: number, sweep: number, color: Color, alpha?: number): void
+		Arc(centerX: number, centerY: number, radius: number, thickness: number, start: number, sweep: number, color: Color, alpha?: number): void
 		/** A line segment with rounded ends. */
-		public Line(startX: number, startY: number, endX: number, endY: number, thickness: number, color: Color, alpha?: number): void
+		Line(startX: number, startY: number, endX: number, endY: number, thickness: number, color: Color, alpha?: number): void
 	}
+	/** What a HUD card is drawn with: glass, plates, chips, rings, arcs, bars and images. */
 	const HudCard: CHudCard
 }

@@ -4,9 +4,6 @@ declare class NeutralSpawnerBox {
 	public static readonly Sleeper: GameSleeper
 	public static get TimeLeft(): number
 	public static get RemainingTime(): number
-	protected static get SpawnInterval(): number
-	protected get IsValidGame(): boolean
-	protected static get IsSpawnTime(): boolean
 	public readonly Creeps: Creep[]
 	public readonly Attackers: Unit[]
 	public readonly Type: NeutralSpawnerType
@@ -15,8 +12,6 @@ declare class NeutralSpawnerBox {
 	public IsStack: boolean
 	public LastAttackTime: number
 	public TotalCreepAvgGold: number
-	protected IsInitialSpawn: boolean
-	protected IsStackMoveAttack: boolean
 	public get IsValidSpawner(): boolean
 	public get Team(): Team
 	public get IsAlly(): boolean
@@ -25,7 +20,13 @@ declare class NeutralSpawnerBox {
 	public get StackEndTime(): number
 	public get StackStartTime(): number
 	public get ValidCreeps(): Creep[]
-	protected get SpawnerTypeString(): "Small" | "Medium" | "Large" | "Ancient" | "Unknown"
+	/**
+	 * Whether `position` is at the camp: inside its spawn box, or within the camp's reach of its
+	 * spawner. The height is ignored.
+	 * @example
+	 * const camp = NeutralSpawners.find(x => x.Covers(hero.Position))
+	 */
+	public Covers(position: Vector3): boolean
 	public CanBeStack(unit: Unit): boolean
 	public Stack(unit: Unit, creeps: Creep[], endPosition: Vector3): boolean
 	public PostDataUpdate(): void

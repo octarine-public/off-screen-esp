@@ -11,9 +11,4 @@ declare class viper_viper_strike extends Ability {
 	public GetBaseSpeedForLevel(level: number): number
 	/** Its first tick lands before its Break (`does_break`): measured on Prophet's Pendulum. */
 	public get HitBeforeBreak(): boolean
-	/** Its hit breaks the unit while the poison lasts (`Breaks`). */
-	protected FillEffects(out: AbilityEffects): void
-	protected FillEffectsOn(out: AbilityEffects, target: Unit): void
-	/** Its poison slows the unit by `bonus_movement_speed` percent, fading evenly to nothing over `duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

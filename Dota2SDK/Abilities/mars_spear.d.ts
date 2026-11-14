@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class mars_spear extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseCastRangeForLevel(level: number): number
 	public GetBaseDamageForLevel(level: number): number

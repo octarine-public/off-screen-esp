@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class MinibossSpawner extends Entity {
-	public TOPSpawner_: number
-	public BOTSpawner_: number
 	public get TOPLocation(): Vector3
 	public get BOTLocation(): Vector3
 	public set CustomGlowColor(_: Nullable<Color>)

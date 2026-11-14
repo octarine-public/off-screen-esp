@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_skeleton_king_curse extends Modifier {
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** The Shard's curse of a Mortal Strike deals its damage as it ends (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/**

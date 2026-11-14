@@ -33,29 +33,29 @@ declare namespace MenuSDK {
 	 * a preview paints on it shows over its stage rather than under the card's glass.
 	 */
 	const MenuSurfaceZ: number
+	/**
+	 * Renders the three panel stacks into their layers; a stack already mounted is left as it is.
+	 * The menu calls it when it mounts.
+	 */
 	function MountPanels(): void
 	/** Registers a panel in one of the host's stacks; returns the handle that takes it back out. */
 	function RegisterPanel(key: string, render: () => React.ReactNode, layer?: EPanelLayer): () => void
 	/**
-	 * The theme a panel put in `layer` is drawn with. A panel that paints imperatively — a decorator
-	 * string, a batched stroke — resolves its colours outside any render and needs this to ask for
-	 * the ones the surface it paints is wearing.
+	 * The theme scope the panels in `layer` are drawn in. A panel that paints outside a render, such
+	 * as a decorator string or a batched stroke, resolves its colours in this scope to match the
+	 * surface it paints on.
 	 *
 	 * @example
-	 * WithThemeScope(PanelScope(EPanelLayer.World), () => marker.Draw())
+	 * MenuSDK.WithThemeScope(MenuSDK.PanelScope(MenuSDK.EPanelLayer.World), () => marker.Draw())
 	 */
 	function PanelScope(layer: EPanelLayer): EThemeScope
 	/** Rewrites the typeface every stack is set in, after a scope's font moved. */
 	function RefontPanels(): void
+	/** Re-renders the panels of all three stacks; {@link RefreshPanelLayer} re-renders one. */
 	function RefreshPanels(): void
 	/**
-	 * Re-renders one stack, leaving the others standing. What a panel of its own has to say rarely
-	 * concerns the other two - a HUD surface grown an element, a profiler with a new reading - and a
-	 * stack carries every panel in it, so the whole-host {@link RefreshPanels} makes one card's news
-	 * everybody's work.
-	 *
-	 * @example
-	 * RefreshPanelLayer(EPanelLayer.Screen)
+	 * Re-renders the panels of the stack `layer` names and leaves the other two alone, which costs
+	 * less than {@link RefreshPanels} when only a panel in that stack has changed.
 	 */
 	function RefreshPanelLayer(layer: EPanelLayer): void
 	/** Re-renders the stack that wears `scope`; a no-op for a scope no stack stands in. */
@@ -64,6 +64,14 @@ declare namespace MenuSDK {
 	function RetintPanels(scope: EThemeScope): void
 	/** Rebuilds the stack that wears `scope`, for a change no re-render can carry. */
 	function RemountPanels(scope: EThemeScope): void
+	/**
+	 * Unmounts the three panel stacks and lets go of their elements. The registered panels stay, and
+	 * the next {@link MountPanels} renders them again. The menu calls it when it unmounts.
+	 */
 	function ResetPanels(): void
+	/**
+	 * Destroys the elements the panels have removed and runs the actions queued with
+	 * `runAfterFrame`. The menu calls it every frame.
+	 */
 	function TickPanels(): void
 }

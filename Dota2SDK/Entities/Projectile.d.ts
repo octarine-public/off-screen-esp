@@ -21,7 +21,6 @@ declare class Projectile {
 	 */
 	public static AbilitiesFlyingAs(path: string): Nullable<readonly Constructor<IThreatAbility>[]>
 	public UpdateParticlePathNoEcon(): void
-	protected UpdateData(): void
 }
 declare class LinearProjectile extends Projectile {
 	public readonly MaxSpeed: number
@@ -36,7 +35,6 @@ declare class LinearProjectile extends Projectile {
 	public readonly TargetLoc: Vector3
 	public get Ability(): Nullable<Ability>
 	public GetRemainingTime(start?: Vector3, end?: Vector3): number
-	protected UpdateData(): void
 }
 declare class TrackingProjectile extends Projectile {
 	public Target: Nullable<Unit | FakeUnit>

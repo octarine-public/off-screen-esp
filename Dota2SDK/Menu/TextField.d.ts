@@ -1,5 +1,12 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/**
+	 * The menu's text field, bound to the entry of a text control: what is typed is written to it a
+	 * frame later, and Enter leaves the field. While it is empty and not focused it shows the
+	 * placeholder, a generic "Search" when none is set.
+	 * @example
+	 * <MenuSDK.TextField entry={name.entry} width={180} placeholder="Player name" />
+	 */
 	function TextField(props: {
 		entry: TextEntry
 		style?: RmlStyle
@@ -12,9 +19,8 @@ declare namespace MenuSDK {
 		 */
 		width?: number
 		/**
-		 * Drops the field's own chrome — the surface fill, border, focus ring and horizontal
-		 * padding — so typing starts where the host lays the field out. For hosts that draw
-		 * the surroundings themselves, like the search modal's input row.
+		 * Drops the field's own fill, border, focus ring and side padding, so the text starts where
+		 * the host lays the field out. For a host that draws the surroundings itself.
 		 */
 		bare?: boolean
 		/**

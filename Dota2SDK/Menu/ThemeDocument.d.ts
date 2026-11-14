@@ -6,9 +6,18 @@ declare namespace MenuSDK {
 	 * applied into - and never part of a config, so switching configs leaves it as it is.
 	 */
 	interface IThemeDocument {
+		/**
+		 * The menu window's look: its accent, seed colors, font and logo colors. The screen panels and
+		 * the world overlays wear it too, each while its own {@link IThemeDocument.panels} or
+		 * {@link IThemeDocument.world} is unset.
+		 */
 		menu: IThemeSnapshot
 		/** Colors set apart from the palette the seeds build, by token. */
 		colors: Partial<Record<PaletteColorToken, string>>
+		/**
+		 * What the glow is colored with: the accent, a color of its own, each surface's own color or a
+		 * walking rainbow. Its reach and strength are in the menu's seeds.
+		 */
 		glow: IThemeGlowStyle
 		/** The theme the screen panels wear, or nothing while they follow the menu. */
 		panels?: IThemeSnapshot
@@ -20,17 +29,23 @@ declare namespace MenuSDK {
 	 * preferences that ride on the Themes tab without being part of the look a theme shares.
 	 */
 	interface IStoredTheme {
+		/** The format version, 2; a stored theme of any other version is not read. */
 		v: number
+		/** The look the account wears. */
 		theme: IThemeDocument
 		/** Speed of every menu animation as a fraction, 1 = 100%. */
 		animationSpeed: number
+		/** What one roll of the theme shuffler may change. */
 		shuffle: EShuffleMode
 		/** The keys the account's cloud themes are on, as packed bind codes by theme id. */
 		binds: Record<string, number>
 	}
-	const StoredThemeVersion = 2
-	const DefaultGlowStyle: IThemeGlowStyle
+	/**
+	 * A new copy of the theme the menu wears untouched: the default accent, seeds, font and glow, no
+	 * colors set apart, and the screen panels and world overlays following the menu.
+	 */
 	function DefaultThemeDocument(): IThemeDocument
+	/** A copy of `theme` that shares no object with it. */
 	function CloneThemeDocument(theme: IThemeDocument): IThemeDocument
 	/**
 	 * Whether two documents dress everything alike: the menu's look and its logo, the colors set
@@ -39,18 +54,11 @@ declare namespace MenuSDK {
 	 */
 	function themesEqual(a: IThemeDocument, b: IThemeDocument): boolean
 	/**
-	 * Reads a whole theme off `unknown` - a stored file, a cloud blob - refusing anything without
-	 * a well-formed menu snapshot: half a theme is worse than none. Every other part falls back to
-	 * its default on its own, so a theme saved before a part existed still comes back whole, and
-	 * every number is held to the range its control offers, so a shared theme cannot carry one
-	 * nobody could have set. A theme written by the build that kept one font for the whole document
-	 * carries it beside the menu snapshot rather than in it; it is read as the menu's.
+	 * Reads a theme document off `unknown`, such as the parsed JSON of a stored or shared theme;
+	 * `undefined` without a well-formed `menu`. Any other part that is missing or malformed takes its
+	 * default, every number is held to the range its control offers, and a font family or weight the
+	 * pickers do not offer reads as the default one. A `menu` without a font takes a `font` stored
+	 * beside it.
 	 */
 	function DecodeThemeDocument(value: unknown): Nullable<IThemeDocument>
-	/** Packs the theme and its preferences the way the host stores them. */
-	function EncodeStoredTheme(theme: IThemeDocument, animationSpeed: number, shuffle: EShuffleMode, binds: Record<string, number>): string
-	/** Reads a stored theme off `unknown`; anything but the shape {@link EncodeStoredTheme} writes reads as none. */
-	function DecodeStoredThemeValue(value: unknown): Nullable<IStoredTheme>
-	/** Unpacks what {@link EncodeStoredTheme} wrote; anything else reads as no stored theme. */
-	function DecodeStoredTheme(raw: string): Nullable<IStoredTheme>
 }

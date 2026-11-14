@@ -44,8 +44,6 @@ declare class invoker_spell_extends extends Ability {
 	public get InvokeDelay(): number
 	/** The craft the spell needs before it can be ordered; see {@link InvokeDelay}. */
 	public get PrepareTime(): number
-	/** Invoked, or crafted by the game time `time`: Invoke free and the answer back in time. */
-	protected CanBeUsableAt(time: number): boolean
 	/** Whether every orb the spell is crafted from has a level, so it can be invoked at all. */
 	public get CanCraft(): boolean
 	/**
@@ -69,19 +67,4 @@ declare class invoker_spell_extends extends Ability {
 	 * }
 	 */
 	public Invoke(queue?: boolean, showEffects?: boolean): boolean
-	/**
-	 * The level a value of the spell that grows with `orb` alone is read at: the orb's level - or,
-	 * for a spell drafted to a hero without orbs (Ability Draft, its `_ad` twin), the spell's own,
-	 * as its data lists one value a level. A value read at the spell's level plus an orb's needs
-	 * nothing of this: without orbs that is the spell's level already.
-	 */
-	protected OrbValueLevel(orb: EInvokerOrb): number
-	protected OrbLevel(orb: EInvokerOrb): number
-	protected OrbAbility(orb: EInvokerOrb): Nullable<Ability>
-	/**
-	 * The orbs still missing, read off what the hero holds: casting `n` orbs keeps the newest
-	 * `required - n` instances and the order inside the cast does not change what is held at the
-	 * end, so the shortest plan is the first `n` whose kept instances are all wanted.
-	 */
-	protected OrbPlan(): readonly EInvokerOrb[]
 }

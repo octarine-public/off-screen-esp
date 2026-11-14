@@ -3,10 +3,7 @@ declare class modifier_omniknight_martyr extends Modifier implements IBuff, IShi
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsShield(): this is IShield
 	public IsBuff(): this is IBuff
-	protected GetMagicalResistanceBonus(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

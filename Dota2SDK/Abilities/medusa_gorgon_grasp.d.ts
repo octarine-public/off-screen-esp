@@ -7,7 +7,6 @@ declare class medusa_gorgon_grasp extends Ability implements INuke {
 	 * the first as it roots, none as it ends.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public get AppliesUnitState(): bigint

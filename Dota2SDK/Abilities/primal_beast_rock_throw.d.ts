@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class primal_beast_rock_throw extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseDamageForLevel(level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number

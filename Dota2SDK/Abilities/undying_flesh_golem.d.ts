@@ -13,5 +13,4 @@ declare class undying_flesh_golem extends Ability implements IBuff {
 	 * Decay at 0.63 s (21 October 2026, demo).
 	 */
 	public get IsCombatBuff(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

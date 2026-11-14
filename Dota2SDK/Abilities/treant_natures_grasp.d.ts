@@ -17,6 +17,5 @@ declare class treant_natures_grasp extends Ability {
 	 * sets only the line's direction.
 	 */
 	public GetBaseSpeedForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseActivationDelayForLevel(level: number): number
 }

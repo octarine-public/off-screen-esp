@@ -1,34 +1,34 @@
 // AUTO-GENERATED - do not edit.
-declare class Inventory {
-	public readonly Owner: Unit
-	public get TotalItems(): Nullable<Item>[]
-	public get TPScroll(): Nullable<Item>
-	public get NeutralItem(): Nullable<Item>
-	public get Items(): Item[]
+interface Inventory {
+	readonly Owner: Unit
+	get TotalItems(): Nullable<Item>[]
+	get TPScroll(): Nullable<Item>
+	get NeutralItem(): Nullable<Item>
+	get Items(): Item[]
 	/** Whether one of `Items` channels, the list not built. */
-	public get IsChanneling(): boolean
-	public get Backpack(): Item[]
-	public get Stash(): Item[]
-	public get FreeSlotsInventory(): DOTAScriptInventorySlot[]
-	public get FreeSlotsBackpack(): DOTAScriptInventorySlot[]
-	public get FreeSlotsStash(): DOTAScriptInventorySlot[]
-	public get HasAnyItemInventory(): boolean
-	public get HasAnyItemBackpack(): boolean
-	public get HasAnyItemStash(): boolean
-	public get HasFreeSlotsInventory(): boolean
-	public get HasFreeSlotsBackpack(): boolean
-	public get HasFreeSlotsStash(): boolean
-	public GetItem(slot: DOTAScriptInventorySlot): Nullable<Item>
-	public GetItemSlot(item: Item): Nullable<DOTAScriptInventorySlot>
-	public GetItems(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): Item[]
-	public GetFreeSlots(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): DOTAScriptInventorySlot[]
-	public HasAnyItem(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): boolean
-	public HasFreeSlot(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): boolean
-	public HasFreeSlots(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot, howMany: number): boolean
-	public HasItemInInventory(name: string | RegExp, includeBackpack?: boolean): boolean
-	public CountItemByOtherPlayer(player?: Nullable<Player>): number
-	public GetItemByName(name: string | RegExp, includeBackpack?: boolean): Nullable<Item>
-	public GetItemByClass<T extends Item>(class_: Constructor<T>, includeBackpack?: boolean): Nullable<T>
-	public GetItemsByNames(names: string[], includeBackpack?: boolean): Item[]
-	public GetItemsByClasses<T extends Item>(classes: Constructor<T>[], includeBackpack?: boolean): T[]
+	get IsChanneling(): boolean
+	get Backpack(): Item[]
+	get Stash(): Item[]
+	get FreeSlotsInventory(): DOTAScriptInventorySlot[]
+	get FreeSlotsBackpack(): DOTAScriptInventorySlot[]
+	get FreeSlotsStash(): DOTAScriptInventorySlot[]
+	get HasAnyItemInventory(): boolean
+	get HasAnyItemBackpack(): boolean
+	get HasAnyItemStash(): boolean
+	get HasFreeSlotsInventory(): boolean
+	get HasFreeSlotsBackpack(): boolean
+	get HasFreeSlotsStash(): boolean
+	GetItem(slot: DOTAScriptInventorySlot): Nullable<Item>
+	GetItemSlot(item: Item): Nullable<DOTAScriptInventorySlot>
+	GetItems(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): Item[]
+	GetFreeSlots(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): DOTAScriptInventorySlot[]
+	HasAnyItem(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): boolean
+	HasFreeSlot(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot): boolean
+	HasFreeSlots(start: DOTAScriptInventorySlot, end: DOTAScriptInventorySlot, howMany: number): boolean
+	HasItemInInventory(name: string | RegExp, includeBackpack?: boolean): boolean
+	CountItemByOtherPlayer(player?: Nullable<Player>): number
+	GetItemByName(name: string | RegExp, includeBackpack?: boolean): Nullable<Item>
+	GetItemByClass<T extends Item>(class_: Constructor<T>, includeBackpack?: boolean): Nullable<T>
+	GetItemsByNames(names: string[], includeBackpack?: boolean): Item[]
+	GetItemsByClasses<T extends Item>(classes: Constructor<T>[], includeBackpack?: boolean): T[]
 }

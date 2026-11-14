@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class crystal_maiden_frostbite extends Ability implements INuke {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	/**
 	 * Frostbite deals its damage only as it ticks: `damage_per_second` over each `tick_interval`,

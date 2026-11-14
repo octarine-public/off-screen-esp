@@ -8,7 +8,6 @@ declare class slark_depth_shroud extends Ability implements IBuff {
 	public readonly BuffModifierName = "modifier_slark_depth_shroud"
 	public IsBuff(): this is IBuff
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** Slark - and the allies in the cloud - hidden, true sight or not (INVISIBLE, TRUESIGHT_IMMUNE). */
 	public get AppliesUnitState(): bigint
 	/** The hiding is our side's, not a hold of a target. */

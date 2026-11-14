@@ -13,6 +13,4 @@ declare class bane_nightmare extends Ability {
 	public GuardDuration(_target: Unit): number
 	/** Nightmare End wakes Bane from a Nightmare of his own, a stun not keeping it from being cast. */
 	public get EndedBy(): Nullable<Ability>
-	protected FillEffects(out: AbilityEffects): void
-	protected FillEffectsOn(out: AbilityEffects, target: Unit): void
 }

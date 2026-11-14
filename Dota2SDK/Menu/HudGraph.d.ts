@@ -59,14 +59,18 @@ declare namespace MenuSDK {
 	 * speed.Push(hero.Velocity.Length2D, hrtime() / 1000)
 	 */
 	class HudSeries {
+		/** How many seconds of samples are kept and drawn, on the clock `Push` is given. */
 		public Span: number
+		/** The lowest the top of the scale is ever taken to, in the reading's own units. */
 		public Floor: number
 		/**
-		 * @param Span how many seconds of samples are kept and drawn.
-		 * @param Floor the lowest the top of the scale is ever taken to, in the reading's own units.
 		 * @param capacity how many samples are held at once; the oldest is dropped past it.
 		 */
-		constructor(Span?: number, Floor?: number, capacity?: number)
+		constructor(
+		/** How many seconds of samples are kept and drawn, on the clock `Push` is given. */
+		Span?: number, 
+		/** The lowest the top of the scale is ever taken to, in the reading's own units. */
+		Floor?: number, capacity?: number)
 		/** How many samples are kept right now. */
 		public get Count(): number
 		/** The newest sample, or nothing at all while the run is empty. */
@@ -93,29 +97,28 @@ declare namespace MenuSDK {
 		/** Forgets every sample and puts the scale back where it started. */
 		public Clear(): void
 	}
-	class CHudGraph {
+	/**
+	 * Graphs of a {@link HudSeries}, drawn onto the active surface in any {@link EHudGraph} style;
+	 * {@link HudGraph} is the instance.
+	 */
+	interface CHudGraph {
 		/**
-		 * Draws the run inside `box`, in the style the look asks for. The box is the plot itself: the
-		 * caller keeps whatever room a card, a title or a readout wants around it.
-		 *
-		 * Everything is drawn against the scale the series keeps, so the shapes hold still between
-		 * frames and the box fills as the reading rises, whichever style is drawn.
-		 *
-		 * The cell still filling carries the latest reading rather than its own peak: the peak lands
-		 * in the cell the moment it completes, and a head that ratcheted up and dropped every time
-		 * the grid slid would never stand still.
+		 * Advances `series` to `now`, on the clock its samples were pushed with, and draws it inside
+		 * `box` in the style `look` asks for. The box is the plot alone: a title or a readout goes
+		 * outside it. Every style is drawn against {@link HudSeries.Ceiling}, and the cell still
+		 * filling shows the latest sample rather than the tallest one in it.
 		 *
 		 * @example
-		 * HudGraph.Draw(plot, this.speed, { style: EHudGraph.Area, color: HudColors.accent }, now)
+		 * MenuSDK.HudGraph.Draw(plot, this.speed, { style: MenuSDK.EHudGraph.Area, color }, now)
 		 */
-		public Draw(box: Rectangle, series: HudSeries, look: IHudGraphLook, now: number): void
+		Draw(box: Rectangle, series: HudSeries, look: IHudGraphLook, now: number): void
 		/**
 		 * The newest reading as a sweep around a ring, three quarters of a turn from the bottom left,
 		 * with the run's peak left standing as a mark on the track. It is the same reading and the
 		 * same scale every other style draws, in the shape a dial reads best at: one number, watched
-		 * rather than followed.
+		 * rather than followed. `thickness` is held to 1 to 2 px, as `HudCard.Arc` holds it.
 		 */
-		public Dial(centerX: number, centerY: number, radius: number, thickness: number, fraction: number, look: IHudGraphLook, peak?: number): void
+		Dial(centerX: number, centerY: number, radius: number, thickness: number, fraction: number, look: IHudGraphLook, peak?: number): void
 	}
 	/**
 	 * The graphs a card can carry: one call per frame with a run of samples and a look, and every

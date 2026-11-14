@@ -10,8 +10,6 @@ declare class AbilityData {
 	public static GetAbilityByName(name: string): Nullable<AbilityData>
 	public static GetAbilityNameByID(id: number): Nullable<string>
 	public static GetItemRecipeName(name: string): Nullable<string>
-	protected static GetAbilityIDByName(name: string): Nullable<number>
-	protected static get HasDebug(): boolean
 	public readonly AbilityBehavior: DOTA_ABILITY_BEHAVIOR
 	public readonly AbilityType: ABILITY_TYPES
 	public readonly BonusStats: EDOTASpecialBonusStats

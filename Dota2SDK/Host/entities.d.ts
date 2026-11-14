@@ -23,8 +23,6 @@ interface INativeEntity extends INativePredictionTarget {
 	readonly VisualVelocity: Vector3
 	/** On screen this frame, by the core's list; meaningful while OnScreenListKnown */
 	IsOnScreen?: boolean
-	FieldHandlers_: Nullable<Map<number, FieldHandler>>
-	Properties_: IEntityPropertiesNode
 	SerialMatches(serial: number): boolean
 }
 
@@ -43,6 +41,7 @@ type EntityPropertyType =
 	| IEntityPropertiesNode
 	| EntityPropertyType[]
 	| string
+	| Float32Array
 	| Vector4
 	| Vector3
 	| Vector2

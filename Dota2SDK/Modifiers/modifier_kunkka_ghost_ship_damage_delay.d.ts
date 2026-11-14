@@ -10,7 +10,6 @@
 declare class modifier_kunkka_ghost_ship_damage_delay extends Modifier implements IBuff {
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** It takes what the rum held back by itself (`DamageOverTime`). */
 	public get IsDamageOverTime(): boolean
 	/** It sets its bearer's health, 1 at least. */
@@ -23,5 +22,4 @@ declare class modifier_kunkka_ghost_ship_damage_delay extends Modifier implement
 	public DamageOverTime(out: DamageTicks, _level: number): boolean
 	public IsBuff(): this is IBuff
 	public get IsPurgable(): boolean
-	protected OnAdded(): void
 }

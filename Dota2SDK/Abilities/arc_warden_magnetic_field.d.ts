@@ -23,6 +23,5 @@ declare class arc_warden_magnetic_field extends Ability implements IBuff, IShiel
 	/** An order at the point of its self-cast (`IsDoubleTapAt`): it needs no cursor. */
 	public IsDoubleTap(order: ExecuteOrder): boolean
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 }

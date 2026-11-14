@@ -2,8 +2,6 @@
 declare class riki_tricks_of_the_trade extends Ability {
 	/** Its cast dodges the projectiles flying at its caster (ProjectileDodge, server.dll). */
 	public get Disjoints(): boolean
-	/** Riki is out of reach while he channels it: `AbilityChannelTime`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	public get AppliesUnitState(): bigint
 	/** The invulnerability is Riki's own, not of the units he strikes. */

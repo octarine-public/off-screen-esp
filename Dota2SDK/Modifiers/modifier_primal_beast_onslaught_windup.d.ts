@@ -1,9 +1,7 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_primal_beast_onslaught_windup extends Modifier implements IBuff {
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
 	/**
 	 * Onslaught's windup: a cast of another spell or item lets the charge go at once, short of the
@@ -12,6 +10,5 @@ declare class modifier_primal_beast_onslaught_windup extends Modifier implements
 	 */
 	public get IsCharge(): boolean
 	public get ChargeTakesInstant(): boolean
-	protected GetDisableTurning(): [number, boolean]
 	public get IsPurgable(): boolean
 }

@@ -8,5 +8,10 @@ declare namespace MenuSDK {
 	 * filtered. Honours the theme's blur setting.
 	 */
 	function ModalBlur(): string
+	/**
+	 * Says whether a modal owns the screen, blurring the menu window's contents by {@link ModalBlur}
+	 * while one does, and redraws the menu on a change. It is one flag rather than a count, so the
+	 * first modal to close clears it for any still open.
+	 */
 	function SetModalOpen(enabled: boolean): void
 }

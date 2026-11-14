@@ -7,7 +7,6 @@ declare class troll_warlord_battle_trance extends Ability implements IBuff {
 	public get AppliesUnitState(): bigint
 	/** The trance holds Troll himself to his attacks, no one else. */
 	public get StatesOnCaster(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	/** Troll's health goes no lower than 1 in the trance (`MIN_HEALTH`). */
 	public get KeepsAlive(): boolean
 	/**

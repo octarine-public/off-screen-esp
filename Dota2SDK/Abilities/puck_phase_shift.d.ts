@@ -6,6 +6,4 @@ declare class puck_phase_shift extends Ability {
 	public get AppliesUnitState(): bigint
 	/** The states are Puck's own. */
 	public get StatesOnCaster(): boolean
-	/** Puck stays shifted its `duration` at most, the channel's length. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 }

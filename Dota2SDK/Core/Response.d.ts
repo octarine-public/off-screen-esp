@@ -1,46 +1,36 @@
 // AUTO-GENERATED - do not edit.
 /**
- * A completed HTTP response. The body arrived whole — there is no stream behind it — so unlike the
- * web platform's `Response` it can be read as often as you like.
+ * An HTTP response. Its whole body has already arrived, so the body can be read any number of
+ * times.
  * @example
  * const res = await SharedSDK.fetch(url)
  * if (res.ok) {
  *   const data = await res.json<{ id: number }>()
  * }
  */
-declare class Response {
-	public readonly headers: Headers
-	public readonly status: number
-	public readonly statusText: string
-	/** The URL that answered, which differs from the requested one when a redirect was followed. */
-	public readonly url: string
-	constructor(result: NetHttpResult)
-	/** True for a 2xx status. */
-	public get ok(): boolean
-	/** True when the server answered with a redirect that was not followed. */
-	public get redirected(): boolean
+interface Response {
+	/** Headers the server sent. */
+	readonly headers: Headers
+	/** HTTP status code. */
+	readonly status: number
+	/** The text sent with the status code, such as `"Not Found"`. */
+	readonly statusText: string
+	/** The URL that answered; differs from the requested one after a followed redirect. */
+	readonly url: string
+	/** Whether the status is 2xx. */
+	get ok(): boolean
+	/** Whether the status is 3xx: a redirect that was not followed. */
+	get redirected(): boolean
+	/** The body as an `ArrayBuffer`. */
+	arrayBuffer(): Promise<ArrayBuffer>
+	/** The body as bytes: a view over the buffer {@link arrayBuffer} returns, not a copy. */
+	bytes(): Promise<Uint8Array>
+	/** The body decoded as UTF-8. */
+	text(): Promise<string>
 	/**
-	 * The raw body.
-	 * @example
-	 * const buffer = await res.arrayBuffer()
-	 */
-	public arrayBuffer(): Promise<ArrayBuffer>
-	/**
-	 * The raw body as bytes.
-	 * @example
-	 * const bytes = await res.bytes()
-	 */
-	public bytes(): Promise<Uint8Array>
-	/**
-	 * The body decoded as UTF-8.
-	 * @example
-	 * const text = await res.text()
-	 */
-	public text(): Promise<string>
-	/**
-	 * The body parsed as JSON. Rejects the same way `JSON.parse` throws when the body is not JSON.
+	 * The body parsed as JSON. Rejects with a `SyntaxError` when it is not valid JSON.
 	 * @example
 	 * const data = await res.json<{ items: string[] }>()
 	 */
-	public json<T = unknown>(): Promise<T>
+	json<T = unknown>(): Promise<T>
 }

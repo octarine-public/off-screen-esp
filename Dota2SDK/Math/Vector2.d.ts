@@ -1,7 +1,9 @@
 // AUTO-GENERATED - do not edit.
 /** 2D vector with x/y math, geometry and rotation helpers. */
 declare class Vector2 {
+	/** The x component. {@link Angle} is 0 along its positive direction. */
 	public x: number
+	/** The y component. {@link Angle} is `Math.PI / 2` along its positive direction. */
 	public y: number
 	/**
 	 * Reads a Vector2 from two consecutive floats in the shared IOBuffer starting at `offset`.
@@ -69,7 +71,11 @@ declare class Vector2 {
 	 * @example
 	 * const vec = new Vector2(1, 2)
 	 */
-	constructor(x?: number, y?: number)
+	constructor(
+	/** The x component. {@link Angle} is 0 along its positive direction. */
+	x?: number, 
+	/** The y component. {@link Angle} is `Math.PI / 2` along its positive direction. */
+	y?: number)
 	/**
 	 * True if both components are finite (not Infinity/NaN). Alias of `IsFinite`.
 	 * @example

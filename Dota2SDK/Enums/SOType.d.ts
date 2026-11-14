@@ -11,5 +11,6 @@ declare const enum SOType {
 	GameHeroFavorites = 2007,
 	MapLocationState = 2008,
 	PlayerChallenge = 2010,
-	LobbyInvite = 2011
+	LobbyInvite = 2011,
+	StaticLobby = 2014
 }

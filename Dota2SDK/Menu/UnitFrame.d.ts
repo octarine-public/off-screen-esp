@@ -8,24 +8,34 @@ declare namespace MenuSDK {
 	interface WorldUnitBounds {
 		/** Where the unit stands, in world units. */
 		x: number
+		/** World y of where the unit stands. */
 		y: number
+		/** World z of where the unit stands, which `baseZ` and `topZ` are offsets from. */
 		z: number
 		/** Footprint offsets around the position, before the turn. */
 		minX: number
+		/** Smallest footprint offset on y, before the box turns by `yaw`. */
 		minY: number
+		/** Largest footprint offset on x, before the box turns by `yaw`. */
 		maxX: number
+		/** Largest footprint offset on y, before the box turns by `yaw`. */
 		maxY: number
 		/** Vertical extent as offsets above the position. */
 		baseZ: number
+		/** Offset of the box's top above `z`. */
 		topZ: number
 		/** Facing, in degrees; the box turns with the unit rather than the world grid. */
 		yaw: number
 	}
-	/** A screen rectangle in px; position in hundredths, sizes whole. */
+	/** A screen rectangle in px, fractions kept. */
 	interface WorldUnitRect {
+		/** Left edge of the projected box, in screen px. */
 		x: number
+		/** Top edge of the projected box, in screen px. */
 		y: number
+		/** Width of the projected box, in px. */
 		w: number
+		/** Height of the projected box, in px. */
 		h: number
 	}
 	/**
@@ -40,7 +50,7 @@ declare namespace MenuSDK {
 		/** The eight projected corners of the last `Project`, as `x, y` pairs. */
 		public Corners(): Readonly<Float64Array>
 		/**
-		 * Projects the unit's box, `false` when any corner leaves the frame — a wireframe missing
+		 * Projects the unit's box, `false` when any corner is behind the camera — a wireframe missing
 		 * a vertex draws edges that go nowhere. The rectangle keeps its fractions: rounding here
 		 * once cost half a pixel of shiver on everything centered on the unit.
 		 */

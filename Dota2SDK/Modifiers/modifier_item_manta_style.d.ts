@@ -1,8 +1,4 @@
 // AUTO-GENERATED - do not edit.
 declare class modifier_item_manta_style extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
-	protected GetMoveSpeedBonusPercentageUnique(): [number, boolean]
-	protected GetAttackSpeedBonusConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

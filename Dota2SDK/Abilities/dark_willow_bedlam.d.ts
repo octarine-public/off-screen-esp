@@ -29,5 +29,4 @@ declare class dark_willow_bedlam extends Ability {
 	 * once a round.
 	 */
 	public ReachOf(target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

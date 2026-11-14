@@ -4,7 +4,6 @@
  * hero, `duration_creep` on a creep.
  */
 declare class modifier_faceless_void_time_lock extends Modifier {
-	protected readonly DeclaredEvents: EModifierfunction[]
 	/** A chance bash counts as it may; none while Faceless Void is broken. */
 	public SwingStun(target: Unit): number
 	/**
@@ -12,5 +11,4 @@ declare class modifier_faceless_void_time_lock extends Modifier {
 	 * attack Faceless Void repeats after it, at its highest roll.
 	 */
 	public SwingProc(target: Unit, _started: boolean, out: ISwingProc): boolean
-	protected UpdateSpecialValues(): void
 }

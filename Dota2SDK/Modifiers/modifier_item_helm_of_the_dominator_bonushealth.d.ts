@@ -5,11 +5,5 @@
  * the last already in the white damage the game sends).
  */
 declare class modifier_item_helm_of_the_dominator_bonushealth extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
-	protected GetPhysicalArmorBonus(): [number, boolean]
-	protected GetBaseAttackBonusDamage(): [number, boolean]
-	protected GetHealthRegenConstant(): [number, boolean]
-	protected GetManaRegenConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 }

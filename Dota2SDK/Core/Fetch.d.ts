@@ -1,13 +1,21 @@
 // AUTO-GENERATED - do not edit.
+/** Options of {@link SharedSDK.fetch}. */
 interface FetchInit {
+	/** HTTP method, such as `"POST"`. */
 	method?: string
+	/** Headers to send. */
 	headers?: HeadersInit
+	/** Body to send. */
 	body?: string | ArrayBuffer | ArrayBufferView
+	/**
+	 * Cancels the request when it aborts. One that has aborted already makes `fetch` reject with
+	 * its reason before anything is sent.
+	 */
 	signal?: AbortSignal
-	/** `"follow"` chases redirects, `"manual"` hands back the 3xx as it arrived. Default `"follow"`. */
+	/** `"follow"` follows redirects, `"manual"` returns the 3xx response itself. Default `"follow"`. */
 	redirect?: "follow" | "manual"
-	/** Deadline for the whole exchange. The client clamps it to its own ceiling. */
+	/** Time limit for the whole request, in milliseconds. The client caps it. */
 	timeoutMs?: number
-	/** Fail rather than read a body past this many bytes. The client clamps it to its own ceiling. */
+	/** Largest response body to accept, in bytes; a larger one fails the request. The client caps it. */
 	maxResponseBytes?: number
 }

@@ -51,61 +51,55 @@
  * 	const dealt = ticks.Deal(frostbite, enemy, now, now + ticks.Duration, -Infinity, now + 1)
  * }
  */
-declare class DamageTicks {
-	public Interval: number
-	public Delay: number
-	public Duration: number
-	public AtEnd: boolean
-	public Flat: number
-	public FlatMax: number
-	public RampTime: number
-	public OfHealth: number
-	public OfMaxHealth: number
-	public Final: number
-	public Count: number
-	public WhileInArea: boolean
-	public Linger: number
-	public PerFrame: boolean
-	public StatusResisted: boolean
-	public KeepsTicks: boolean
-	public PerStack: boolean
-	public PhaseKept: boolean
-	public WhileMoving: boolean
-	public OfMoveSpeed: number
-	public Random: boolean
-	public After: number
-	public Growth: number
-	public BurstEvery: number
-	public OfLost: number
-	public HealthLaid: number
-	public Amounts: Nullable<readonly number[]>
-	public Removal: boolean
-	public SetsHealth: boolean
-	public Volley: number
+interface DamageTicks {
+	Interval: number
+	Delay: number
+	Duration: number
+	AtEnd: boolean
+	Flat: number
+	FlatMax: number
+	RampTime: number
+	OfHealth: number
+	OfMaxHealth: number
+	Final: number
+	Count: number
+	WhileInArea: boolean
+	Linger: number
+	PerFrame: boolean
+	StatusResisted: boolean
+	KeepsTicks: boolean
+	PerStack: boolean
+	PhaseKept: boolean
+	WhileMoving: boolean
+	OfMoveSpeed: number
+	Random: boolean
+	After: number
+	Growth: number
+	BurstEvery: number
+	OfLost: number
+	HealthLaid: number
+	Amounts: Nullable<readonly number[]>
+	Removal: boolean
+	SetsHealth: boolean
+	Volley: number
 	/** Where the latest `Deal` notes each hit it counts, when given (`Ability.DamageUntil`). */
-	public Hits: Nullable<DamageHits>
+	Hits: Nullable<DamageHits>
 	/**
 	 * The target's shields each tick of `Deal` goes through, as the blows before left them, when
 	 * given: a tick they take whole leaves the next its turn (`ShieldLedger`).
 	 */
-	public Shields: Nullable<ShieldLedger>
+	Shields: Nullable<ShieldLedger>
 	/** The ticks' damage type when it is not the ability's - Cinder Brew's ignite, magical. */
-	public DamageType: Nullable<DAMAGE_TYPES>
+	DamageType: Nullable<DAMAGE_TYPES>
 	/** Game time the last tick the latest `Deal` counted is due; `-Infinity` when it counted none. */
-	public LastAt: number
-	/**
-	 * How many of the ticks due every `interval` from game time `first` on are in by game time
-	 * `time`: each lands on the first server tick it is due by (`LandsAt`), so those due by then,
-	 * or within `dealtWithin` after it.
-	 */
-	public static DueBy(first: number, interval: number, time: number): number
+	LastAt: number
 	/** No ticks: what an ability with no damage over time leaves it. */
-	public Reset(): this
+	Reset(): this
 	/**
 	 * A second rule of the same cast, handed out from nothing (`Reset`) for the ability to fill
 	 * beside this one (`Ability.BesideOverTime`) - Firestorm's burn beside its waves.
 	 */
-	public Beside(): DamageTicks
+	Beside(): DamageTicks
 	/**
 	 * Game time until which `target` surely keeps the ticks `ability` laid on it at game time `laid`:
 	 * to their end, unless it is a hero that may dispel them (`Ability.IsDispellable`) - then only
@@ -113,7 +107,7 @@ declare class DamageTicks {
 	 * are laid at least: the disable of the cast laying them; an area's also while the unit cannot
 	 * walk out of it (`Unit.ImmobileUntil`), laid anew all along.
 	 */
-	public KeptUntil(ability: Ability, target: Unit, laid: number, held?: number): number
+	KeptUntil(ability: Ability, target: Unit, laid: number, held?: number): number
 	/**
 	 * The damage the ticks of `ability` laid on `target` at game time `start`, ending at game time
 	 * `end`, deal it after game time `from` and by game time `until` at the roll `strength` - the
@@ -122,24 +116,24 @@ declare class DamageTicks {
 	 * (`Ability.DamageOf`), its health less what the ones before took, its shields as they left
 	 * them (`Shields`). None at a unit that is no enemy of the ability's owner.
 	 */
-	public Deal(ability: Ability, target: Unit, start: number, end: number, from: number, until: number, strength?: ATTACK_DAMAGE_STRENGTH, kept?: number): number
+	Deal(ability: Ability, target: Unit, start: number, end: number, from: number, until: number, strength?: ATTACK_DAMAGE_STRENGTH, kept?: number): number
 	/**
 	 * Game time the next of the ticks of `ability` laid on `target` at game time `start`, ending at
 	 * game time `end`, lands after game time `from` at the roll `strength`: as soon as it may by
 	 * default - one landing at `Random`, the next that may. `Infinity` when none does, or at a unit
 	 * that is no enemy of the ability's owner.
 	 */
-	public NextAt(ability: Ability, target: Unit, start: number, end: number, from: number, strength?: ATTACK_DAMAGE_STRENGTH): number
+	NextAt(ability: Ability, target: Unit, start: number, end: number, from: number, strength?: ATTACK_DAMAGE_STRENGTH): number
 	/**
 	 * Makes ticks laid anew at game time `start` keep the time of the ones first laid at game time
 	 * `origin` - a renewal that does not move them, Mage Slayer's: the first after `start` comes
 	 * as theirs would. None of it for `origin` not before `start`.
 	 */
-	public KeepTime(origin: number, start: number): void
+	KeepTime(origin: number, start: number): void
 	/**
 	 * Fills it with the ticks of shares each dealing `shares[i]` on `count` ticks every `interval`
 	 * from game time `firsts[i]` on - all on one row of ticks - laid at game time `start`: each tick
 	 * the shares due then (`Amounts`, kept in `amounts`). Whether any is due.
 	 */
-	public Shares(firsts: readonly number[], shares: readonly number[], count: number, interval: number, start: number, amounts: number[]): boolean
+	Shares(firsts: readonly number[], shares: readonly number[], count: number, interval: number, start: number, amounts: number[]): boolean
 }

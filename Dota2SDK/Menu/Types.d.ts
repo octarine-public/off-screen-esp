@@ -2,39 +2,57 @@
 declare namespace MenuSDK {
 	/** A world position in engine units. Anything with `x`, `y`, `z` fits — a Vector3 included. */
 	interface WorldPoint {
+		/** World x, in engine units. */
 		readonly x: number
+		/** World y, in engine units. */
 		readonly y: number
+		/** World z, the vertical axis, in engine units. */
 		readonly z: number
 	}
 	/** A fixed point, or a provider re-read every frame; `undefined` from a provider hides the node. */
 	type WorldAnchor = WorldPoint | (() => Nullable<WorldPoint>)
 	/** A stroke for lines and chains, in px; colors are `#rrggbb[aa]` hex. */
 	interface WorldStroke {
+		/** Color of the line. */
 		readonly color: string
+		/** Width of the line in px; 2 when omitted. */
 		readonly thickness?: number
+		/** Width of an outline around the line, in px; none when omitted or 0. */
 		readonly outline?: number
+		/** Color of the outline; `#000000aa` when omitted. */
 		readonly outlineColor?: string
 	}
 	/** A filled shape, in px; `border` draws inside the edge. */
 	interface WorldShapeStyle {
+		/** Color the shape is filled with. */
 		readonly fill: string
+		/** Width of the border in px; none when omitted or 0. */
 		readonly border?: number
+		/** Color of the border; `#000000ff` when omitted. */
 		readonly borderColor?: string
 		/** Corner radius for rectangles; a circle ignores it. */
 		readonly radius?: number
 	}
 	/** A text run, in px. */
 	interface WorldTextStyle {
+		/** Font size in px. */
 		readonly size: number
+		/** Color the text is drawn in. */
 		readonly color: string
+		/** Font weight, 400 when omitted; the menu's font weight setting can raise it. */
 		readonly weight?: number
+		/** Whether the text gets a 1 px black outline; on unless `false`. */
 		readonly outline?: boolean
 	}
 	/** A two-tone bar: what remains in `fill` over a `background` track. */
 	interface WorldBarStyle {
+		/** Color of the filled part, which grows from the left edge. */
 		readonly fill: string
+		/** Color of the track; `#000000aa` when omitted. */
 		readonly background?: string
+		/** Width of the track's border in px, which the fill sits inside; none when omitted or 0. */
 		readonly border?: number
+		/** Color of the track's border; `#000000ff` when omitted. */
 		readonly borderColor?: string
 	}
 	/**
@@ -57,14 +75,17 @@ declare namespace MenuSDK {
 		/** A centered image; `color` tints it. */
 		Image(path: string, width: number, height: number, color?: string): IWorldNode
 		/**
-		 * A polyline in world space: `points` holds x, y, z triples, `segments` of them joined in
-		 * order into one seamless field. Call again whenever the geometry moves — the buffer is
-		 * read at flush, not kept.
+		 * A polyline in world space through the x, y, z triples of `points`: `segments` lines joining
+		 * the first `segments + 1` points in order, drawn as one shape. `points` is kept and read again
+		 * every frame, so it can be changed in place. A line with an end behind the camera is left
+		 * out.
 		 */
 		Chain(points: ArrayLike<number>, segments: number, stroke: WorldStroke): IWorldNode
 		/** Fades the node between the two distances from the layer's fade origin, in world units. */
 		FadeByDistance(from: number, to: number): IWorldNode
+		/** Hides the node while `on` is false, keeping what it was told; a node starts shown. */
 		Show(on: boolean): IWorldNode
+		/** Removes the node from its layer and takes down what it drew. */
 		Destroy(): void
 	}
 	/**
@@ -89,8 +110,9 @@ declare namespace MenuSDK {
 		/** An image for this frame, centered on the point. */
 		Image(at: WorldPoint, path: string, width: number, height: number): void
 		/**
-		 * A wireframe of a turned world box for this frame, drawn as one seamless batch.
-		 * `stubs` draws corner stubs instead of whole edges.
+		 * The twelve edges of `bounds`' box for this frame, turned by its `yaw` and drawn as one shape;
+		 * nothing is drawn while a corner is behind the camera. `stubs` draws only the end of each edge at
+		 * every corner: 15% of its length, at most 14 px.
 		 */
 		Box3D(bounds: Readonly<WorldUnitBounds>, stroke: WorldStroke, stubs?: boolean): void
 		/**

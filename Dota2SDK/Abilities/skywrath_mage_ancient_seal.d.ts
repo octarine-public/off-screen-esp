@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class skywrath_mage_ancient_seal extends Ability {
-	/** The seal lasts `seal_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public get IsAmplifier(): boolean
 	/** The sealed enemy takes more magical damage (`resist_debuff`): its magic resistance is cut. */

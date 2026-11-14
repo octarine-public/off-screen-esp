@@ -5,6 +5,5 @@ declare class item_clarity extends Item implements IManaRestore<Unit> {
 	public get InstantRestore(): boolean
 	public readonly ManaRestoreModifierName = "modifier_clarity_potion"
 	public GetManaRestore(_target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public IsManaRestore(): this is IManaRestore<Unit>
 }

@@ -1,6 +1,14 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/**
+	 * Which file {@link ResolveAsset} takes first for an `.svg` path: the `.svg` itself for `"vector"`,
+	 * the `.png` beside it for `"raster"`.
+	 */
 	type AssetMode = "raster" | "vector"
+	/**
+	 * Sets what {@link ResolveAsset} asks about a path no package file answers, and forgets every
+	 * answer it has kept. {@link AttachHost} sets it to the host's `resolveAsset`.
+	 */
 	function SetAssetResolver(next: (path: string) => string): void
 	/**
 	 * Registers the host's rule for art whose shape is its alpha alone. A game's ability icons are
@@ -17,9 +25,13 @@ declare namespace MenuSDK {
 	function AssetElementTag(src: string): "svg" | "img"
 	/** A rectangle of an image file in the file's own whole pixels: one sprite of a sheet, or a crop. */
 	interface ImageRegion {
+		/** Left edge, counted from the left of the file: a whole number from 0. */
 		readonly x: number
+		/** Top edge, counted from the top of the file: a whole number from 0. */
 		readonly y: number
+		/** Width: a whole number above 0. */
 		readonly width: number
+		/** Height: a whole number above 0. */
 		readonly height: number
 	}
 	/**
@@ -35,31 +47,25 @@ declare namespace MenuSDK {
 	/** Returns a previously prepared raster source without creating or retaining a new asset. */
 	function PeekSizedAsset(path: string, width: number, height: number, radius?: number): string
 	/**
-	 * A source for `path` resampled to the pixel size it will be drawn at, or `path` itself where that
-	 * cannot help. Mip selection lands only on a power-of-two level and rounds toward the smaller one,
-	 * so art drawn at a size the chain does not hold reads soft however well the chain was built; art
-	 * cut once, straight to its drawn size, does not.
+	 * A raster `path` resampled to the `width` by `height` screen pixels it is drawn at; sizes in dp
+	 * go through {@link DpToPx} first. A `radius` in pixels is baked into the alpha, so the source is
+	 * drawn without another rounded clip. Answers `path` itself for a vector or `scheme://` source
+	 * and on a host that cannot resample. Hand every source taken here back to
+	 * {@link ReleaseSizedAsset} once nothing draws it at that size. A `region` is cut out on its own;
+	 * where it cannot be, the answer is `""`, which draws nothing rather than the whole sheet.
 	 *
-	 * Raster only: a vector source rasterizes at its display size already, and a scheme source names
-	 * something the host serves rather than a file to resample. Sizes are in whole screen pixels, not
-	 * dp — pass them through {@link DpToPx} first. Every source taken here is handed back to
-	 * {@link ReleaseSizedAsset} when the element drawing it goes away or asks for another size.
-	 *
-	 * Radius is in screen pixels and defaults to zero. Rounded sources bake coverage into their
-	 * alpha; draw them without another rounded clip. Hosts predating radius support keep square art.
-	 * Hosts predating the function keep the raw path, which the mip chain still covers.
-	 *
-	 * A `region` cuts that rectangle of the file out on its own - one sprite of a sheet - so nothing
-	 * around it bleeds in; cut at the region's own size it keeps the frame's texels as they are. There
-	 * is no stand-in for a region: where it cannot be cut (a host without
-	 * `RegisterSizedImageRegion`, a vector or scheme source, a rectangle that is not whole pixels)
-	 * the answer is `""`, which draws nothing, never the whole sheet in the sprite's place.
 	 * @example
-	 * const src = RegisterSizedAsset(sheet, 32, 32, 0, { x: 32, y: 0, width: 32, height: 32 })
+	 * const frame = { x: 32, y: 0, width: 32, height: 32 }
+	 * const src = MenuSDK.RegisterSizedAsset(sheet, 32, 32, 0, frame)
 	 */
 	function RegisterSizedAsset(path: string, width: number, height: number, radius?: number, region?: ImageRegion): string
 	/** Hands back a source taken from {@link RegisterSizedAsset}. A raw path is ignored. */
 	function ReleaseSizedAsset(source: string): void
+	/**
+	 * The source an image element loads `path` from: the file `SharedSDK.tryFindFile` finds, else
+	 * what the resolver of {@link SetAssetResolver} answers, else `path` itself. `""` and a
+	 * `scheme://` path come back unchanged. Each answer is kept per path and `mode`.
+	 */
 	function ResolveAsset(path: string, mode?: AssetMode): string
 	/**
 	 * Whether `path` resolves to a vector source, which only the svg element draws. Answered once per

@@ -5,14 +5,10 @@
  * its talent grants.
  */
 declare class modifier_slark_shadow_dance extends Modifier implements IBuff, IShield {
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public readonly IsHidden = false
 	public readonly BuffModifierName: string
 	public readonly ShieldModifierName: string
-	protected readonly DeclaredFunction: Map<EModifierfunction, () => [number, boolean]>
 	public IsBuff(): this is IBuff
-	protected GetAttackSpeedBonusConstant(): [number, boolean]
-	protected UpdateSpecialValues(): void
 	public get IsPurgable(): boolean
 	public get KeepsInvisibilityOnCast(): boolean
 }

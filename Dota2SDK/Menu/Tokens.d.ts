@@ -1,5 +1,14 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/**
+	 * A reference to each palette token, for a style that follows the theme: as a style value it is
+	 * resolved against the palette of the scope being drawn, and again when that palette changes.
+	 * Beside the keys of {@link DefaultPalette} it holds `Accent`, `AccentMuted`, `AccentSurface`,
+	 * `WindowBlur` and the accent at fixed alphas, `AccentA6` to `AccentA40`.
+	 *
+	 * @example
+	 * const label = MenuSDK.Styled({ base: { color: MenuSDK.Tokens.TextMuted } })
+	 */
 	const Tokens: TokenSet<{
 		Accent: string
 		AccentMuted: string
@@ -57,7 +66,6 @@ declare namespace MenuSDK {
 		GlassBlur: string
 		BackdropDim: string
 		BackdropDimSoft: string
-		LockedZone: string
 		LockedMark: string
 		MarkNew: string
 		MarkChanged: string

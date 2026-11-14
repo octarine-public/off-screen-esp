@@ -1,7 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class ember_spirit_searing_chains extends Ability {
-	/** The chains hold a twentieth of a second more than `duration` - not in the data. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	public GetBaseAOERadiusForLevel(level: number): number
 	/**

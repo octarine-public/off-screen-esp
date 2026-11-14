@@ -1,104 +1,106 @@
 // AUTO-GENERATED - do not edit.
+/** Delivered once the connection is established. */
 interface WebSocketOpenEvent {
+	/** Event name. */
 	readonly type: "open"
 }
+/** Delivered for every message received. */
 interface WebSocketMessageEvent {
+	/** Event name. */
 	readonly type: "message"
-	/** A text frame arrives as a string, a binary frame as an ArrayBuffer. */
+	/** The payload: a string for a text frame, an `ArrayBuffer` for a binary one. */
 	readonly data: string | ArrayBuffer
 }
+/** Delivered once when the connection ends, however it ends. */
 interface WebSocketCloseEvent {
+	/** Event name. */
 	readonly type: "close"
+	/** Close code; 1006 when the connection failed or was lost. */
 	readonly code: number
+	/** The reason sent with the close, or the error text after a failure. */
 	readonly reason: string
-	/** True when both ends exchanged a close frame. */
+	/** False when {@link code} is 1006. */
 	readonly wasClean: boolean
 }
+/** Delivered when the connection fails. A `close` event with code 1006 follows it. */
 interface WebSocketErrorEvent {
+	/** Event name. */
 	readonly type: "error"
+	/** What went wrong, as text. */
 	readonly message: string
+	/** Why it failed. */
 	readonly code: NetErrorCode
 }
+/** What a listener of each event name receives. */
 interface WebSocketEventMap {
+	/** The connection is established. */
 	open: WebSocketOpenEvent
+	/** A message arrived. */
 	message: WebSocketMessageEvent
+	/** The connection ended. */
 	close: WebSocketCloseEvent
+	/** The connection failed. */
 	error: WebSocketErrorEvent
 }
+/** Options of the {@link WebSocket} constructor. */
 interface WebSocketInit {
-	/** Extra handshake headers. The transport's own (`Sec-WebSocket-*`, `Host`) are refused. */
+	/** Extra headers for the handshake. `Host` and `Sec-WebSocket-*` cannot be set. */
 	headers?: HeadersInit
 }
+/** A handler of the event named `K`. */
 type Listener<K extends keyof WebSocketEventMap> = (event: WebSocketEventMap[K]) => void
 /**
- * A WebSocket, opened and driven by the client on the script's behalf. The surface is the web
- * platform's: `readyState`, `send`, `close`, the four `on*` handlers and `addEventListener`.
+ * A WebSocket connection with the browser's API: `readyState`, `send`, `close`, the `on*`
+ * handlers and `addEventListener`.
  *
- * Off this machine only `wss://` is reachable, and only on the public internet — our own
- * infrastructure and private networks are refused. A local helper may be reached over plain
- * `ws://` when the url names this machine outright (`localhost`, `*.localhost`, a loopback
- * address), except on the ports the client itself binds. A refusal arrives as an `error` event
- * followed by `close`, exactly as a failed connection does in a browser.
+ * Reachable are `wss://` on the public internet and, on this machine (`localhost`,
+ * `*.localhost`, a loopback address), plain `ws://` as well. A target that is not allowed fires
+ * `error`, then `close`, like any connection that failed.
  * @example
  * const socket = new SharedSDK.WebSocket("wss://echo.example.com")
  * socket.onopen = () => socket.send("hello")
  * socket.onmessage = event => console.log(event.data)
  */
-declare class WebSocket {
-	public static readonly CONNECTING = 0
-	public static readonly OPEN = 1
-	public static readonly CLOSING = 2
-	public static readonly CLOSED = 3
-	public readonly CONNECTING = 0
-	public readonly OPEN = 1
-	public readonly CLOSING = 2
-	public readonly CLOSED = 3
-	public readonly url: string
-	public onopen: Nullable<Listener<"open">>
-	public onmessage: Nullable<Listener<"message">>
-	public onclose: Nullable<Listener<"close">>
-	public onerror: Nullable<Listener<"error">>
+interface WebSocket {
+	/** {@link readyState} while the connection is being established. */
+	readonly CONNECTING: 0
+	/** {@link readyState} while connected: the only state {@link send} works in. */
+	readonly OPEN: 1
+	/** {@link readyState} after {@link close} was called, until the connection ends. */
+	readonly CLOSING: 2
+	/** {@link readyState} once the connection has ended or failed. */
+	readonly CLOSED: 3
+	/** The URL given to the constructor. */
+	readonly url: string
+	/** Called when the connection is established. */
+	onopen: Nullable<Listener<"open">>
+	/** Called for every message received. */
+	onmessage: Nullable<Listener<"message">>
+	/** Called once when the connection ends. */
+	onclose: Nullable<Listener<"close">>
+	/** Called when the connection fails, before {@link onclose}. */
+	onerror: Nullable<Listener<"error">>
+	/** Connection state: {@link CONNECTING}, {@link OPEN}, {@link CLOSING} or {@link CLOSED}. */
+	get readyState(): number
+	/** The subprotocol the server chose, or `""` when there is none. */
+	get protocol(): string
+	/** Always 0: what `send` takes is queued by the client, not here. */
+	get bufferedAmount(): number
 	/**
-	 * @param url the `wss://` endpoint to connect to, or `ws://` for a local helper
-	 * @param protocols subprotocols to offer during the handshake
-	 * @throws SyntaxError when `url` is not a websocket url at all — a scheme the protocol has no
-	 * meaning for is a typo, and a typo should fail on the line that made it rather than come back
-	 * later as a socket that quietly closed.
-	 * @example
-	 * new SharedSDK.WebSocket("wss://example.com/stream", "graphql-ws")
+	 * Adds a listener for `type`. Listeners run after the matching `on*` handler, in the order
+	 * they were added.
 	 */
-	constructor(url: string, protocols?: string | string[], init?: WebSocketInit)
-	/** One of `CONNECTING`, `OPEN`, `CLOSING`, `CLOSED`. */
-	public get readyState(): number
-	/** The subprotocol the server accepted, or `""` when none was negotiated. */
-	public get protocol(): string
+	addEventListener<K extends keyof WebSocketEventMap>(type: K, listener: Listener<K>): void
+	/** Removes a listener added with {@link addEventListener}. */
+	removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: Listener<K>): void
 	/**
-	 * Always `0`: the client owns the send queue, so there is nothing buffered on this side.
+	 * Sends one message: a string as a text frame, anything else as a binary one. Throws an
+	 * `Error` unless {@link readyState} is {@link OPEN}.
 	 */
-	public get bufferedAmount(): number
+	send(data: string | ArrayBuffer | ArrayBufferView): void
 	/**
-	 * Registers a listener. The matching `on*` handler is called too, before the listeners.
-	 * @example
-	 * socket.addEventListener("message", event => console.log(event.data))
+	 * Starts closing the connection; does nothing once it is closing or closed. `code` must be
+	 * 1000 or within 3000-4999, and any other value is sent as 1000.
 	 */
-	public addEventListener<K extends keyof WebSocketEventMap>(type: K, listener: Listener<K>): void
-	/**
-	 * Removes a listener registered with {@link addEventListener}.
-	 * @example
-	 * socket.removeEventListener("message", onMessage)
-	 */
-	public removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: Listener<K>): void
-	/**
-	 * Queues one frame. A string goes out as text, anything else as binary. Throws while the
-	 * socket is not open, the way the web platform's `send` does.
-	 * @example
-	 * socket.send(JSON.stringify({ subscribe: "ticks" }))
-	 */
-	public send(data: string | ArrayBuffer | ArrayBufferView): void
-	/**
-	 * Starts a clean close. `code` must be 1000 or in 3000-4999; anything else is sent as 1000.
-	 * @example
-	 * socket.close(1000, "done")
-	 */
-	public close(code?: number, reason?: string): void
+	close(code?: number, reason?: string): void
 }

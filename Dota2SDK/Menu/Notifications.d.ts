@@ -1,6 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/** Names a card {@link INotifications.Show} put up, for {@link INotifications.Dismiss}. */
 	type NotificationID = number
+	/** What one notification card shows and does; `title` and `message` are all it needs. */
 	interface INotificationOptions {
 		/** Main line of the notification. */
 		readonly title: string
@@ -48,6 +50,11 @@ declare namespace MenuSDK {
 		 */
 		readonly onClick?: () => void
 	}
+	/**
+	 * The stack of notification cards the user places, and turns on or off, under Settings >
+	 * Notifications. It holds five cards at most: a sixth sends the oldest away. A game ending drops
+	 * every card.
+	 */
 	interface INotifications {
 		/**
 		 * Adds a notification to the shared on-screen stack. The card flies in from the nearer screen
@@ -98,6 +105,7 @@ declare namespace MenuSDK {
 	 * SetNotificationStrip(true)
 	 */
 	function SetNotificationStrip(enabled: boolean): void
+	/** The menu's notification stack, which every script shares. */
 	const Notifications: INotifications
 	/**
 	 * Joins the notifications to the host's frame and input. The bootstrap calls it once the menu

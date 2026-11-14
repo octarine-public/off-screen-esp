@@ -1,28 +1,42 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
+	/**
+	 * Queues a cursor position in layout units for the open drag's `onMove`. Only the latest one
+	 * queued is delivered, at the next {@link FlushDragMove}.
+	 */
 	function QueueDragMove(x: number, y: number): void
+	/**
+	 * Hands the queued move to the open drag's `onMove`, if one is waiting; nothing once the drag
+	 * has ended. The menu calls it every frame.
+	 */
 	function FlushDragMove(): void
 	/**
-	 * Opens the drag shield over the menu and hands the hand's moves to `onMove`, in layout units,
-	 * flushed once per frame; `onEnd` runs when the button is let go, wherever that happens. A drag
-	 * that follows the host's cursor on its own each frame - an overlay card - passes no `onMove`
-	 * and takes only the release. A drag still open when the next one begins is released first, so
-	 * its owner is told rather than forgotten.
+	 * Opens the drag shield over the menu and hands the cursor's moves to `onMove` in layout units,
+	 * at most once a frame; `onEnd` runs once when the drag ends, wherever the button is let go or
+	 * when the menu closes first. A drag that follows the host's cursor on its own, such as an
+	 * overlay card's, passes no `onMove`. A drag still open when the next one begins is ended first,
+	 * and its `onEnd` runs.
 	 */
 	function BeginDrag(onMove?: (x: number, y: number) => void, onEnd?: () => void): void
+	/**
+	 * Ends the open drag. At the menu's next frame the last queued move lands, `onEnd` runs unless
+	 * it already has, and the shield comes down. Does nothing while no drag is open.
+	 */
 	function EndDrag(): void
 	/**
 	 * Takes the shield down once the drag is over. The last move the shield queued still lands, and
 	 * an owner the shield never got to tell hears the release here.
 	 */
 	function SettleDrag(): void
+	/** Whether a drag is open: from {@link BeginDrag} until the menu frame after its release. */
 	function IsDragging(): boolean
 }
 
 declare namespace MenuSDK {
 	/**
-	 * What a {@link CPreviewDrag} carries: something a script draws on its preview's stage that stands
-	 * at one of a few places `T` - its menu's dropdown option - and the boxes it takes at each.
+	 * What a {@link CPreviewDrag} carries: something a script draws on its preview's stage that
+	 * stands at one of a few places `T`, such as the options of a dropdown, with the box it takes
+	 * at each.
 	 */
 	abstract class CPreviewDragTarget<T extends number> {
 		/** Every place it can stand, one drop mark each. */
@@ -33,18 +47,18 @@ declare namespace MenuSDK {
 		public abstract Drop(position: T): void
 	}
 	/**
-	 * Something drawn on a preview's stage taken off it by the hand: it follows the cursor, held at
-	 * the point it was taken by, while a mark stands at every place it can stand - the one a drop
-	 * would land on green, the rest an accent ring. A drop writes its place; a drop off the stage
-	 * leaves it where it was, and a press that never went 4 dp - as far as the menu's own controls
-	 * let a hand go before a drag - is a click. The stage holds still while it is in hand.
+	 * Carries a {@link CPreviewDragTarget} across its preview's stage by hand. While held it follows
+	 * the cursor from the point it was taken by, and every place it can stand shows a mark: the one
+	 * nearest, where a drop lands, in the status-good colour, the rest as accent rings. A drop on the
+	 * stage calls the target's `Drop`; a drop off it changes nothing. A press that moves less than
+	 * 4 dp is a click. The preview's motion is paused while something is in hand.
 	 *
 	 * @example
-	 * const drag = new CPreviewDrag(target, stage)
+	 * const drag = new MenuSDK.CPreviewDrag(target, stage)
 	 * // the marks: one element each, under the stage's pointer areas
 	 * drag.Refs.map(ref => <div ref={ref} style={{ position: "absolute", display: "none" }} />)
 	 * // the left button down on the thing
-	 * drag.Grab(screenX, screenY, area, () => OpenElementSettings(node, stage))
+	 * drag.Grab(screenX, screenY, area, () => MenuSDK.OpenElementSettings(node, stage))
 	 * // once per frame
 	 * drag.Update(width, height)
 	 * const box = drag.Carrying ? drag.Carried : target.Box(place, out)

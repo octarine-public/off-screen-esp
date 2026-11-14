@@ -1,7 +1,6 @@
 // AUTO-GENERATED - do not edit.
 declare class ember_spirit_flame_guard extends Ability {
 	public get PassiveRadius(): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/** Its shield takes `absorb_amount` of magical damage (INCOMING_SPELL_DAMAGE_CONSTANT). */
 	public BarrierOn(_target: Unit): number

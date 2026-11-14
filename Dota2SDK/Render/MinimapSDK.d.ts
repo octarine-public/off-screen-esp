@@ -3,30 +3,24 @@
  * An icon of the game's minimap (`scripts/mod_textures.txt`, `minimap_*`): the texture it is cut
  * from and, for one of a sheet, where on the sheet it stands, in the texture's own pixels.
  */
-declare class MinimapIcon {
-	public readonly path: string
-	public readonly sourcePosition?: Vector2 | undefined
-	public readonly sourceSize?: Vector2 | undefined
-	constructor(path: string, sourcePosition?: Vector2 | undefined, sourceSize?: Vector2 | undefined)
-	public get size(): Vector2
-	public Draw(pos: Vector2, size: Vector2, color: Color): void
+interface MinimapIcon {
+	readonly path: string
+	readonly sourcePosition?: Vector2 | undefined
+	readonly sourceSize?: Vector2 | undefined
+	get size(): Vector2
+	Draw(pos: Vector2, size: Vector2, color: Color): void
 }
-declare class MinimapOverview {
-	public readonly material: string
-	public readonly simpleMaterial: string
+interface MinimapOverview {
+	readonly material: string
+	readonly simpleMaterial: string
 	/** The world position of the overview's top-left corner. */
-	public readonly pos: Vector2
+	readonly pos: Vector2
 	/** The world units the overview spans on each side. */
-	public readonly size: number
-	constructor(material: string, simpleMaterial: string, 
-	/** The world position of the overview's top-left corner. */
-	pos: Vector2, 
-	/** The world units the overview spans on each side. */
-	size: number)
+	readonly size: number
 }
-declare class CMinimapSDK {
-	public readonly MinimapBounds: Rectangle
-	public CurrentMinimapOverview: Nullable<MinimapOverview>
+interface CMinimapSDK {
+	readonly MinimapBounds: Rectangle
+	CurrentMinimapOverview: Nullable<MinimapOverview>
 	/**
 	 * Draws icon at minimap
 	 *
@@ -36,15 +30,15 @@ declare class CMinimapSDK {
 	 * @param endTime Changing it to 0 will hide icon from minimap if you're not calling it repeatedly in Draw event
 	 * @param uid you can use this value to edit existing uid's location/color/icon/endTime
 	 */
-	public DrawIcon(name: string, worldPos: Vector3, size?: number, color?: Color, endTime?: number, uid?: any, minSizeAnimated?: number, animationCycle?: number, priority?: number): void
-	public DeleteIcon(uid: any): void
-	public GetIconSize(name: string): Nullable<Vector2>
+	DrawIcon(name: string, worldPos: Vector3, size?: number, color?: Color, endTime?: number, uid?: any, minSizeAnimated?: number, animationCycle?: number, priority?: number): void
+	DeleteIcon(uid: any): void
+	GetIconSize(name: string): Nullable<Vector2>
 	/**
 	 * The minimap's icon `name` (without its `minimap_` prefix): its texture and its place on the
 	 * sheet, to draw it as the minimap does - e.g. a neutral camp's `creepcamp`, `creepcamp_mid`,
 	 * `creepcamp_big`, `creepcamp_ancient`; none before the server's info or for an unknown name.
 	 */
-	public GetIcon(name: string): Nullable<MinimapIcon>
+	GetIcon(name: string): Nullable<MinimapIcon>
 	/**
 	 * Draws ping at minimap
 	 *
@@ -52,16 +46,16 @@ declare class CMinimapSDK {
 	 * @param endTime Changing it to 0 will hide icon from minimap if you're not calling it repeatedly in Draw event
 	 * @param uid you can use this value to edit existing uid's location/color/icon, or specify 0x80000000 to make it unique
 	 */
-	public DrawPing(worldPos: Vector3, color?: Color, endTime?: number, uid?: any): void
-	public DrawLineArrow(start: Vector3, end: Vector3, color?: Color, width?: number, arrowLength?: number, rotationDeg?: number): void
-	public DeletePing(uid: any): void
-	public SendPing(location: Vector2, type?: PingType, directPing?: boolean, target?: Entity): void
+	DrawPing(worldPos: Vector3, color?: Color, endTime?: number, uid?: any): void
+	DrawLineArrow(start: Vector3, end: Vector3, color?: Color, width?: number, arrowLength?: number, rotationDeg?: number): void
+	DeletePing(uid: any): void
+	SendPing(location: Vector2, type?: PingType, directPing?: boolean, target?: Entity): void
 	/**
 	 * Where a world position lands on the minimap, or undefined while the game lays out no
 	 * minimap — there is then nothing to put it on.
 	 */
-	public WorldToMinimap(pos: Vector3): Nullable<Vector2>
+	WorldToMinimap(pos: Vector3): Nullable<Vector2>
 	/** The world position under a minimap point, or undefined while it is not laid out. */
-	public MinimapToWorld(pos: Vector2): Nullable<Vector3>
+	MinimapToWorld(pos: Vector2): Nullable<Vector3>
 }
 declare const MinimapSDK: CMinimapSDK

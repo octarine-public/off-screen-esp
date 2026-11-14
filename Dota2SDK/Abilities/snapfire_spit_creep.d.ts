@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class snapfire_spit_creep extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseSpeedForLevel(level: number): number
 	/**
 	 * The creep is lobbed to the point it was spat at and stuns around it there: a circle, not a

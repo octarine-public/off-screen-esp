@@ -18,7 +18,7 @@ declare enum LocalStorageErrorCode {
 	QuotaExceeded = 4,
 	/** The file could not be read or written. */
 	IOFailed = 5,
-	/** The store was never opened — reach it through {@link openLocalStorage}. */
+	/** The store was never opened — reach it through {@link SharedSDK.openLocalStorage}. */
 	NotOpened = 6,
 	/** Storage is gone, which normally means the client is shutting down. */
 	Unavailable = 7
@@ -36,22 +36,25 @@ declare enum LocalStorageErrorCode {
  * }
  */
 declare class LocalStorageError extends Error {
+	/**
+	 * Why the operation failed: the client's answer, or `InvalidValue` when
+	 * {@link LocalStorage.set} was given a value that is not JSON.
+	 */
 	public readonly code: LocalStorageErrorCode
-	constructor(message: string, code: LocalStorageErrorCode)
+	/** An error with `message` and the reason as `code`; its `name` is `"LocalStorageError"`. */
+	constructor(message: string, 
+	/**
+	 * Why the operation failed: the client's answer, or `InvalidValue` when
+	 * {@link LocalStorage.set} was given a value that is not JSON.
+	 */
+	code: LocalStorageErrorCode)
 }
 /**
- * One script's own key/value store on the user's disk — the web platform's `localStorage`, with the
- * client as the only writer and a JSON file anyone can open in an editor.
- *
- * The store is scoped to the running game by the client, not by the name given here, so the same
- * script under two games keeps two sets of data. Values are anything `JSON.stringify` handles.
- *
- * Unlike the web platform's, every method is a round trip to the client and so returns a promise. A
- * settled one means the file on disk already says so — read what you need once and keep it, rather
- * than reaching in from a frame handler.
- *
- * Nothing here is a security boundary: every script shares one isolate, so the name is a namespace,
- * not a lock. Do not put anything in a store you would not hand to another script.
+ * A key/value store on the user's disk, written only by the client: one JSON file per game and
+ * store name, so the same name under two games is two stores. Values are whatever
+ * `JSON.stringify` carries. Every method is a round trip to the client, so read what you need
+ * once and keep it; the promise of a write resolves once the file holds it. Any script that
+ * knows the name can open the store.
  * @example
  * const storage = await SharedSDK.openLocalStorage("deadlock-heroes")
  * const cheaters = (await storage.get<string[]>("cheaters")) ?? []
@@ -59,8 +62,23 @@ declare class LocalStorageError extends Error {
  * await storage.set("cheaters", cheaters)
  */
 declare class LocalStorage {
+	/**
+	 * The name as given. The client trims and lower-cases it, so `"MyStore"` and `"mystore"`
+	 * are one store; a name it cannot use fails {@link open} with
+	 * {@link LocalStorageErrorCode.InvalidName}.
+	 */
 	public readonly name: string
-	constructor(name: string)
+	/**
+	 * A handle on the store `name`, which it does not open: call {@link open} before anything
+	 * else, or take the handle from {@link SharedSDK.openLocalStorage}, which has already done so.
+	 */
+	constructor(
+	/**
+	 * The name as given. The client trims and lower-cases it, so `"MyStore"` and `"mystore"`
+	 * are one store; a name it cannot use fails {@link open} with
+	 * {@link LocalStorageErrorCode.InvalidName}.
+	 */
+	name: string)
 	/**
 	 * Creates the store if this is its first run and answers with every key it already holds.
 	 * Until this has run, every other method rejects with {@link LocalStorageErrorCode.NotOpened}.

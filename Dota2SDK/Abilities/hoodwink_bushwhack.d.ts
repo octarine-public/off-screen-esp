@@ -30,7 +30,6 @@ declare class hoodwink_bushwhack extends Ability implements INuke {
 	 * const catches = bushwhack.TreesNear(enemy.Position, []).length !== 0
 	 */
 	public TreesNear(position: Vector3, out: Entity[], reach?: number): Entity[]
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	public GetBaseAOERadiusForLevel(level: number): number
 	public GetBaseSpeedForLevel(level: number): number

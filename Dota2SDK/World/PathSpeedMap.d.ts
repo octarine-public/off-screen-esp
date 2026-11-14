@@ -14,44 +14,34 @@
  * const path = hero.FindPath(target.Position)
  * const time = path === undefined ? Infinity : PathfinderSDK.PathSpeed.WalkTime(path, 300, 450)
  */
-declare class PathSpeedMap {
-	/** The name of the modifier the bonus comes with. */
-	public static readonly ModifierName = "modifier_path_movespeed"
-	constructor(grid: NavGrid)
+interface PathSpeedMap {
 	/** The bonus a current gives at its most, as the game showed it; 0 before any. */
-	public get FullBonus(): number
-	/** The current modifier on `unit`, which carries the bonus it walks with; none for a unit currents do not speed. */
-	public static ModifierOf(unit: Unit): Nullable<Modifier>
-	/**
-	 * Counts the current modifier on `unit` as one comes on it (`carries`) or goes off it.
-	 * @internal
-	 */
-	public static NoteBearer(unit: Unit, carries: boolean): void
+	get FullBonus(): number
 	/**
 	 * Whether a walk through the cell at `position` the way of `x`, `y` goes with a current seen
 	 * there.
 	 */
-	public WithCurrent(position: Vector3, x: number, y: number): boolean
+	WithCurrent(position: Vector3, x: number, y: number): boolean
 	/**
 	 * Seconds a walk along `path` takes: at `on` while it goes with a current seen from its start,
 	 * at `off` from the first stretch that does not - a current's bonus is the walker's own, kept
 	 * while it walks the current's way and lost once it turns against or off it; a walk meeting
 	 * another current later gains little before it leaves that one too.
 	 */
-	public WalkTime(path: Path, off: number, on: number): number
+	WalkTime(path: Path, off: number, on: number): number
 	/**
 	 * A tick of `unit`: the bonus it walks with now against the tick before, and the way it walks,
 	 * vote on the cell it walks through - the bonus in whole units of speed, as the game counts
 	 * it: the value the server sends drifts by a hair while it holds.
 	 * @internal
 	 */
-	public Observe(unit: Unit): void
+	Observe(unit: Unit): void
 	/**
 	 * Forgets the bonus `unit` walked with and whether it carried a current's modifier as it leaves
 	 * the game, so the next unit given its entity index starts without one.
 	 * @internal
 	 */
-	public RemoveUnit(unit: Unit): void
+	RemoveUnit(unit: Unit): void
 	/** Forgets what was learnt and lets go of the cells; they are sized again to the next map grid. */
-	public Clear(): void
+	Clear(): void
 }

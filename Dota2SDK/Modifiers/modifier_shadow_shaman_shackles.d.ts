@@ -4,7 +4,5 @@ declare class modifier_shadow_shaman_shackles extends Modifier implements IDebuf
 	public readonly DebuffModifierName: string
 	public IsDebuff(): this is IDebuff
 	public IsDisable(): this is IDisable
-	/** Shackles ticks on the unit by itself: its ability's damage over time (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public get IsStunDebuff(): boolean
 }

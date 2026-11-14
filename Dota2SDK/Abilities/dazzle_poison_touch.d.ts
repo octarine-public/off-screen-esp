@@ -28,8 +28,4 @@ declare class dazzle_poison_touch extends Ability {
 	public get IsCastBySoul(): boolean
 	/** A hex, cast by the soul (`IsCastBySoul`); nothing else holds what it strikes. */
 	public get AppliesUnitState(): bigint
-	/** The hex lasts the `poison_touch_hex` of its caster's Nothl Projection; none without one. */
-	protected AppliedFrom(_values: ISpecialValues, _level: number): number
-	/** Its poison slows the unit it hits by `slow` percent for `duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

@@ -17,7 +17,6 @@ declare namespace MenuSDK {
 	 */
 	abstract class CStageHandle<T extends number> extends CStageArea implements CPreviewDragTarget<T> {
 		public readonly Positions: readonly T[]
-		protected readonly frame: Readonly<ScreenRect>
 		/** The hand that carries it. */
 		public readonly Drag: CPreviewDrag<T>
 		/**
@@ -37,12 +36,10 @@ declare namespace MenuSDK {
 		public Grab(x: number, y: number, click: () => void): void
 		/** Takes it off the stage: not shown, nothing in hand, its pointer area gone with its tooltip. */
 		public Hide(): void
-		/** Its box at `position`, into `out`, in screen px. */
-		protected abstract ScreenBox(position: T, out: ScreenRect): ScreenRect
 		/**
 		 * Lays it on a stage `width` by `height` px: at `place`, or in hand where the cursor carries it,
 		 * its pointer area over it. Answers where it stands on the screen, in px.
 		 */
-		protected Lay(place: T, width: number, height: number): Readonly<ScreenRect>
+		public Lay(place: T, width: number, height: number): Readonly<ScreenRect>
 	}
 }

@@ -5,7 +5,4 @@
  * less (`DAMAGEOUTGOING_PERCENTAGE_ILLUSION`).
  */
 declare class modifier_phantom_lancer_illusory_armaments extends Modifier {
-	protected readonly DeclaredFunction: Map<EModifierfunction, (params?: IModifierParams) => [number, boolean]>
-	protected GetDamageOutgoingPercentageIllusion(params?: IModifierParams): [number, boolean]
-	protected UpdateSpecialValues(): void
 }

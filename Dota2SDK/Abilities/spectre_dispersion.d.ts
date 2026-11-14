@@ -16,5 +16,4 @@ declare class spectre_dispersion extends Ability implements IBuff {
 	public IsBuff(): this is IBuff
 	public GetBaseManaCostForLevel(level: number): number
 	public GetMaxCooldownForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

@@ -6,25 +6,18 @@ declare enum ERenderAnchorFlags {
 	Snap = 1,
 	/**
 	 * The projected point lands on the pixel the game draws a health bar at, before the screen
-	 * offset: pulled toward the middle of the screen by (width - 1) / width on both axes, then cut
-	 * toward it. Content laid on a unit's bar stands on the game's own bar pixel for pixel.
+	 * offset: its fraction cut toward the middle of the screen. Content laid on a unit's bar stands
+	 * on the game's own bar pixel for pixel.
 	 */
 	HealthBarPixel = 2
 }
 /**
- * A point UI content is pinned to: an entity's origin plus an offset in world units,
- * or a fixed world point, plus an offset in screen px. Content drawn relative to it - MenuSDK
- * `Canvas.Anchor`, an element's `setAnchor(anchor.Slot)` - is placed by the core when the frame is
- * presented, with that frame's camera and positions, so it keeps up with the camera and the unit
- * even on a frame whose script pass ran late. Define it when its target or offsets change, not
- * every frame, and `Free` it when its target is gone: there are 4096 slots.
- *
- * An entity anchor names its entity by handle - index and serial - so it is hidden while the game
- * has no such entity, even when another one has taken the index since, and for the one present
- * after it is first pointed at an entity, whose origin the core starts reading then. An entity the
- * SDK made up itself is none of the game's: pin what belongs to it with `SetWorld`.
- *
- * On a host without anchors `Slot` stays -1 and `Project` gives the same point from the script.
+ * A point UI content is pinned to: an entity's origin plus an offset in world units, or a fixed
+ * world point, plus an offset in screen px. Content drawn relative to it, with MenuSDK
+ * `Canvas.Anchor` or an element's `setAnchor(anchor.Slot)`, is placed by the core as the frame is
+ * presented, with that frame's camera and positions. An entity anchor is hidden while the game
+ * has no entity of that handle, so always for an entity the SDK made up, and for the first frame
+ * after it is pointed at one. `Free` it when its target is gone: there are 4096 slots.
  * @example
  * const bar = new CRenderAnchor()
  * bar.SetEntity(unit.Handle, 0, 0, unit.HealthBarOffset)

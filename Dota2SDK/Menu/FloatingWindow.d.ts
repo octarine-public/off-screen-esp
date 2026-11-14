@@ -1,54 +1,59 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
 	/**
-	 * What ranks the sidebar: the names in their current order — top is the most important — and
-	 * the move a drag performs. Bound to whatever really owns the order, an image selector's row
-	 * being the usual owner, so a drag in the sidebar and a drag on the tiles write the same state.
-	 *
-	 * With `enabled` and `toggle` given, every ranked row also carries the switch: a dot on its
-	 * right shows the state and a click on it flips it, through the same owner.
+	 * The ranking {@link FloatingWindow.BindPageOrder} gives the sidebar, read from and written to
+	 * whatever owns the order, such as an image selector's row, so a drag in the sidebar and a drag
+	 * on its tiles change the same state. With `enabled` and `toggle` given, each ranked row also
+	 * shows a switch that reads and flips its page through them.
 	 */
 	interface IPageOrder {
+		/** The ranked page names, top first; a page it does not name is pinned above them. */
 		order(): readonly string[]
+		/** Moves the ranked row at `from` to `to`, both counted among the ranked rows shown. */
 		move(from: number, to: number): void
+		/** Whether the page `name` is on, for the switch on its row. */
 		enabled?(name: string): boolean
+		/** Flips the page `name` on or off from the switch on its row; the config is saved after. */
 		toggle?(name: string): void
 	}
 	/** The sidebar's hands, lent to the HUD-side drag: carry a held row, settle a dropped one. */
 	interface ISidebarView {
+		/** Draws the held row `name` `dyDp` dp off its slot, lifted with a shadow. */
 		hold(name: string, dyDp: number): void
+		/** Puts the row `name` back in its slot without the lift. */
 		settle(name: string): void
 	}
 	/**
-	 * A floating window of real menu controls: a sidebar of pages on the left, and on the right
-	 * the rows of whichever page is picked — rendered by the same renderer the menu's own pages
-	 * use, animations, tooltips and drag'n'drop included.
-	 *
-	 * Every page is a {@link Node} living under the node given to the constructor, so everything a
-	 * page holds persists through the ordinary config path; the pages only step off the menu page
-	 * itself and out of search, because this window is where they are meant to be touched.
-	 *
-	 * It is an overlay card in every way that matters: registered with the {@link OverlayManager},
-	 * so a click belongs to the front-most card under the cursor whichever kind it is, and the
-	 * title-bar drag snaps to the other cards' edges and centres with the same accent guides and
-	 * the same dragging outline. It stands on the HUD whenever the host lets overlays draw; while
-	 * the menu is open its controls take the mouse — pages switch, tiles flip. With
-	 * {@link BindPageOrder} the sidebar itself ranks: its rows are dragged into order, top first,
-	 * through the same state the bound row persists.
+	 * A window of menu controls on the HUD: a sidebar of pages, and the rows of the picked page. Each
+	 * page is a {@link Node} under the node given to the constructor, so its values save with the
+	 * config, but it is left out of that node's rows and of search. The window shows while the menu
+	 * is open or the host lets overlays draw, and is dragged by its title bar like the other overlay
+	 * cards. With the menu closed it answers only the mouse events a script passes to
+	 * {@link FloatingWindow.MouseKeyDown}, `MouseKeyUp` and `MouseWheel`.
 	 *
 	 * @example
-	 * const window = new FloatingWindow(tab, "Dodge panel", 740, 220, () => toggle.value = false)
-	 * const page = window.AddPage("upgrade_counterspell")
+	 * const dodge = new MenuSDK.FloatingWindow(tab, "Dodge panel", 740, 220, () => {
+	 * 	toggle.value = false
+	 * })
+	 * const page = dodge.AddPage("upgrade_counterspell")
 	 * page.AddDynamicImageSelector("Abilities", names, defaults)
 	 */
 	class FloatingWindow {
+		/** The title bar's text, localized when drawn. */
 		public readonly Title: string
-		constructor(holder: Node, Title: string, defaultX?: number, defaultY?: number, onClose?: (() => void) | undefined)
+		/**
+		 * Registers the window and adds the hidden sliders "Position: X" and "Position: Y" to
+		 * `holder`, which keep its place in dp, starting at `defaultX` and `defaultY`. Without
+		 * `onClose` the title bar's close button hides the window.
+		 */
+		constructor(holder: Node, 
+		/** The title bar's text, localized when drawn. */
+		Title: string, defaultX?: number, defaultY?: number, onClose?: (() => void) | undefined)
 		/**
 		 * Takes the window apart for good: the card unmounts, the overlay registration stops taking
-		 * clicks, the outline surface is dropped and the config listener lets go of the instance. The
-		 * pages added through {@link FloatingWindow.AddPage} stay in the menu tree - they belong to
-		 * the node given at birth.
+		 * clicks and the outline surface is dropped. The pages added through
+		 * {@link FloatingWindow.AddPage} stay in the menu tree - they belong to the node given at
+		 * birth.
 		 */
 		public Destroy(): void
 		/**
@@ -147,11 +152,10 @@ declare namespace MenuSDK {
 		/** Lets go of whatever is held and writes it down; the click itself goes through. */
 		public MouseKeyUp(key?: VMouseKeys): boolean
 		/**
-		 * The title bar's own listener, for the menu being open: the menu eats every click over
-		 * this window before the game-event side ever hears of it — that is what keeps the click
-		 * out of the game — so the drag has to start from the card itself. The cursor-follow,
-		 * the snapping and the outline are the same either way; the menu's drag system carries
-		 * the release, which its host delivers wherever the hand lets go.
+		 * Starts dragging the window from a left press on its title bar while the menu is open, when
+		 * the menu takes the click before {@link FloatingWindow.MouseKeyDown} could see it. The drag
+		 * follows the cursor and snaps as one started there does, and ends on the release the menu's
+		 * drag system reports.
 		 */
 		public BeginHeaderDrag(event: Event): void
 		/**
@@ -163,6 +167,11 @@ declare namespace MenuSDK {
 		/** Whether the cursor stands on this window, for the click the menu keeps off the game. */
 		public CoversCursor(x: number, y: number, now: number): boolean
 	}
+	/**
+	 * Runs the floating windows' frame: each one's overlay rectangle, a title-bar drag and its
+	 * guides, and a re-render when the host starts or stops letting overlays draw. The menu calls it
+	 * every frame.
+	 */
 	function TickFloatingWindows(): void
 	/**
 	 * Whether any floating window stands on the screen — which is a claim on the cursor: a host

@@ -1,18 +1,15 @@
 // AUTO-GENERATED - do not edit.
 /**
- * Shapes in world space - lines, rings and filled polygons - drawn beneath the UI with the camera of
- * the frame on screen, so they stay on the ground while the camera or the units move, even on a
- * frame whose script pass runs late. Add them from a `WorldDraw` listener: the frame's list is sent
- * when the listeners return, before `PreDraw`, and starts empty on the next frame.
- *
- * Positions are world units. With an `entity` handle they are relative to that entity's origin and
- * follow it exactly; such a shape is hidden while the game has no such entity - another one that
- * took its index is not it - and on the first frame a list names it, whose origin the core starts
- * reading then. A shape with a non-finite or out-of-range argument, or past the frame's 65536
- * vertices, is skipped.
+ * Lines, rings and filled polygons in world units, drawn beneath the UI with the camera of the
+ * frame on screen. Add them from a `WorldDraw` listener: the frame's list is sent when the
+ * listeners return and starts empty on the next frame. With an `entity` handle a shape's
+ * positions are relative to that entity's origin, and it is hidden while the game has no entity
+ * of that handle and on the first frame a list names it. A shape with a non-finite or
+ * out-of-range argument, or past the frame's 65536 vertices, is skipped.
  * @example
+ * const clear = new Color(0, 0, 0, 0)
  * Events.on("WorldDraw", () => {
- * 	WorldDraw.Ring(Vector3.Zero, hero.AttackRange, new Color(0, 0, 0, 0), Color.White, 2, hero.Handle)
+ * 	WorldDraw.Ring(Vector3.Zero, hero.AttackRange, clear, Color.White, 2, hero.Handle)
  * })
  */
 declare class CWorldDraw {
@@ -43,4 +40,5 @@ declare class CWorldDraw {
 	 */
 	public Polygon(points: readonly Vector3[], color: Color, entity?: number): void
 }
+/** The world shapes of the frame being drawn. */
 declare const WorldDraw: CWorldDraw

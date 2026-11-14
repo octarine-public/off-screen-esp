@@ -13,6 +13,4 @@ declare class hoodwink_acorn_shot extends Ability implements INuke {
 	public GetBaseDamageForLevel(level: number): number
 	public GetRawDamage(target: Unit): number
 	public GetDamage(target: Unit): number
-	/** Each unit it hits is slowed by `slow` percent for `debuff_duration`. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

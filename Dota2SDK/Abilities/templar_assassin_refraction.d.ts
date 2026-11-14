@@ -15,5 +15,4 @@ declare class templar_assassin_refraction extends Ability implements IBuff, IShi
 	 * `instances` are left is not counted.
 	 */
 	public get GuardsDamage(): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

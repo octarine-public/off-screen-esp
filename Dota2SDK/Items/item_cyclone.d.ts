@@ -6,7 +6,6 @@
  * STUNNED with `modifier_eul_cyclone`.
  */
 declare class item_cyclone extends Item {
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/**
 	 * An enemy takes `tooltip_drop_damage` magical damage as it drops, `cyclone_duration` after

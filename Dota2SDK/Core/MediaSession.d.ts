@@ -1,18 +1,19 @@
 // AUTO-GENERATED - do not edit.
 /**
- * A control the client can work for a player.
- *
- * The first five are transport, which the media session carries itself. The last two are not:
- * Windows offers no volume through the media session, so they move the player's own audio
- * session — the row the volume mixer shows it under — and leave everything else on the machine,
- * the game included, where it was.
+ * A command for a media player. `playpause`, `play`, `pause`, `next` and `prev` go to it through
+ * the Windows media session. `volup` and `voldown` move the player's own volume, the row the
+ * volume mixer shows for it, by 0.05 of full and leave every other volume on the machine alone.
  */
 type MediaCommand = "playpause" | "play" | "pause" | "next" | "prev" | "volup" | "voldown"
 /** What the machine is playing, as the player reported it to Windows. */
 interface NowPlaying {
+	/** Whether the player reports the track as playing; `false` for a paused or stopped one. */
 	readonly playing: boolean
+	/** The track title the player published. */
 	readonly title: string
+	/** The artist the player published. */
 	readonly artist: string
+	/** The album title the player published. */
 	readonly album: string
 	/**
 	 * Seconds into the track. The system only republishes this on seek, pause and track
@@ -63,16 +64,5 @@ interface MediaSessionSnapshot {
 	readonly sources: readonly string[]
 }
 /** Thrown when the media session could not be reached at all. */
-declare class MediaSessionError extends Error {
-	constructor(message: string)
+interface MediaSessionError extends Error {
 }
-/**
- * Sends a transport command to the player being followed, or to whatever holds the session when
- * following no one in particular. Rejects when no player is listening or when it does not offer
- * that control — plenty of sources have no notion of "previous".
- *
- * `source` names the player the same way {@link MediaReadOptions.source} does, so a card
- * following one player pauses that one and not whichever grabbed the session in between.
- * @example
- * await SharedSDK.sendMediaCommand("playpause")
- */

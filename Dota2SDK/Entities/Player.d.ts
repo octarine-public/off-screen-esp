@@ -7,9 +7,6 @@ declare class Player extends Entity {
 	public Pawn: Nullable<PlayerPawn>
 	/** @deprecated has been removed use Player#ItemSlots */
 	public QuickBuyItems: number[]
-	public hero_: number
-	public pawn_: number
-	public playerID_: number
 	public get IsSpectator(): boolean
 	public get ItemSlots(): QuickBuySlot[]
 	public get SteamID(): Nullable<bigint>

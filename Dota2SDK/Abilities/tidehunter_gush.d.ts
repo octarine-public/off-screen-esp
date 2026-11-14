@@ -8,6 +8,4 @@ declare class tidehunter_gush extends Ability implements INuke {
 	public get Range(): number
 	public get AbilityBehaviorMask(): DOTA_ABILITY_BEHAVIOR
 	public GetBaseCastRangeForLevel(level: number): number
-	/** Its hit slows the unit by `movement_speed` percent for its duration. */
-	protected FillSpeedChangesOn(out: AbilityEffects, target: Unit): void
 }

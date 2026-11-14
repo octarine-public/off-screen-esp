@@ -5,7 +5,6 @@ declare class modifier_dazzle_shallow_grave extends Modifier implements IBuff, I
 	public readonly ShieldModifierName: string
 	public IsBuff(): this is IBuff
 	public IsShield(): this is IShield
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public PreventsDeath(_damageType: DAMAGE_TYPES): boolean
 	public get IsPurgable(): boolean
 }

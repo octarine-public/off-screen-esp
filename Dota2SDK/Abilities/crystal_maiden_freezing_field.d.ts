@@ -25,13 +25,6 @@ declare class crystal_maiden_freezing_field extends Ability {
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
 	/**
-	 * The Scepter's field Frostbites a unit inside `radius` once it has been there
-	 * `frostbite_delay` seconds, on the frame after: Frostbite's own ticks from then
-	 * (`crystal_maiden_frostbite.DamageOverTime`); none with no Scepter, `frostbite_delay` below
-	 * zero.
-	 */
-	protected BesideOverTime(out: DamageTicks, level: number): boolean
-	/**
 	 * Chance the explosion `tick` - from the first - strikes `target` where it stands, the caster
 	 * where it stands: the explosions go round the quarters from the east - 0 to 90 degrees, then
 	 * 90 to 180 - each at a random angle in its quarter and a random distance from

@@ -13,5 +13,4 @@ declare class nyx_assassin_spiked_carapace extends Ability {
 	public get GuardsDamage(): boolean
 	/** Burrow widens the carapace while Nyx sits underground. */
 	public GetBaseAOERadiusForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

@@ -7,5 +7,4 @@
 declare class slardar_amplify_damage extends Ability implements IDebuff {
 	public readonly DebuffModifierName = "modifier_slardar_amplify_damage"
 	public IsDebuff(): this is IDebuff
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

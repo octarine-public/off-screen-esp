@@ -16,6 +16,5 @@ declare class dark_willow_terrorize extends Ability {
 	 */
 	public get SkillShotType(): ESkillShotType
 	public GetBaseDamageForLevel(level: number): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 }

@@ -7,5 +7,4 @@ declare class alchemist_acid_spray extends Ability {
 	 * debuff's half second, not in the data. The armor it takes off is not weighed before it lands.
 	 */
 	public DamageOverTime(out: DamageTicks, level: number): boolean
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

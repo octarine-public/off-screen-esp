@@ -33,7 +33,6 @@ declare class kunkka_ghostship extends Ability {
 	 * const hits = ship.CannonballsAt(235, enemy.HullRadius)
 	 */
 	public CannonballsAt(side: number, hull: number): number
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public get AppliesUnitState(): bigint
 	/** The crash is a circle at the point cast at. */
 	public get SkillShotType(): ESkillShotType

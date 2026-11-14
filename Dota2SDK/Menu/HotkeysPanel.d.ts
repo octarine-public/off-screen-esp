@@ -1,10 +1,8 @@
 // AUTO-GENERATED - do not edit.
 declare namespace MenuSDK {
-	/** Config key holding the on-screen hotkeys panel position. */
-	const HotkeysPanelConfigKey = "HotkeysPanel"
 	/** Stored position of the hotkeys panel, [-1, -1] while it was never moved. */
 	function HotkeysPanelConfigValue(): [number, number]
-	/** Restores the hotkeys panel position the config holds. */
+	/** Restores the hotkeys panel position the machine keeps. */
 	function ApplyHotkeysPanelConfig(value: unknown): void
 	/**
 	 * Whether the cursor is over the hotkeys panel while the menu is open, so the
@@ -22,17 +20,12 @@ declare namespace MenuSDK {
 	 */
 	function SetHotkeysPanelDisplay(mode: HotkeysPanelDisplay): void
 	/**
-	 * Registers the on-screen panel listing every visible bound hotkey with the
-	 * value it drives; an active hotkey lights its key chip with the accent. A bind
-	 * that starts showing while the panel is already up slides down into place and
-	 * slides back out when it stops; the first bind and the last one carry the
-	 * panel itself, which fades and lifts as one surface — glass blur included —
-	 * and only leaves the screen once that has played out. Both are cut when
-	 * `MenuFlags.HotkeysPanelAnimation` is off. While the menu is open the panel
-	 * is dragged with the mouse like every other overlay card: it snaps to the
-	 * edges and centres of the cards beside it and they snap to its, with the same
-	 * accent guides and the same dragging outline, and the position persists in
-	 * the config.
+	 * Registers the on-screen panel that lists the visible bound hotkeys with the value each drives;
+	 * an active hotkey's key is lit with the accent. Rows slide in and out as binds come and go, and
+	 * the panel fades in with the first and out with the last, unless
+	 * `MenuFlags.HotkeysPanelAnimation` is off. While the menu is open the panel is dragged like the
+	 * other overlay cards, snapping to their edges, and the machine keeps where it was left. The menu
+	 * calls it when it sets up; later calls do nothing.
 	 */
 	function SetupHotkeysOverlay(): void
 	/**

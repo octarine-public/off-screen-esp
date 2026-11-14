@@ -1,6 +1,5 @@
 // AUTO-GENERATED - do not edit.
 declare class tiny_avalanche extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public GetBaseAOERadiusForLevel(level: number): number
 	/**
 	 * The rocks deal its damage only as they fall: `tick_count` of them each `tick_interval`, the

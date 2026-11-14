@@ -18,5 +18,4 @@ declare class furion_sprout extends Ability implements INuke {
 	 * const held = sprout.RingUntil(enemy) > GameState.RawGameTime
 	 */
 	public RingUntil(target: Unit): number
-	protected DurationFrom(values: ISpecialValues, level: number): number
 }

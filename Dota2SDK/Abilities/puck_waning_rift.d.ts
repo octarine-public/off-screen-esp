@@ -6,8 +6,6 @@
  * within `max_distance` and `radius` is caught from where he stands (`ReachOf`).
  */
 declare class puck_waning_rift extends Ability implements INuke {
-	/** The silence lasts `silence_duration`. */
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	public IsNuke(): this is INuke
 	/** Cast beyond its range, Puck jumps its range that way: the order walks him nowhere. */
 	public get IsCastRangeFake(): boolean

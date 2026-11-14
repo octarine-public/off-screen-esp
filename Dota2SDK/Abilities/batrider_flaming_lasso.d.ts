@@ -8,7 +8,6 @@
  * the Blink (19 October 2026, demo).
  */
 declare class batrider_flaming_lasso extends Ability {
-	protected AppliedFrom(values: ISpecialValues, level: number): number
 	/** Each tick of the lasso takes Sticky Napalm's damage on the target too. */
 	public TickBonus(target: Unit): number
 	/**

@@ -6,7 +6,5 @@ declare class modifier_enigma_black_hole_pull extends Modifier implements IDebuf
 	/** The draw of the hole whose aura this is (`enigma_black_hole.SpiralOf`). */
 	public CreateMotion(): Nullable<Motion>
 	public IsDisable(): this is IDisable
-	/** It ticks on the unit by itself: its ability's (`Ability.DamageOverTime`). */
-	protected readonly DeclaredEvents: EModifierfunction[]
 	public get IsPurgable(): boolean
 }
